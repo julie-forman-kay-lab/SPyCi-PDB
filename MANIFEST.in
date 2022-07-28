@@ -1,0 +1,25 @@
+graft docs
+graft src
+
+include *.rst
+include LICENSE
+include requirements.txt
+include CODE_OF_CONDUCT.md
+
+exclude .appveyor.yml
+exclude .bumpversion.cfg
+exclude .codacy.yaml
+exclude .coveragerc
+exclude .cookiecutterrc
+exclude .editorconfig
+exclude .readthedocs.yml
+exclude .codeclimate.yml
+exclude tox.ini
+exclude .travis.yml
+
+prune devtools
+prune tests
+
+global-exclude *.py[cod] __pycache__/* *.so *.dylib 
+global-exclude tags
+global-exclude *.swp
