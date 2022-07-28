@@ -1,10 +1,10 @@
-sampleproject
+spycipdb
 =============
 
 .. testsetup::
 
-    from sampleproject import *
+    from spycipdb import *
 
-.. automodule:: sampleproject
+.. automodule:: spycipdb
     :members:
 

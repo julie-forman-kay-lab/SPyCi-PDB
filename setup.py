@@ -43,7 +43,7 @@ setup(
     license='Apache 2.0 License',
     author='Zi Hao Liu',
     author_email='nemo.liu@sickkids.ca',
-    url='https://github.com/julie-forman-kay-lab/python-project-skeleton',
+    url='https://github.com/julie-forman-kay-lab/SPyCi-PDB',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[splitext(basename(i))[0] for i in glob("src/*.py")],
@@ -67,11 +67,11 @@ setup(
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         ],
     project_urls={
-        'webpage': 'https://github.com/julie-forman-kay-lab/python-project-skeleton',
-        'Documentation': 'https://python-project-skeleton.readthedocs.io/en/latest/',
-        'Changelog': 'https://github.com/julie-forman-kay-lab/python-project-skeleton/blob/master/CHANGELOG.rst',
-        'Issue Tracker': 'https://github.com/julie-forman-kay-lab/python-project-skeleton/issues',
-        'Discussion Forum': 'https://github.com/julie-forman-kay-lab/python-project-skeleton/discussions',
+        'webpage': 'https://github.com/julie-forman-kay-lab/SPyCi-PDB',
+        'Documentation': 'https://SPyCi-PDB.readthedocs.io/en/latest/',
+        'Changelog': 'https://github.com/julie-forman-kay-lab/SPyCi-PDB/blob/master/CHANGELOG.rst',
+        'Issue Tracker': 'https://github.com/julie-forman-kay-lab/SPyCi-PDB/issues',
+        'Discussion Forum': 'https://github.com/julie-forman-kay-lab/SPyCi-PDB/discussions',
         },
     keywords=[
         'ci', 'continuous-integration', 'project-template',
@@ -94,7 +94,7 @@ setup(
         ],
     entry_points={
         'console_scripts': [
-            'samplecli1= sampleproject.cli_int1:main',
+            'samplecli1= spycipdb.cli_int1:main',
             ]
         #
         },
