@@ -72,7 +72,7 @@ jobs:
       run: |
         bump2version patch
       if: env.SKIPBUMP == 'FALSE'
-
+      
     - name: Commit version change to master
       run: |
         git push --follow-tags
