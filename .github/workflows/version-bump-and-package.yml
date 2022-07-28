@@ -34,7 +34,7 @@ jobs:
       run: |
         git config user.name "menoliu"
         git config user.email 'menoliu@users.noreply.github.com'
-        git remote set-url origin https://x-access-token:${{ secrets.AC_GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+        git remote set-url origin https://x-access-token:${{ secrets.AC_GITHUB_TOKEN_NEMO }}@github.com/$GITHUB_REPOSITORY
         git checkout "${GITHUB_REF:11}"
 
     - name: Setup env variables
