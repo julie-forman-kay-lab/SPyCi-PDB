@@ -1,7 +1,6 @@
 Authors
 =======
 
-* Joao M. C. Teixeira (`webpage`_, `github`_)
+* Zi Hao (Nemo) Liu (`github`_)
 
-.. _webpage: https://bit.ly/joaomcteixeira
-.. _github: https://github.com/joaomcteixeira
+.. _github: https://github.com/menoliu

@@ -6,7 +6,7 @@ import os
 import sys
 
 import mock
-import sphinx_py3doc_enhanced_theme
+import sphinx_rtd_theme
 
 
 mock_modules = [
@@ -44,17 +44,17 @@ if os.getenv('SPELLCHECK'):
 
 source_suffix = '.rst'
 master_doc = 'index'
-project = 'Python-Project-Skeleton'
-year = '2020'
-author = 'Joao MC Teixeira'
+project = 'SPyCi-PDB'
+year = '2022'
+author = 'Zi Hao Liu'
 copyright = '{0}, {1}'.format(year, author)
-version = release = '0.11.1'
+version = release = '0.0.0'
 
 pygments_style = 'trac'
 templates_path = ['.']
 extlinks = {
-    'issue': ('https://github.com/joaomcteixeira/python-project-skeleton/issues/%s', '#'),  # noqa: E501
-    'pr': ('https://github.com/joaomcteixeira/python-project-skeleton/pull/%s', 'PR #'),  # noqa: E501
+    'issue': ('https://github.com/julie-forman-kay-lab/SPyCi-PDB/issues/%s', '#'),  # noqa: E501
+    'pr': ('https://github.com/julie-forman-kay-lab/SPyCi-PDB/pull/%s', 'PR #'),  # noqa: E501
     }
 
 # codecov io closes connection if host is accessed too repetitively.
@@ -62,13 +62,13 @@ extlinks = {
 # in the .travis.yml file
 # see https://github.com/codecov/codecov-python/issues/158
 linkcheck_ignore = [
-    r'https://codecov.io/gh/joaomcteixeira/python-project-skeleton/*',
+    r'https://codecov.io/gh/julie-forman-kay-lab/SPyCi-PDB/*',
     ]
 
-html_theme = "sphinx_py3doc_enhanced_theme"
-html_theme_path = [sphinx_py3doc_enhanced_theme.get_html_theme_path()]
+html_theme = "sphinx_rtd_theme"
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 html_theme_options = {
-    'githuburl': 'https://github.com/joaomcteixeira/python-project-skeleton',
+    'githuburl': 'https://github.com/julie-forman-kay-lab/SPyCi-PDB',
     }
 
 html_use_smartypants = True

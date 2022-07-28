@@ -1,13 +1,13 @@
 Libs
 ====
 
-.. automodule:: sampleproject.libs
+.. automodule:: spycipdb.libs
     :members:
     :undoc-members:
 
 Something
 ---------
 
-.. automodule:: sampleproject.libs.samplemodule
+.. automodule:: spycipdb.libs.samplemodule
     :members:
     :undoc-members:

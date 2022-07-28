@@ -6,5 +6,5 @@ Thank you for contributing to this project! Before you submit a Pull Request:
 * summarize the approach used to address the issue
 
 
-.. _contribution guidelines: https://github.com/joaomcteixeira/python-project-skeleton/blob/latest/docs/CONTRIBUTING.rst
-.. _issue: https://github.com/joaomcteixeira/python-project-skeleton/issues
+.. _contribution guidelines: https://github.com/julie-forman-kay-lab/SPyCi-PDB/blob/latest/docs/CONTRIBUTING.rst
+.. _issue: https://github.com/julie-forman-kay-lab/SPyCi-PDB/issues
