@@ -16,7 +16,7 @@ jobs:
         python-version: [3.7, 3.8, 3.9, '3.10']
         # you can separate the tox-envs in different .yml files
         # see version 0.10.1
-        # https://github.com/joaomcteixeira/SPyCi-PDB/releases/tag/v0.10.1
+        # https://github.com/joaomcteixeira/python-project-skeleton/releases/tag/v0.10.1
         # below the list of tox envs that you wish to include in the matrix
         tox-envs: [docs, lint, build, test, pr]
         # workaround to ignore 'pr' when merging to main
