@@ -1,23 +1,25 @@
 """
 SPyCi-PDB.
 
-Main client interface to store access to modules
+Command-line-interface for various back-calculators for
+    experimental NMR, SAXS, and smFRET data.
 
 USAGE:
     For help:
-    $ spycipdb -h
+    >>> spycipdb -h
 """
 import argparse
 import sys
 
 from spycipdb.libs import libcli
+from spycipdb.logger import S
 from spycipdb import(
     __version__,
     log,
     # Rest of the CLI modules go here
     )
 
-_prog, _description, _usageage = libcli,libcli.parse_doc_params(__doc__)
+_prog, _description, _usageage = libcli.parse_doc_params(__doc__)
 
 description = f"""
 {_description}
