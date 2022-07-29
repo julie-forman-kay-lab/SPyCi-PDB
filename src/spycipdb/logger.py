@@ -1,8 +1,4 @@
-"""
-Main DOCSTRING for amodule.
-
-With several lines.
-"""
+"""Manages operations with logging."""
 
 
 def hello():
