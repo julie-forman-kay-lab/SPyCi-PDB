@@ -10,4 +10,4 @@ Developed as a standalone program with integration into the IDPConformerGenerato
 Version
 -------
 
-v0.0.2
+v0.0.3

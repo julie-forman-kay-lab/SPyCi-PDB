@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.0.3 (2022-08-08)
+------------------------------------------------------------
+
 * Core CLI backbone and base libs required (#2)
 * Basic documentation for installation and updates
 
