@@ -94,7 +94,7 @@ setup(
         ],
     entry_points={
         'console_scripts': [
-            'spycipdb = spycipdb.cli:maincli',
+            'spycipdb = spycipdb.clis.cli:maincli',
             ]
         #
         },
