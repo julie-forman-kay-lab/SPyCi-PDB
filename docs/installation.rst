@@ -4,7 +4,13 @@ Installation
 
 SPyCi-PDB uses only Python-based APIs for which we expect it to run
 native on any system Python can run, as long as third-party back-calculator
-installation requirements are met (further instructions below).
+installation requirements are met.
+
+Please note that the IDPConformerGenerator library is required for parsing
+PDB structure co-ordinates.
+
+Full installation instructures are highlighted below.
+
 
 From Source
 -----------
@@ -28,7 +34,7 @@ Anaconda is used as your Python package manager::
     ``virtualenv`` and the ``requirements.txt`` file following the commands:
 
     | ``virtualenv spycienv --python=3.9``
-    | ``source venv/bin/activate``
+    | ``source spycienv/bin/activate``
     | ``pip install -r requirements.txt``
 
     If you have difficulties installing ``spycipdb``, raise an Issue in the
@@ -65,3 +71,41 @@ To update to the latest version, navigate to the repository folder, activate the
     python setup.py develop --no-deps
 
 Your installation will become up to date with the latest developments.
+
+
+Installing IDPConformerGenerator On Top of SPyCi-PDB
+----------------------------------------------------
+
+.. note::
+    You should already be inside the ``SPyCi-PDB`` directory.
+    The ``spycipdb`` conda environment should not be active. Deactivate using:
+    
+    | conda deactivate
+    
+    if you're using ``virtualenv``, remain in the environment.
+
+Clone from the official repository::
+
+    git clone https://github.com/julie-forman-kay-lab/IDPConformerGenerator
+
+Navigate to the new ``IDPConformerGenerator`` folder::
+
+    cd IDPConformerGenerator
+
+Run the following commands to install ``idpconfgen`` dependencies if
+Anaconda is used as your Python package manager::
+
+    conda env update --name spycipdb --file requirements.yml --prune
+    conda activate spycipdb
+    python setup.py develop --no-deps
+    
+Run the following commands to install ``idpconfgen`` dependencies if
+virtualenv was used to install SPyCi-PDB::
+
+    pip install -r requirements.txt
+    python setup.py develop --no-deps
+
+Go back to the ``SPyCi-PDB`` directory and reinstall ``spycipdb``::
+
+    cd ..
+    python setup.py develop --no-deps
