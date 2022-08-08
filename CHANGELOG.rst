@@ -2,8 +2,12 @@
 Changelog
 =========
 
+* Logic/module for PRE back-calculator (#5)
+
 v0.0.4 (2022-08-08)
 ------------------------------------------------------------
+
+* Documentation for installing IDPConformerGenerator as a library (#4)
 
 v0.0.3 (2022-08-08)
 ------------------------------------------------------------
