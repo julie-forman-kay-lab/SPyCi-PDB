@@ -13,10 +13,9 @@ import sys
 
 from spycipdb.libs import libcli
 from spycipdb.logger import S
-from spycipdb import(
-    __version__,
-    log,
-    # Rest of the CLI modules go here
+from spycipdb import __version__, log
+from spycipdb.clis import(
+    cli_prebc,
     )
 
 _prog, _description, _usageage = libcli.parse_doc_params(__doc__)
@@ -24,8 +23,9 @@ _prog, _description, _usageage = libcli.parse_doc_params(__doc__)
 description = f"""
 {_description}
 
-    * Name goes here
+Core back-calculator functions:
 
+    * {cli_prebc._name}
 """
 
 ap = libcli.CustomParser(
@@ -40,7 +40,9 @@ libcli.add_version(ap)
 subparsers = ap.add_subparsers(
     title='SPyCi-PDB routines',
     help='Short description:',
-)
+    )
+
+libcli.add_subparser(subparsers, cli_prebc)
 
 def load_args():
     """Load user input arguments."""
