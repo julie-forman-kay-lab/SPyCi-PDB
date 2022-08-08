@@ -1,5 +1,5 @@
 """Test main command-line client."""
-from spycipdb.cli import maincli
+from spycipdb.clis.cli import maincli
 
 
 def test_main():
