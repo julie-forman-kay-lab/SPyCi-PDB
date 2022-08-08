@@ -2,8 +2,13 @@
 Changelog
 =========
 
+* Core CLI backbone and base libs required (#2)
+* Basic documentation for installation and updates
+
 v0.0.2 (2022-08-08)
 ------------------------------------------------------------
+
+* Fix reference to python-project-skeleton (#3)
 
 v0.0.1 (2022-07-28)
 ------------------------------------------------------------

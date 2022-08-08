@@ -1,7 +1,7 @@
 """Test main command-line client."""
-from spycipdb.cli_int1 import main
+from spycipdb.clis.cli import maincli
 
 
 def test_main():
     """Test CLI main function."""
-    main()
+    maincli()

@@ -94,7 +94,7 @@ setup(
         ],
     entry_points={
         'console_scripts': [
-            'samplecli1= spycipdb.cli_int1:main',
+            'spycipdb = spycipdb.clis.cli:maincli',
             ]
         #
         },
