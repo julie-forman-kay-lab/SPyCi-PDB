@@ -2,7 +2,10 @@
 SPyCi-PDB.
 
 Command-line-interface for various back-calculators for
-    experimental NMR, SAXS, and smFRET data.
+experimental NMR, SAXS, and smFRET data.
+
+Back-calculator logic for PRE, NOE, and JC can be found here:
+https://github.com/Oufan75/X-EISD/blob/79df80b3ee76dd37a30d784fed3d2e46ee5cd144/EISD_back_calc.ipynb
 
 USAGE:
     For help:
@@ -62,7 +65,7 @@ def maincli():
 
     cmd = load_args()
 
-    with open('idpconfgen.version', 'w') as fout:
+    with open('spycipdb.version', 'w') as fout:
         fout.write(f'version: {__version__}')
 
     cmd.func(**vars(cmd))

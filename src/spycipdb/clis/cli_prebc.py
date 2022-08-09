@@ -4,7 +4,8 @@ Back-calculates the PRE distances from PDB structure file.
 Uses idpconfgen libraries for coordinate parsing as it's proven
 to be faster than BioPython.
 
-Back-calculator logic inspired from Oufan Zhang @Oufan75
+Back-calculator logic inspired from X-EISD.
+Error = 0.0001 as reported in Lincoff et al. 2020.
 
 USAGE:
     $ spycipdb prebc <PDB-FILES> [--exp-file]
@@ -17,13 +18,25 @@ REQUIREMENTS:
     
     Where res1/atom1 is the atom number and name respectively for the first residue
     and res2/atom2 is the atom number and name respectively for the second residue.
+
+OUTPUT:
+    Output is in standard .JSON format as follows, with the first
+    key-value pair being the reference formatting for residues and
+    atom-names:
+    
+    {
+        'format': {'res1': [], 'atom1':[], 'res2':[], 'atom2':[]},
+        'pdb1': [dist_values],
+        'pdb2': [dist_values],
+        ...
+    }
 """
+import json
 import argparse
 import shutil
-import numpy as np
 import pandas as pd
-
 from pathlib import Path
+from functools import partial
 
 from spycipdb import log
 from spycipdb.libs import libcli
@@ -32,7 +45,11 @@ from spycipdb.libs.libfuncs import get_scalar
 
 from idpconfgen.libs.libio import extract_from_tar, read_path_bundle
 from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libstructure import Structure, col_name
+from idpconfgen.libs.libstructure import(
+    Structure,
+    col_name,
+    col_resSeq,
+    )
 
 LOGFILESNAME = '.spycipdb_prebc'
 _name = 'prebc'
@@ -64,25 +81,58 @@ ap.add_argument(
     )
 
 
+def get_exp_format_pre(fexp):
+    format = {}
+    exp = pd.read_csv(fexp)
+    format['res1'] = exp.res1.values.astype(int).tolist()
+    format['atom1'] = exp.atom1.values.tolist()
+    format['res2'] = exp.res2.values.astype(int).tolist()
+    format['atom2'] = exp.atom2.values.tolist()
+    
+    return format
+
+
 def calc_pre(fexp, pdb):
+    """
+    Main logic for back-calculating PRE data
+    with atom-pairs derived from experimental template.
+    """
     dist = []
     
     exp = pd.read_csv(fexp)
-    res1 = exp.res1.values.astype(np.int)
+    res1 = exp.res1.values.astype(int)
     atom1_name = exp.atom1.values
-    res2 = exp.res2.values.astype(np.int)
+    res2 = exp.res2.values.astype(int)
     atom2_name = exp.atom2.values
     
     s = Structure(pdb)
     s.build()
-    # TODO: see how idpconfgen struct processes atom names and coords
     
-    for idx in range (exp.shape[0]):
-        r1 = np.int(res1[idx])
-        r2 = np.int(res2[idx])
-        
+    for i in range (exp.shape[0]):
+        r1 = int(res1[i])
+        r2 = int(res2[i])
+        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
+            if r == r1:
+                if atom1_name[i] == 'H':
+                    atom1 = s.coords[j, :]
+                    break
+                if atom1_name[i] in s.data_array[j, col_name]:
+                    atom1 = s.coords[j, :]
+                    break
+        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
+            if r == r2:
+                if atom2_name[i] == 'H':
+                    atom2 = s.coords[j, :]
+                    break
+                if atom2_name[i] in s.data_array[j, col_name]:
+                    atom2 = s.coords[j, :]
+                    break
+                
+        dv = atom1 - atom2
+        assert dv.shape == (3,)
+        dist.append(get_scalar(dv[0], dv[1], dv[2]))
     
-    return dist
+    return pdb, dist
 
 
 def main(
@@ -91,6 +141,7 @@ def main(
         output="prebc.json",
         ncores=1,
         tmpdir=TMPDIR,
+        **kwargs,
         ):
     """
     Main logic for back-calculating PRE values from PDB structures
@@ -127,7 +178,26 @@ def main(
         pdbs2operate = list(read_path_bundle(pdb_files, ext='pdb'))
         _istarfile = False
     log.info(S('done'))
-
+    
+    log.info(T(f'back calculating using {ncores} workers'))
+    execute = partial(
+        report_on_crash,
+        calc_pre,
+        exp_file,
+        )
+    execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
+    
+    _output = {}
+    _output['format'] = get_exp_format_pre(exp_file)
+    for results in execute_pool:
+        _output[results[0].stem] = results[1]
+    log.info(S('done'))
+    
+    log.info(T('Writing output onto disk'))
+    with open(output, mode="w") as fout:
+        fout.write(json.dumps(_output, indent=4))
+    log.info(S('done'))
+    
 
     if _istarfile:
         shutil.rmtree(tmpdir)
