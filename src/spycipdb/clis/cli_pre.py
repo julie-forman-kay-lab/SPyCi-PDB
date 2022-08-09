@@ -69,7 +69,7 @@ libcli.add_argument_exp_file(ap)
 libcli.add_argument_output(ap)
 libcli.add_argument_ncores(ap)
 
-TMPDIR = '__tmpprebc__'
+TMPDIR = '__tmppre__'
 ap.add_argument(
     '--tmpdir',
     help=(
@@ -138,7 +138,7 @@ def calc_pre(fexp, pdb):
 def main(
         pdb_files,
         exp_file,
-        output="prebc.json",
+        output,
         ncores=1,
         tmpdir=TMPDIR,
         **kwargs,
@@ -158,7 +158,7 @@ def main(
     
     output : str or Path, optional
         Where to store the back-calculated data.
-        Defaults to "prebc.json".
+        Defaults to working directory.
         
     ncores : int, optional
         The number of cores to use.
