@@ -51,8 +51,8 @@ from idpconfgen.libs.libstructure import(
     col_resSeq,
     )
 
-LOGFILESNAME = '.spycipdb_prebc'
-_name = 'prebc'
+LOGFILESNAME = '.spycipdb_pre'
+_name = 'pre'
 _help = 'PRE back-calculator given experimental data template.'
 
 _prog, _des, _usage = libcli.parse_doc_params(__doc__)
