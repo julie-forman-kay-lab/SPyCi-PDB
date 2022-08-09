@@ -174,6 +174,17 @@ def add_argument_pdb_files(parser):
         )
 
 
+def add_argument_exp_file(parser):
+    """Add argument for path to experimental file template."""
+    parser.add_argument(
+        '-e',
+        '--exp-file',
+        help='Path to the experimental file to use as template.',
+        type=str,
+        required=True,
+        )
+
+
 def add_argument_ncores(parser):
     """Add argument for number of cores to use."""
     ncpus = max(cpu_count() - 1, 1)
@@ -198,9 +209,11 @@ def add_argument_output(parser):
         '-o',
         '--output',
         help=(
-            'Output file. Defaults to `None`. '
-            'Read CLI instructions for `None` behaviour.'
+            'Output back-calculated information into'
+            ' a .JSON readabale file.'
+            'Formatting may vary across modules.'
+            'Defaults to `output.json`.'
             ),
         type=str,
-        default=None,
+        default='output.json',
         )

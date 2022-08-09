@@ -2,7 +2,10 @@
 SPyCi-PDB.
 
 Command-line-interface for various back-calculators for
-    experimental NMR, SAXS, and smFRET data.
+experimental NMR, SAXS, and smFRET data.
+
+Back-calculator logic for PRE, NOE, and JC can be found here:
+https://github.com/Oufan75/X-EISD/blob/79df80b3ee76dd37a30d784fed3d2e46ee5cd144/EISD_back_calc.ipynb
 
 USAGE:
     For help:
@@ -13,10 +16,9 @@ import sys
 
 from spycipdb.libs import libcli
 from spycipdb.logger import S
-from spycipdb import(
-    __version__,
-    log,
-    # Rest of the CLI modules go here
+from spycipdb import __version__, log
+from spycipdb.clis import(
+    cli_prebc,
     )
 
 _prog, _description, _usageage = libcli.parse_doc_params(__doc__)
@@ -24,8 +26,9 @@ _prog, _description, _usageage = libcli.parse_doc_params(__doc__)
 description = f"""
 {_description}
 
-    * Name goes here
+Core back-calculator functions:
 
+    * {cli_prebc._name}
 """
 
 ap = libcli.CustomParser(
@@ -40,7 +43,9 @@ libcli.add_version(ap)
 subparsers = ap.add_subparsers(
     title='SPyCi-PDB routines',
     help='Short description:',
-)
+    )
+
+libcli.add_subparser(subparsers, cli_prebc)
 
 def load_args():
     """Load user input arguments."""
@@ -60,7 +65,7 @@ def maincli():
 
     cmd = load_args()
 
-    with open('idpconfgen.version', 'w') as fout:
+    with open('spycipdb.version', 'w') as fout:
         fout.write(f'version: {__version__}')
 
     cmd.func(**vars(cmd))
