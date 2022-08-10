@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.0.8 (2022-08-10)
+------------------------------------------------------------
+
 * Logic/module for NOE back-calculator (#8)
 * Refractor get_pdb_paths
 
