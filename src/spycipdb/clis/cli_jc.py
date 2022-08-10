@@ -111,7 +111,7 @@ def main(
         ):
     """
     Main logic for processing PDB structures and
-    outputting back-calculatedJC values.
+    outputting back-calculated JC values.
     
     Parameters
     ----------

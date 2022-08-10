@@ -40,6 +40,7 @@ OUTPUT:
 import json
 import argparse
 import shutil
+import numpy as np
 import pandas as pd
 from pathlib import Path
 from functools import partial
@@ -100,6 +101,34 @@ def get_exp_format_pre(fexp):
     return format
 
 
+def calc_noe(fexp, pdb):
+    """
+    Main logic for back-calculating NOE data
+    with atom-pairs and multi-assigns derived
+    from experimental template
+    """
+    dist = []
+    
+    exp = pd.read_csv(fexp)
+    res1 = exp.res1.values.astype(int)
+    atom1_name = exp.atom1.values
+    res2 = exp.res2.values.astype(int)
+    atom2_name = exp.atom2.values
+    multi1 = exp.atom1_multiple_assignments.values
+    multi2 = exp.atom2_multiple_assignments.values
+    
+    s = Structure(pdb)
+    s.build()
+    
+    for i in range(exp.shape[0]):
+        r1 = int(res1[i])
+        r2 = int(res2[i])
+        atom1_list = []
+        atom2_list = []
+    
+    return dist
+
+
 def main(
         pdb_files,
         exp_file,
@@ -110,7 +139,7 @@ def main(
         ):
     """
     Main logic for processing PDB structures and
-    outputting back-calculatedJC values.
+    outputting back-calculated NOE values.
     
     Parameters
     ----------
@@ -135,7 +164,7 @@ def main(
     """
     init_files(log, LOGFILESNAME)
     log.info(T('reading input paths'))
-    pdbs2operate, _istarfile = extract_pdb_paths(pdb_files, tmpdir)
+    pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
     log.info(S('done'))
     
     
