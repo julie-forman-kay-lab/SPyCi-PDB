@@ -74,7 +74,7 @@ libcli.add_argument_exp_file(ap)
 libcli.add_argument_output(ap)
 libcli.add_argument_ncores(ap)
 
-TMPDIR = '__tmppre__'
+TMPDIR = '__tmpnoe__'
 ap.add_argument(
     '--tmpdir',
     help=(

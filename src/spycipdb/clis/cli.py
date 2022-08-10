@@ -21,6 +21,7 @@ from spycipdb.clis import(
     cli_pre,
     cli_noe,
     cli_jc,
+    cli_smfret,
     )
 
 _prog, _description, _usageage = libcli.parse_doc_params(__doc__)
@@ -33,6 +34,7 @@ Core back-calculator functions:
     * {cli_pre._name}
     * {cli_noe._name}
     * {cli_jc._name}
+    * {cli_smfret._name}
 """
 
 ap = libcli.CustomParser(
@@ -52,6 +54,7 @@ subparsers = ap.add_subparsers(
 libcli.add_subparser(subparsers, cli_pre)
 libcli.add_subparser(subparsers, cli_noe)
 libcli.add_subparser(subparsers, cli_jc)
+libcli.add_subparser(subparsers, cli_smfret)
 
 def load_args():
     """Load user input arguments."""
