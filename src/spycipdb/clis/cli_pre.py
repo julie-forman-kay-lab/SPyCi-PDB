@@ -8,8 +8,8 @@ Back-calculator logic inspired from X-EISD.
 Error = 0.0001 as reported in Lincoff et al. 2020.
 
 USAGE:
-    $ spycipdb prebc <PDB-FILES> [--exp-file]
-    $ spycipdb prebc <PDB-FILES> [--exp-file] [--output] [--ncores]
+    $ spycipdb pre <PDB-FILES> [--exp-file]
+    $ spycipdb pre <PDB-FILES> [--exp-file] [--output] [--ncores]
 
 REQUIREMENTS:
     Experimental data must be comma-delimited with at least the following columns:
@@ -25,7 +25,7 @@ OUTPUT:
     atom-names:
     
     {
-        'format': {'res1': [], 'atom1':[], 'res2':[], 'atom2':[]},
+        'format': {'res1': [], 'atom1': [], 'res2': [], 'atom2': []},
         'pdb1': [dist_values],
         'pdb2': [dist_values],
         ...
@@ -84,6 +84,7 @@ ap.add_argument(
 def get_exp_format_pre(fexp):
     format = {}
     exp = pd.read_csv(fexp)
+    
     format['res1'] = exp.res1.values.astype(int).tolist()
     format['atom1'] = exp.atom1.values.tolist()
     format['res2'] = exp.res2.values.astype(int).tolist()

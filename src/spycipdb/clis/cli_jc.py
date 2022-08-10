@@ -5,8 +5,8 @@ Uses idpconfgen libraries for coordinate parsing as it's proven
 to be faster than BioPython.
 
 USAGE:
-    $ spycipdb jcbc <PDB-FILES>
-    $ spycipdb jcbc <PDB-FILES> [--output] [--ncores]
+    $ spycipdb jc <PDB-FILES>
+    $ spycipdb jc <PDB-FILES> [--output] [--ncores]
     
 REQUIREMENTS:
     Experimental data must be comma-delimited with at least the following columns:
