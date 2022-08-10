@@ -40,7 +40,6 @@ OUTPUT:
 import json
 import argparse
 import shutil
-import numpy as np
 import pandas as pd
 from pathlib import Path
 from functools import partial
@@ -48,7 +47,7 @@ from functools import partial
 from spycipdb import log
 from spycipdb.libs import libcli
 from spycipdb.logger import S, T, init_files, report_on_crash
-from spycipdb.libs.libfuncs import get_pdb_paths
+from spycipdb.libs.libfuncs import get_pdb_paths, get_scalar
 
 from idpconfgen.libs.libmulticore import pool_function
 from idpconfgen.libs.libstructure import(
@@ -125,8 +124,42 @@ def calc_noe(fexp, pdb):
         r2 = int(res2[i])
         atom1_list = []
         atom2_list = []
+        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
+            if r == r1:
+                if atom1_name[i] == 'H':
+                    atom1_list.append(s.coords[j, :])
+                    break
+                if atom1_name[i] in s.data_array[j, col_name]:
+                    atom1_list.append(s.coords[j, :])
+                if len(atom1_list) == 2:
+                    break
+                if not multi1[i] and len(atom1_list) == 1:
+                    break
+        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
+            if r == r2:
+                if atom2_name[i] == 'H':
+                    atom2_list.append(s.coords[j, :])
+                    break
+                if atom2_name[i] in s.data_array[j, col_name]:
+                    atom2_list.append(s.coords[j, :])
+                if len(atom2_list) == 2:
+                    break
+                if not multi2[i] and len(atom2_list) == 1:
+                    break
+
+        combos = 0.0
+        num_combos = 0
+
+        for first_atom in atom1_list:
+            for second_atom in atom2_list:
+                dv = first_atom - second_atom
+                assert dv.shape == (3,)
+                combos += (get_scalar(dv[0], dv[1], dv[2])) ** (-6.)
+                num_combos += 1
+
+        dist.append((combos / float(num_combos)) ** (-1 / 6))
     
-    return dist
+    return pdb, dist
 
 
 def main(
@@ -167,7 +200,24 @@ def main(
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
     log.info(S('done'))
     
+    log.info(T(f'back calculating using {ncores} workers'))
+    execute = partial(
+        report_on_crash,
+        calc_noe,
+        exp_file,
+        )
+    execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
     
+    _output = {}
+    _output['format'] = get_exp_format_pre(exp_file)
+    for results in execute_pool:
+        _output[results[0].stem] = results[1]
+    log.info(S('done'))
+    
+    log.info(T('Writing output onto disk'))
+    with open(output, mode="w") as fout:
+        fout.write(json.dumps(_output, indent=4))
+    log.info(S('done'))
     
     
     if _istarfile:
