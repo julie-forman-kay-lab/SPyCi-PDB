@@ -52,15 +52,15 @@ from spycipdb.logger import S, T, init_files, report_on_crash
 from spycipdb.libs.libfuncs import get_pdb_paths, get_scalar
 
 from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libstructure import(
+from idpconfgen.libs.libstructure import (
     Structure,
     col_name,
     col_resSeq,
     )
 
-LOGFILESNAME = '.spycipdb_noe'
-_name = 'noe'
-_help = 'NOE back-calculator given experimental data template.'
+LOGFILESNAME = '.spycipdb_smfret'
+_name = 'smfret'
+_help = 'smFRET back-calculator given experimental data template.'
 
 _prog, _des, _usage = libcli.parse_doc_params(__doc__)
 
@@ -114,22 +114,31 @@ def calc_smfret(fexp, pdb):
     
     s = Structure(pdb)
     s.build()
-    # assumes CA as atom labeled
-    s.add_filter(lambda x: x[col_name] == 'CA')
     
-    for j in range(exp.shape[0]):
-        r1 = int(res1[j])
-        r2 = int(res2[j])
+    for i in range(exp.shape[0]):
+        r1 = int(res1[i])
+        r2 = int(res2[i])
+        r1p = 0
+        r2p = 0
+        
+        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
+            if r == r1 and s.data_array[j, col_name] == 'CA':
+                r1p = j
+                break
+        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
+            if r == r2 and s.data_array[j, col_name] == 'CA':
+                r2p = j
+                break
+            
         # distance between 2 CA atoms
-        dv = s.coords[r1, :] - s.coords[r2, :]
+        dv = s.coords[r1p, :] - s.coords[r2p, :]
         assert dv.shape == (3,)
         d = get_scalar(dv[0], dv[1], dv[2])
-        
+
         # scale_factor to adjust for dye size and CA to label distances
         scale_factor = ((np.abs(r1 - r2) + 7) / np.abs(r1 - r2)) ** 0.5
         d = d * scale_factor
-        eff = 1.0 / (1.0 + (d / scale[j]) ** 6.0)
-
+        eff = 1.0 / (1.0 + (d / scale[i]) ** 6.0)
         fret_bc.append(eff)
     
     fret_bc = np.reshape(fret_bc, (-1, exp.shape[0]))
