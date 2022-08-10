@@ -1,5 +1,5 @@
 """
-Back-calculates the PRE distances from PDB structure file.
+Back-calculates the J-Couping angles (radians) from PDB structure file.
 
 Uses idpconfgen libraries for coordinate parsing as it's proven
 to be faster than BioPython.

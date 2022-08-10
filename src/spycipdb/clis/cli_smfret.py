@@ -88,7 +88,7 @@ ap.add_argument(
     )
 
 
-def get_exp_format_pre(fexp):
+def get_exp_format_smfret(fexp):
     format = {}
     exp = pd.read_csv(fexp)
     
@@ -141,7 +141,7 @@ def calc_smfret(fexp, pdb):
         eff = 1.0 / (1.0 + (d / scale[i]) ** 6.0)
         fret_bc.append(eff)
     
-    fret_bc = np.reshape(fret_bc, (-1, exp.shape[0]))
+    fret_bc = np.reshape(fret_bc, (-1, exp.shape[0])).tolist()
     
     return pdb, fret_bc
 
@@ -183,6 +183,25 @@ def main(
     
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
+    log.info(S('done'))
+    
+    log.info(T(f'back calculating using {ncores} workers'))
+    execute = partial(
+        report_on_crash,
+        calc_smfret,
+        exp_file,
+        )
+    execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
+    
+    _output = {}
+    _output['format'] = get_exp_format_smfret(exp_file)
+    for results in execute_pool:
+        _output[results[0].stem] = results[1]
+    log.info(S('done'))
+    
+    log.info(T('Writing output onto disk'))
+    with open(output, mode="w") as fout:
+        fout.write(json.dumps(_output, indent=4))
     log.info(S('done'))
     
         

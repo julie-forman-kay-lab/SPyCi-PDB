@@ -86,7 +86,7 @@ ap.add_argument(
     )
 
 
-def get_exp_format_pre(fexp):
+def get_exp_format_noe(fexp):
     format = {}
     exp = pd.read_csv(fexp)
     
@@ -209,7 +209,7 @@ def main(
     execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
     
     _output = {}
-    _output['format'] = get_exp_format_pre(exp_file)
+    _output['format'] = get_exp_format_noe(exp_file)
     for results in execute_pool:
         _output[results[0].stem] = results[1]
     log.info(S('done'))
