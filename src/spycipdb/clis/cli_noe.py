@@ -47,7 +47,7 @@ from functools import partial
 from spycipdb import log
 from spycipdb.libs import libcli
 from spycipdb.logger import S, T, init_files, report_on_crash
-from spycipdb.libs.libfuncs import extract_pdb_paths
+from spycipdb.libs.libfuncs import get_pdb_paths
 
 from idpconfgen.libs.libmulticore import pool_function
 from idpconfgen.libs.libstructure import(
