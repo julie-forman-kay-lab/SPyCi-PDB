@@ -47,9 +47,8 @@ from functools import partial
 from spycipdb import log
 from spycipdb.libs import libcli
 from spycipdb.logger import S, T, init_files, report_on_crash
-from spycipdb.libs.libfuncs import get_scalar
+from spycipdb.libs.libfuncs import extract_pdb_paths
 
-from idpconfgen.libs.libio import extract_from_tar, read_path_bundle
 from idpconfgen.libs.libmulticore import pool_function
 from idpconfgen.libs.libstructure import(
     Structure,
@@ -100,3 +99,53 @@ def get_exp_format_pre(fexp):
     
     return format
 
+
+def main(
+        pdb_files,
+        exp_file,
+        output,
+        ncores=1,
+        tmpdir=TMPDIR,
+        **kwargs,
+        ):
+    """
+    Main logic for processing PDB structures and
+    outputting back-calculatedJC values.
+    
+    Parameters
+    ----------
+    pdb_files : str or Path, required
+        Path to a .TAR or folder of PDB files.
+        
+    exp_file : str or Path, required
+        Path to experimental file template.
+        Required to know for which residues to calculate.
+    
+    output : str or Path, optional
+        Where to store the back-calculated data.
+        Defaults to working directory.
+        
+    ncores : int, optional
+        The number of cores to use.
+        Defaults to 1.
+    
+    tmpdir : str or Path, optional
+        Path to the temporary directory if working with .TAR files.
+        Defaults to TMPDIR.
+    """
+    init_files(log, LOGFILESNAME)
+    log.info(T('reading input paths'))
+    pdbs2operate, _istarfile = extract_pdb_paths(pdb_files, tmpdir)
+    log.info(S('done'))
+    
+    
+    
+    
+    if _istarfile:
+        shutil.rmtree(tmpdir)
+
+    return
+
+
+if __name__ == '__main__':
+    libcli.maincli(ap, main)

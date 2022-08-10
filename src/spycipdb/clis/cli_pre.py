@@ -41,9 +41,8 @@ from functools import partial
 from spycipdb import log
 from spycipdb.libs import libcli
 from spycipdb.logger import S, T, init_files, report_on_crash
-from spycipdb.libs.libfuncs import get_scalar
+from spycipdb.libs.libfuncs import get_scalar, get_pdb_paths
 
-from idpconfgen.libs.libio import extract_from_tar, read_path_bundle
 from idpconfgen.libs.libmulticore import pool_function
 from idpconfgen.libs.libstructure import(
     Structure,
@@ -172,12 +171,7 @@ def main(
     init_files(log, LOGFILESNAME)
     
     log.info(T('reading input paths'))
-    try:
-        pdbs2operate = extract_from_tar(pdb_files, output=tmpdir, ext='.pdb')
-        _istarfile = True
-    except (OSError, TypeError):
-        pdbs2operate = list(read_path_bundle(pdb_files, ext='pdb'))
-        _istarfile = False
+    pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
     log.info(S('done'))
     
     log.info(T(f'back calculating using {ncores} workers'))
