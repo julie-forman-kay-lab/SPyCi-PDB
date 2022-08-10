@@ -40,7 +40,7 @@ from spycipdb.logger import S, T, init_files, report_on_crash
 
 from idpconfgen.libs.libio import extract_from_tar, read_path_bundle
 from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libcalc import calc_torsion_angles
+from idpconfgen.libs.libhigherlevel import get_torsions
 
 LOGFILESNAME = '.spycipdb_jc'
 _name = 'jc'
@@ -76,12 +76,29 @@ def calc_jc(fexp, pdb):
     """
     Main logic for back-calculating JC data
     with residues of interest derived from experimental template.
+    
+    Parameters
+    ----------
+    fexp : str or Path
+        To the experimental file template
+    
+    pdb : Path
+        To the PDB file
+    
+    Returns
+    -------
+    jc_bc : list
+        Of JC values
+    
+    pdb : Path
+        Of the PDB calculated
     """
     exp = pd.read_csv(fexp)
     # align torsion index as the first residue doesn't have phi torsion
     resn = exp.resnum.values - 2
+    jc_bc = np.cos(get_torsions(pdb)[2::3][resn] - np.radians(60))
     
-    # TODO: use logic from `get_torsions` or `calc_torsion_angles` from idpcg
+    return pdb, jc_bc.tolist()
 
 
 def main(
@@ -117,4 +134,43 @@ def main(
         Path to the temporary directory if working with .TAR files.
         Defaults to TMPDIR.
     """
+    init_files(log, LOGFILESNAME)
     
+    log.info(T('reading input paths'))
+    try:
+        pdbs2operate = extract_from_tar(pdb_files, output=tmpdir, ext='.pdb')
+        _istarfile = True
+    except (OSError, TypeError):
+        pdbs2operate = list(read_path_bundle(pdb_files, ext='pdb'))
+        _istarfile = False
+    log.info(S('done'))
+    
+    log.info(T(f'back calculaing using {ncores} workers'))
+    execute = partial(
+        report_on_crash,
+        calc_jc,
+        exp_file,
+        )
+    execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
+    
+    _output = {}
+    exp = pd.read_csv(exp_file)
+    _output['format'] = exp.resnum.values.tolist()
+    for results in execute_pool:
+        _output[results[0].stem] = results[1]
+    log.info(S('done'))
+    
+    log.info(T('Writing output onto disk'))
+    with open(output, mode="w") as fout:
+        fout.write(json.dumps(_output, indent=4))
+    log.info(S('done'))
+    
+    
+    if _istarfile:
+        shutil.rmtree(tmpdir)
+
+    return
+
+
+if __name__ == '__main__':
+    libcli.maincli(ap, main)
