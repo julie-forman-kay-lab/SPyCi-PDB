@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Examples folder and some usage documentation (#7)
+
 v0.0.6 (2022-08-10)
 ------------------------------------------------------------
 
