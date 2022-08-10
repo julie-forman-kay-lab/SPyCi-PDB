@@ -1,45 +1,47 @@
 """
-Back-calculates the NOE distances from PDB structure file.
+Back-calculates scaled smFRET distances from PDB structure file.
 
 Uses idpconfgen libraries for coordinate parsing as it's proven
 to be faster than BioPython.
 
 Back-calculator logic inspired from X-EISD.
-Error = 0.0001 as reported in Lincoff et al. 2020.
+Error = 0.0074 as reported in Lincoff et al. 2020.
 
 USAGE:
-    $ spycipdb noe <PDB-FILES> [--exp-file]
-    $ spycipdb noe <PDB-FILES> [--exp-file] [--output] [--ncores]
+    $ spycipdb smfret <PDB-FILES> [--exp-file]
+    $ spycipdb smfret <PDB-FILES> [--exp-file] [--output] [--ncores]
 
 REQUIREMENTS:
     Experimental data must be comma-delimited with at least the following columns:
     
-    res1,atom1,atom1_multiple_assignments,res2,atom2,atom2_multiple_assignments
+    res1,res2,scaler
     
-    Where res1/atom1 is the atom number and name respectively for the first residue
-    and res2/atom2 is the atom number and name respectively for the second residue.
+    Where res1/res2 is the residue number for the first and second residue respectively.
+    Scaler is the r0 Foster radius of the dye pair.
 
 OUTPUT:
     Output is in standard .JSON format as follows, with the first
     key-value pair being the reference formatting for residues and
-    atom-names:
+    scaler values:
     
     {
         'format': { 'res1': [],
-                    'atom1': [],
-                    'atom1_multiple_assignments': [],
                     'res2': [],
-                    'atom2': [],
-                    'atom2_multiple_assignments': []
+                    'scale': [],
                     },
-        'pdb1': [dist_values],
-        'pdb2': [dist_values],
+        'pdb1': [values],
+        'pdb2': [values],
         ...
     }
+    
+TODO: currently assumes 'CA' as atom labeled
+TODO: provide alternative strategies of back-calculating and
+    interpreting smFRET data.
 """
 import json
 import argparse
 import shutil
+import numpy as np
 import pandas as pd
 from pathlib import Path
 from functools import partial
@@ -50,15 +52,15 @@ from spycipdb.logger import S, T, init_files, report_on_crash
 from spycipdb.libs.libfuncs import get_pdb_paths, get_scalar
 
 from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libstructure import(
+from idpconfgen.libs.libstructure import (
     Structure,
     col_name,
     col_resSeq,
     )
 
-LOGFILESNAME = '.spycipdb_noe'
-_name = 'noe'
-_help = 'NOE back-calculator given experimental data template.'
+LOGFILESNAME = '.spycipdb_smfret'
+_name = 'smfret'
+_help = 'smFRET back-calculator given experimental data template.'
 
 _prog, _des, _usage = libcli.parse_doc_params(__doc__)
 
@@ -74,7 +76,7 @@ libcli.add_argument_exp_file(ap)
 libcli.add_argument_output(ap)
 libcli.add_argument_ncores(ap)
 
-TMPDIR = '__tmpnoe__'
+TMPDIR = '__tmpsmfret__'
 ap.add_argument(
     '--tmpdir',
     help=(
@@ -86,35 +88,29 @@ ap.add_argument(
     )
 
 
-def get_exp_format_noe(fexp):
+def get_exp_format_smfret(fexp):
     format = {}
     exp = pd.read_csv(fexp)
     
     format['res1'] = exp.res1.values.astype(int).tolist()
-    format['atom1'] = exp.atom1.values.tolist()
-    format['atom1_multiple_assignments'] = exp.atom1_multiple_assignments.values.tolist()
     format['res2'] = exp.res2.values.astype(int).tolist()
-    format['atom2'] = exp.atom2.values.tolist()
-    format['atom2_multiple_assignments'] = exp.atom2_multiple_assignments.values.tolist()
+    format['scale'] = exp.scale.values.tolist()
     
     return format
 
 
-def calc_noe(fexp, pdb):
+def calc_smfret(fexp, pdb):
     """
-    Main logic for back-calculating NOE data
-    with atom-pairs and multi-assigns derived
-    from experimental template
+    Main logic for back-calculating smFRET values
+    taking into consideration residue pairs and
+    scale from experimental data.
     """
-    dist = []
+    fret_bc = []
     
     exp = pd.read_csv(fexp)
     res1 = exp.res1.values.astype(int)
-    atom1_name = exp.atom1.values
     res2 = exp.res2.values.astype(int)
-    atom2_name = exp.atom2.values
-    multi1 = exp.atom1_multiple_assignments.values
-    multi2 = exp.atom2_multiple_assignments.values
+    scale = exp.scale.values
     
     s = Structure(pdb)
     s.build()
@@ -122,44 +118,32 @@ def calc_noe(fexp, pdb):
     for i in range(exp.shape[0]):
         r1 = int(res1[i])
         r2 = int(res2[i])
-        atom1_list = []
-        atom2_list = []
+        r1p = 0
+        r2p = 0
+        
         for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
-            if r == r1:
-                if atom1_name[i] == 'H':
-                    atom1_list.append(s.coords[j, :])
-                    break
-                if atom1_name[i] in s.data_array[j, col_name]:
-                    atom1_list.append(s.coords[j, :])
-                if len(atom1_list) == 2:
-                    break
-                if not multi1[i] and len(atom1_list) == 1:
-                    break
+            if r == r1 and s.data_array[j, col_name] == 'CA':
+                r1p = j
+                break
         for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
-            if r == r2:
-                if atom2_name[i] == 'H':
-                    atom2_list.append(s.coords[j, :])
-                    break
-                if atom2_name[i] in s.data_array[j, col_name]:
-                    atom2_list.append(s.coords[j, :])
-                if len(atom2_list) == 2:
-                    break
-                if not multi2[i] and len(atom2_list) == 1:
-                    break
+            if r == r2 and s.data_array[j, col_name] == 'CA':
+                r2p = j
+                break
+            
+        # distance between 2 CA atoms
+        dv = s.coords[r1p, :] - s.coords[r2p, :]
+        assert dv.shape == (3,)
+        d = get_scalar(dv[0], dv[1], dv[2])
 
-        combos = 0.0
-        num_combos = 0
-
-        for first_atom in atom1_list:
-            for second_atom in atom2_list:
-                dv = first_atom - second_atom
-                assert dv.shape == (3,)
-                combos += (get_scalar(dv[0], dv[1], dv[2])) ** (-6.)
-                num_combos += 1
-
-        dist.append((combos / float(num_combos)) ** (-1 / 6))
+        # scale_factor to adjust for dye size and CA to label distances
+        scale_factor = ((np.abs(r1 - r2) + 7) / np.abs(r1 - r2)) ** 0.5
+        d = d * scale_factor
+        eff = 1.0 / (1.0 + (d / scale[i]) ** 6.0)
+        fret_bc.append(eff)
     
-    return pdb, dist
+    fret_bc = np.reshape(fret_bc, (-1, exp.shape[0])).tolist()
+    
+    return pdb, fret_bc
 
 
 def main(
@@ -171,9 +155,9 @@ def main(
         **kwargs,
         ):
     """
-    Main logic for processing PDB structures and
-    outputting back-calculated NOE values.
-    
+    Main logic for back-calculating smFRET values from PDB structures
+    given experimental file template.
+
     Parameters
     ----------
     pdb_files : str or Path, required
@@ -181,7 +165,7 @@ def main(
         
     exp_file : str or Path, required
         Path to experimental file template.
-        Required to know for which residues to calculate.
+        Required to know which distances to calculate.
     
     output : str or Path, optional
         Where to store the back-calculated data.
@@ -196,6 +180,7 @@ def main(
         Defaults to TMPDIR.
     """
     init_files(log, LOGFILESNAME)
+    
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
     log.info(S('done'))
@@ -203,13 +188,13 @@ def main(
     log.info(T(f'back calculating using {ncores} workers'))
     execute = partial(
         report_on_crash,
-        calc_noe,
+        calc_smfret,
         exp_file,
         )
     execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
     
     _output = {}
-    _output['format'] = get_exp_format_noe(exp_file)
+    _output['format'] = get_exp_format_smfret(exp_file)
     for results in execute_pool:
         _output[results[0].stem] = results[1]
     log.info(S('done'))
@@ -219,7 +204,7 @@ def main(
         fout.write(json.dumps(_output, indent=4))
     log.info(S('done'))
     
-    
+        
     if _istarfile:
         shutil.rmtree(tmpdir)
 
