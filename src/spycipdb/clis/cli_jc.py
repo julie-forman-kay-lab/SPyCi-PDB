@@ -5,8 +5,8 @@ Uses idpconfgen libraries for coordinate parsing as it's proven
 to be faster than BioPython.
 
 USAGE:
-    $ spycipdb jcbc <PDB-FILES>
-    $ spycipdb jcbc <PDB-FILES> [--output] [--ncores]
+    $ spycipdb jc <PDB-FILES>
+    $ spycipdb jc <PDB-FILES> [--output] [--ncores]
     
 REQUIREMENTS:
     Experimental data must be comma-delimited with at least the following columns:
@@ -36,9 +36,9 @@ from functools import partial
 
 from spycipdb import log
 from spycipdb.libs import libcli
+from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
 
-from idpconfgen.libs.libio import extract_from_tar, read_path_bundle
 from idpconfgen.libs.libmulticore import pool_function
 from idpconfgen.libs.libhigherlevel import get_torsions
 
@@ -111,7 +111,7 @@ def main(
         ):
     """
     Main logic for processing PDB structures and
-    outputting back-calculatedJC values.
+    outputting back-calculated JC values.
     
     Parameters
     ----------
@@ -137,12 +137,7 @@ def main(
     init_files(log, LOGFILESNAME)
     
     log.info(T('reading input paths'))
-    try:
-        pdbs2operate = extract_from_tar(pdb_files, output=tmpdir, ext='.pdb')
-        _istarfile = True
-    except (OSError, TypeError):
-        pdbs2operate = list(read_path_bundle(pdb_files, ext='pdb'))
-        _istarfile = False
+    pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
     log.info(S('done'))
     
     log.info(T(f'back calculaing using {ncores} workers'))
