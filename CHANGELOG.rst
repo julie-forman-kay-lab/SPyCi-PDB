@@ -2,6 +2,9 @@
 Changelog
 =========
 
+* Logic/module to link UCBShift for CS back-calculator (#10)
+* Documentation for installing third party applications
+
 v0.0.9 (2022-08-10)
 ------------------------------------------------------------
 
