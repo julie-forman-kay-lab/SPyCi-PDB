@@ -149,6 +149,17 @@ virtualenv was used to install SPyCi-PDB::
     pip install -r ucbshift_requirements.txt
 
 Go back to the ``SPyCi-PDB`` directory and reinstall ``spycipdb``::
-
+    
+    conda activate spycipdb
     cd ../..
     python setup.py develop --no-deps
+
+Again with virtualenv::
+
+    source spycienv/bin/activate
+    cd ../..
+    python setup.py develop --no-deps
+
+.. note::
+    ``idpconfgen`` may need to be reinstalled while the ``spycipdb`` or
+    ``spycienv`` is active as well after installing UCBShift
