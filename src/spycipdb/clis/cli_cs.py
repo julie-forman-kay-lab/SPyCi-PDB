@@ -17,6 +17,7 @@ REQUIREMENTS:
 OUTPUT:
     Output is in standard .JSON format as follows:
     {
+        'format': {'res': [], 'resname': []}
         'pdb1': {
                     'H': [],
                     'HA': [],
@@ -36,7 +37,8 @@ OUTPUT:
         ...
     }
 """
-import pandas as pd
+import sys
+import os
 import json
 import argparse
 import shutil
@@ -50,7 +52,21 @@ from spycipdb.logger import S, T, init_files, report_on_crash
 
 from idpconfgen.libs.libmulticore import pool_function
 
-from CSpred.CSpred import calc_sing_pdb
+# Interesting way to import from repository that cannot be
+# installed as a module ;-)
+# https://www.geeksforgeeks.org/python-import-module-from-different-directory/
+current_file_path = os.path.realpath(__file__)
+curr_fp_split = current_file_path.split('/')
+cspred_fp = "/"
+for item in curr_fp_split:
+    if item == "SPyCi-PDB":
+        cspred_fp += item + "/" + "CSpred"
+        break
+    else:
+        cspred_fp += item + "/"
+sys.path.insert(0, cspred_fp)
+
+from CSpred import calc_sing_pdb
 
 LOGFILESNAME = '.spycipdb_cs'
 _name = 'cs'
@@ -75,7 +91,7 @@ ap.add_argument(
     )
 
 libcli.add_argument_output(ap)
-libcli.add_argument_ncores(ap)
+#libcli.add_argument_ncores(ap)
 
 TMPDIR = '__tmpcs__'
 ap.add_argument(
@@ -103,11 +119,24 @@ def main(
 
     Parameters
     ----------
-        pdb_files (_type_): _description_
-        output (_type_): _description_
-        ph (int, optional): _description_. Defaults to 5.
-        ncores (int, optional): _description_. Defaults to 1.
-        tmpdir (_type_, optional): _description_. Defaults to TMPDIR.
+    pdb_files : str or Path, required
+        Path to a .TAR or folder of PDB files.
+        
+    pH : int, optional
+        pH to consider while performing back-calculation.
+        Defaults to 5.
+    
+    output : str or Path, optional
+        Where to store the back-calculated data.
+        Defaults to working directory.
+        
+    ncores : int, optional
+        The number of cores to use.
+        Defaults to 1.
+    
+    tmpdir : str or Path, optional
+        Path to the temporary directory if working with .TAR files.
+        Defaults to TMPDIR.
     """
     init_files(log, LOGFILESNAME)
     
@@ -119,23 +148,43 @@ def main(
     
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
+    str_pdbpaths = [str(path) for path in pdbs2operate]
     log.info(S('done'))
     
     log.info(T(f'back calculaing using {ncores} workers'))
-
+    
+    # TODO: multiprocessing not working because UCBSHift is iterative
+    # e.g. worker 1 needs blast/ dir but worker 3 has already removed it...
+    '''
     execute = partial(
         report_on_crash,
         calc_sing_pdb,
         pH=ph,
         )
-    execute_pool = pool_function(execute, pdb_file_name=pdbs2operate, ncores=ncores)
+    execute_pool = pool_function(execute, str_pdbpaths, ncores=ncores)
+    '''
     
     _output = {}
-    for results in execute_pool:
-        per_struct = {'H': [], 'HA': [], 'C': [], 'CA': [], 'CB': [], 'N': []}
-        preds = results[1]
+    for path in str_pdbpaths:
+        name = path.rsplit('/',1)[-1]
+        log.info(S(f'Processing {name}...'))
+        per_struct = {}
+        format = {}
+        preds = calc_sing_pdb(path, pH=ph)
         
-        _output[results[0].stem] = per_struct
+        format['res'] = preds.RESNUM.values.astype(int).tolist()
+        format['resname'] = preds.RESNAME.values.tolist()
+        
+        per_struct['H'] = preds.H_UCBShift.values.astype(float).tolist()
+        per_struct['HA'] = preds.HA_UCBShift.values.astype(float).tolist()
+        per_struct['C'] = preds.C_UCBShift.values.astype(float).tolist()
+        per_struct['CA'] = preds.CA_UCBShift.values.astype(float).tolist()
+        per_struct['CB'] = preds.CB_UCBShift.values.astype(float).tolist()
+        per_struct['N'] = preds.CB_UCBShift.values.astype(float).tolist()
+        
+        _output['format'] = format
+        _output[name] = per_struct
+        log.info(S('done'))
     log.info(S('done'))
     
     log.info(T('Writing output onto disk'))
