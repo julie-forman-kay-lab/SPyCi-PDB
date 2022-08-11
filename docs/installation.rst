@@ -109,3 +109,46 @@ Go back to the ``SPyCi-PDB`` directory and reinstall ``spycipdb``::
 
     cd ..
     python setup.py develop --no-deps
+
+
+Installing Third-party Software
+---------------------------------------
+
+Some functionalities of ``SPyCi-PDB`` require third-party software.
+These are not mandatory to install unless you want to use such operations.
+
+UCBShift
+````````
+
+.. note::
+    UCBShift installation is only required for the :code:`cs` module.
+    We are assuming we're in the ``SPyCi-PDB`` directory and the Python
+    environment is deactivated.
+
+Clone the UCBShift repository from the `THG-Lab <https://github.com/THGLab>`_ GitHub::
+
+    git clone https://github.com/THGLab/CSpred
+
+Enter the ``CSpred`` folder and make a ``models`` directory, then download and
+extract the `trained models <https://datadryad.org/stash/dataset/doi:10.6078/D1B974>`_
+to ``CSpred/models`` directory.
+
+Move back into the ``SPyCi-PDB`` directory and enter the ``thirdparty/ucbshift_reqs`` folder::
+
+    cd ..
+    cd ./thirdparty/ucbshift_reqs
+
+Run the following commands to install ``UCBShift`` dependencies if
+Anaconda is used as your Python package manager::
+
+    conda env update --name spycipdb --file ucbshift_requirements.yml --prune
+
+Run the following commands to install ``UCBShift`` dependencies if
+virtualenv was used to install SPyCi-PDB::
+
+    pip install -r ucbshift_requirements.txt
+
+Go back to the ``SPyCi-PDB`` directory and reinstall ``spycipdb``::
+
+    cd ../..
+    python setup.py develop --no-deps
