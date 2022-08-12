@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.0.10 (2022-08-12)
+------------------------------------------------------------
+
 * Logic/module to link UCBShift for CS back-calculator (#10)
 * Documentation for installing UCBShift on top of SPyCi-PDB
 

@@ -84,4 +84,4 @@ def count_string_formatters(s):
 
 source_folder = Path(__file__).absparent
 
-__version__ = '0.0.9'
+__version__ = '0.0.10'
