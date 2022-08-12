@@ -4,7 +4,7 @@ SPyCi-PDB.
 Command-line-interface for various back-calculators for
 experimental NMR, SAXS, and smFRET data.
 
-Back-calculator logic for PRE, NOE, and JC can be found here:
+Back-calculator logic for PRE, NOE, JC, and smFRET can be found here:
 https://github.com/Oufan75/X-EISD/blob/79df80b3ee76dd37a30d784fed3d2e46ee5cd144/EISD_back_calc.ipynb
 
 USAGE:
@@ -22,6 +22,7 @@ from spycipdb.clis import(
     cli_noe,
     cli_jc,
     cli_cs,
+    cli_saxs,
     cli_smfret,
     )
 
@@ -36,6 +37,7 @@ Core back-calculator functions:
     * {cli_noe._name}
     * {cli_jc._name}
     * {cli_cs._name}
+    * {cli_saxs._name}
     * {cli_smfret._name}
 """
 
@@ -57,6 +59,7 @@ libcli.add_subparser(subparsers, cli_pre)
 libcli.add_subparser(subparsers, cli_noe)
 libcli.add_subparser(subparsers, cli_jc)
 libcli.add_subparser(subparsers, cli_cs)
+libcli.add_subparser(subparsers, cli_saxs)
 libcli.add_subparser(subparsers, cli_smfret)
 
 def load_args():
