@@ -4,6 +4,12 @@ Back-calculates Chemical Shift  distances from PDB structure file.
 Uses third-party software to do so. Default is UCBShift:
 https://github.com/THGLab/CSpred
 
+Publication:
+Li, J., Bennett, K. C., Liu, Y., Martin, M. V., & Head-Gordon, T. (2020).
+Accurate prediction of chemical shifts for aqueous protein structure on
+“Real World” data. Chemical Science, 11(12), 3180-3191.
+DOI: 10.1039/C9SC06561J
+
 Back-calculator errors as reported for H, HA, C, CA, CB, N:
 0.38, 0.22, 1.31, 0.97, 1.29 and 2.16 ppm respectively.
 
