@@ -163,3 +163,17 @@ Again with virtualenv::
 .. note::
     ``idpconfgen`` may need to be reinstalled while the ``spycipdb`` or
     ``spycienv`` is active as well after installing UCBShift
+
+ATSAS v3.1.1 - CRYSOL v3.0
+``````````````````````````
+
+.. note::
+    ATSAS installation is only required for the :code:`saxs` module.
+
+Please visit the `ATSAS website <https://www.embl-hamburg.de/biosaxs/download.html>`_
+to download v3.1.1 of ATSAS. Theoretically, SPyCi-PDB will work if you already
+have ATSAS v3.X installed.
+
+Test your installation via::
+
+    crysol -h

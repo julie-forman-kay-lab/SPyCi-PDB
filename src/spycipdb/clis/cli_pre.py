@@ -184,8 +184,8 @@ def main(
     
     _output = {}
     _output['format'] = get_exp_format_pre(exp_file)
-    for results in execute_pool:
-        _output[results[0].stem] = results[1]
+    for result in execute_pool:
+        _output[result[0].stem] = result[1]
     log.info(S('done'))
     
     log.info(T('Writing output onto disk'))
