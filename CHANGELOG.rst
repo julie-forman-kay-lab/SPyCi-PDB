@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.0.11 (2022-08-12)
+------------------------------------------------------------
+
 * Logic/module to link CRYSOL 3.0 for SAXS back-calculator (#12)
 * Documentation for installing CRYSOL 3.0 on top of SPyCi-PDB
 
