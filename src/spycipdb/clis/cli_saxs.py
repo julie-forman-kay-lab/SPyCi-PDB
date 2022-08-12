@@ -11,7 +11,8 @@ C.M. and Svergun, D.I. (2017) ATSAS 2.8: a comprehensive data analysis suite
 for small-angle scattering from macromolecular solutions. J. Appl. Cryst.
 50(4), 1212-1225.
 
-Back-calculator error ? (0.006 from Lincoff et al. 2020)
+Back-calculator error ? (0.006 from Lincoff et al. 2020).
+Units for values are: I_abs(s)[cm^-1]/c[mg/ml]
 
 USAGE:
     $ spycipdb saxs <PDB-FILES> [--lm]
@@ -23,15 +24,13 @@ REQUIREMENTS:
 OUTPUT:
     Output is in standard .JSON format as follows:
     {
-        'pdb1': {
-                },
-        'pdb2': {
-                },
+        'pdb1': {'index': [], 'value': []},
+        'pdb2': {'index': [], 'value': []},
         ...
     }
 """
-import sys
 import os
+import subprocess
 import json
 import argparse
 import shutil
@@ -47,7 +46,7 @@ from idpconfgen.libs.libmulticore import pool_function
 
 LOGFILESNAME = '.spycipdb_saxs'
 _name = 'saxs'
-_help = 'SAXS back-calculator using CRYSOLv3.0.'
+_help = 'SAXS back-calculator using CRYSOL v3.0.'
 
 _prog, _des, _usage = libcli.parse_doc_params(__doc__)
 
@@ -86,6 +85,62 @@ ap.add_argument(
     )
 
 
+def crysol_helper(pdb_path, lm):
+    """
+    Main logic to handel external crysol shell command.
+
+    Parameters
+    ----------
+    pdb_path : str
+        Absolute path of PDB file.
+    
+    lm : int
+        Maximum order of harmonics used for CRYSOL
+
+    Returns
+    -------
+    pdb_name_ext : str
+        PDB file name with extension.
+    
+    saxs_bc : dict
+        Dictionary of index and values for each back-calculation.
+    """
+    saxs_bc = {}
+    index = []
+    value = []
+    
+    wrkdir = os.getcwd()
+    pdb_name_ext = pdb_path.rsplit('/',1)[-1]
+    pdb_name = pdb_name_ext[0 : pdb_name_ext.index('.')]
+    paths = wrkdir + "/" + pdb_name
+    
+    p = subprocess.Popen(
+        f"crysol {pdb_path} --lm={lm} --shell=water",
+        stdout=subprocess.PIPE,
+        shell=True,                              
+        )
+    p.communicate()  # waits for subprocess to stop running
+    
+    with open(paths+".abs", mode='r') as crysol_out:
+        data = crysol_out.readlines()
+        data.pop(0)
+        for line in data:
+            splitted = line.split()
+            index.append(float(splitted[0]))
+            value.append(float(splitted[1]))
+        
+    saxs_bc['index'] = index
+    saxs_bc['value'] = value
+    
+    # removing crysol generated files
+    os.remove(paths+".abs")
+    os.remove(paths+".alm")
+    os.remove(paths+".log")
+    os.remove(paths+".int")
+    
+    return pdb_name_ext, saxs_bc
+
+
 def main(
         pdb_files,
         output,
@@ -121,17 +176,43 @@ def main(
     """
     init_files(log, LOGFILESNAME)
     
+    # check to see if crysol is installed
+    try:
+        subprocess.check_output(["crysol", "-h"])
+    except FileNotFoundError:
+        log.info(S('WARNING: ATSAS v3.1.1 is not installed. Exiting...'))
+        return
+    
     if lm < 1 or lm > 100:
-        log.info(S('WARNING: maximum order of harmonics '
-                   'is not within the range of 1-100 inclusive. '
-                   ))
+        log.info(
+            S('WARNING: maximum order of harmonics '
+            'is not within the range of 1-100 inclusive. '
+            ))
         return
     
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
+    str_pdbpaths = [str(path) for path in pdbs2operate]
     log.info(S('done'))
 
-
+    
+    log.info(T(f'back calculaing using {ncores} workers'))
+    execute = partial(
+        report_on_crash,
+        crysol_helper,
+        lm=lm,
+        )
+    execute_pool = pool_function(execute, str_pdbpaths, ncores=ncores)
+    
+    _output = {}
+    for result in execute_pool:
+        _output[result[0]] = result[1]
+    log.info(S('done'))
+    
+    log.info(T('Writing output onto disk'))
+    with open(output, mode="w") as fout:
+        fout.write(json.dumps(_output, indent=4))
+    log.info(S('done'))
 
 
     if _istarfile:
