@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Logic/module to link HullRad for Rh back-calculator (#13)
+
 v0.0.11 (2022-08-12)
 ------------------------------------------------------------
 

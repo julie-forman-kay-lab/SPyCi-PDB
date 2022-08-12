@@ -1,0 +1,142 @@
+"""
+Back-calculates translational Rh values from PDB structure file.
+
+Uses third-party software to do so.
+Default is HullRad 8.1.
+
+Publication:
+Fleming, P.J. and Fleming, K.G.
+"HullRad: Fast Calculations of Folded and Disordered Protein and Nucleic Acid Hydrodynamic Properties"
+Biophysical Journal, 114:856-869, February 27, 2018
+DOI: 10.1016/j.bpj.2018.01.002
+
+Back-calculator error 0.1 from Fleming, P.J. and Fleming, K.G. 2018.
+Units for values are in Angstroms.
+
+USAGE:
+    $ spycipdb rh <PDB-FILES>
+    $ spycipdb rh <PDB-FILES> [--output] [--ncores]
+
+OUTPUT:
+    Output is in standard .JSON format as follows:
+    {
+        'pdb1': value,
+        'pdb2': value,
+        ...
+    }
+"""
+import json
+import argparse
+import shutil
+from pathlib import Path
+from functools import partial
+
+from spycipdb import log
+from spycipdb.libs import libcli
+from spycipdb.libs.libfuncs import get_pdb_paths
+from spycipdb.logger import S, T, init_files, report_on_crash
+from spycipdb.components.hullrad import model_from_pdb, Sved
+
+from idpconfgen.libs.libmulticore import pool_function
+
+LOGFILESNAME = '.spycipdb_rh'
+_name = 'rh'
+_help = 'Rh back-calculator using HullRad v8.1.'
+
+_prog, _des, _usage = libcli.parse_doc_params(__doc__)
+
+ap = libcli.CustomParser(
+    prog=_prog,
+    description=libcli.detailed.format(_des),
+    usage=_usage,
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
+libcli.add_argument_pdb_files(ap)
+
+libcli.add_argument_output(ap)
+libcli.add_argument_ncores(ap)
+
+TMPDIR = '__tmprh__'
+ap.add_argument(
+    '--tmpdir',
+    help=(
+        'Temporary directory to store data during calculation '
+        'if needed.'
+        ),
+    type=Path,
+    default=TMPDIR,
+    )
+
+
+def hullrad_helper(pdb_path):
+    pdb_name_ext = pdb_path.rsplit('/',1)[-1]
+    
+    all_atm_rec, num_MG, num_MN, model_array = model_from_pdb(pdb_path)
+    s,Dt,Dr,vbar_prot,Rht,ffo_hyd_P,M,Ro,Rhr,int_vis,a_b_ratio,Ft,Rg,Dmax,tauC, \
+        asphr,AA,NA,GL,DT,useNumpy = Sved(all_atm_rec,num_MG,num_MN,model_array)
+
+    return pdb_name_ext, Rht
+
+
+def main(
+        pdb_files,
+        output,
+        ncores=1,
+        tmpdir=TMPDIR,
+        **kwargs,
+        ):
+    """
+    Main logic for using UCBShift to predict chemical shift
+    values for PDB structures and output.
+
+    Parameters
+    ----------
+    pdb_files : str or Path, required
+        Path to a .TAR or folder of PDB files.
+    
+    output : str or Path, optional
+        Where to store the back-calculated data.
+        Defaults to working directory.
+        
+    ncores : int, optional
+        The number of cores to use.
+        Defaults to 1.
+    
+    tmpdir : str or Path, optional
+        Path to the temporary directory if working with .TAR files.
+        Defaults to TMPDIR.
+    """
+    init_files(log, LOGFILESNAME)
+    
+    log.info(T('reading input paths'))
+    pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
+    str_pdbpaths = [str(path) for path in pdbs2operate]
+    log.info(S('done'))
+    
+    
+    log.info(T(f'back calculaing using {ncores} workers'))
+    execute = partial(
+        report_on_crash,
+        hullrad_helper,
+        )
+    execute_pool = pool_function(execute, str_pdbpaths, ncores=ncores)
+    
+    _output = {}
+    for result in execute_pool:
+        _output[result[0]] = result[1]
+    log.info(S('done'))
+    
+    log.info(T('Writing output onto disk'))
+    with open(output, mode="w") as fout:
+        fout.write(json.dumps(_output, indent=4))
+    log.info(S('done'))
+
+    if _istarfile:
+        shutil.rmtree(tmpdir)
+
+    return
+
+
+if __name__ == '__main__':
+    libcli.maincli(ap, main)
