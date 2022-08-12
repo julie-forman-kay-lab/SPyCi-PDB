@@ -173,3 +173,7 @@ ATSAS v3.1.1 - CRYSOL v3.0
 Please visit the `ATSAS website <https://www.embl-hamburg.de/biosaxs/download.html>`_
 to download v3.1.1 of ATSAS. Theoretically, SPyCi-PDB will work if you already
 have ATSAS v3.X installed.
+
+Test your installation via::
+
+    crysol -h
