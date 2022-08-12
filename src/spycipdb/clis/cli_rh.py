@@ -70,11 +70,13 @@ ap.add_argument(
 
 
 def hullrad_helper(pdb_path):
+    pdb_name_ext = pdb_path.rsplit('/',1)[-1]
+    
     all_atm_rec, num_MG, num_MN, model_array = model_from_pdb(pdb_path)
     s,Dt,Dr,vbar_prot,Rht,ffo_hyd_P,M,Ro,Rhr,int_vis,a_b_ratio,Ft,Rg,Dmax,tauC, \
         asphr,AA,NA,GL,DT,useNumpy = Sved(all_atm_rec,num_MG,num_MN,model_array)
 
-    return Rht
+    return pdb_name_ext, Rht
 
 
 def main(
@@ -113,6 +115,22 @@ def main(
     log.info(S('done'))
     
     
+    log.info(T(f'back calculaing using {ncores} workers'))
+    execute = partial(
+        report_on_crash,
+        hullrad_helper,
+        )
+    execute_pool = pool_function(execute, str_pdbpaths, ncores=ncores)
+    
+    _output = {}
+    for result in execute_pool:
+        _output[result[0]] = result[1]
+    log.info(S('done'))
+    
+    log.info(T('Writing output onto disk'))
+    with open(output, mode="w") as fout:
+        fout.write(json.dumps(_output, indent=4))
+    log.info(S('done'))
 
     if _istarfile:
         shutil.rmtree(tmpdir)
