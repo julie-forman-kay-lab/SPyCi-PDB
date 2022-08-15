@@ -1,0 +1,47 @@
+DATA SEQUENCE MTYKLILNGK TLKGETTTEA VDAATAEKVF KQYANDNGVD
+DATA SEQUENCE GEWTYDDATK TFTVTE
+
+VARS   RESID_I RESNAME_I ATOMNAME_I RESID_J RESNAME_J ATOMNAME_J D DD W
+FORMAT %5d     %6s       %6s        %5d     %6s    %6s %9.3f %9.3f %.2f
+
+    2    THR     HN     2    THR      N      1.464      1.000  1.00
+    3    TYR     HN     3    TYR      N      7.057      1.000  1.00
+    4    LYS     HN     4    LYS      N      8.654      1.000  1.00
+    5    LEU     HN     5    LEU      N     12.180      1.000  1.00
+    7    LEU     HN     7    LEU      N     12.691      1.000  1.00
+    8    ASN     HN     8    ASN      N      5.202      1.000  1.00
+   12    LEU     HN    12    LEU      N     11.677      1.000  1.00
+   14    GLY     HN    14    GLY      N     10.553      1.000  1.00
+   15    GLU     HN    15    GLU      N     11.154      1.000  1.00
+   16    THR     HN    16    THR      N     11.009      1.000  1.00
+   17    THR     HN    17    THR      N      8.874      1.000  1.00
+   18    THR     HN    18    THR      N      5.519      1.000  1.00
+   19    GLU     HN    19    GLU      N      5.651      1.000  1.00
+   20    ALA     HN    20    ALA      N      4.173      1.000  1.00
+   21    VAL     HN    21    VAL      N      4.799      1.000  1.00
+   22    ASP     HN    22    ASP      N     -4.294      1.000  1.00
+   23    ALA     HN    23    ALA      N     -2.326      1.000  1.00
+   24    ALA     HN    24    ALA      N    -13.433      1.000  1.00
+   25    THR     HN    25    THR      N    -10.596      1.000  1.00
+   26    ALA     HN    26    ALA      N     -5.413      1.000  1.00
+   28    LYS     HN    28    LYS      N    -16.158      1.000  1.00
+   30    PHE     HN    30    PHE      N     -8.662      1.000  1.00
+   31    LYS     HN    31    LYS      N    -13.968      1.000  1.00
+   32    GLN     HN    32    GLN      N    -16.039      1.000  1.00
+   33    TYR     HN    33    TYR      N    -12.049      1.000  1.00
+   34    ALA     HN    34    ALA      N     -9.608      1.000  1.00
+   35    ASN     HN    35    ASN      N    -15.696      1.000  1.00
+   36    ASP     HN    36    ASP      N    -15.091      1.000  1.00
+   37    ASN     HN    37    ASN      N     -3.687      1.000  1.00
+   38    GLY     HN    38    GLY      N     -8.065      1.000  1.00
+   44    THR     HN    44    THR      N     11.676      1.000  1.00
+   45    TYR     HN    45    TYR      N     11.812      1.000  1.00
+   46    ASP     HN    46    ASP      N     10.760      1.000  1.00
+   47    ASP     HN    47    ASP      N     11.043      1.000  1.00
+   49    THR     HN    49    THR      N      2.457      1.000  1.00
+   50    LYS     HN    50    LYS      N      8.514      1.000  1.00
+   51    THR     HN    51    THR      N      9.368      1.000  1.00
+   52    PHE     HN    52    PHE      N     11.593      1.000  1.00
+   53    THR     HN    53    THR      N     10.149      1.000  1.00
+   54    VAL     HN    54    VAL      N     12.224      1.000  1.00
+   56    GLU     HN    56    GLU      N     11.622      1.000  1.00
