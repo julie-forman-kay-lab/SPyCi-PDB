@@ -63,7 +63,7 @@ from idpconfgen.libs.libmulticore import pool_function
 # https://www.geeksforgeeks.org/python-import-module-from-different-directory/
 current_file_path = os.path.realpath(__file__)
 curr_fp_split = current_file_path.split('/')
-cspred_fp = "/"
+cspred_fp = ""
 for item in curr_fp_split:
     if item == "SPyCi-PDB":
         cspred_fp += item + "/" + "CSpred"
