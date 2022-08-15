@@ -2,6 +2,9 @@
 Changelog
 =========
 
+* Logic/module to link PALES v6.0 for RDC back-calculator (#14)
+* Documentation for installing dependencies for PALES v6.0 for Ubuntu 20.04 LTS
+
 v0.0.12 (2022-08-12)
 ------------------------------------------------------------
 
