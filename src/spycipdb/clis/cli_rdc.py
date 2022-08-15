@@ -27,9 +27,9 @@ OUTPUT:
         ...
     }
 """
-from multiprocessing import current_process
 import os
 import json
+import subprocess
 import argparse
 import shutil
 from pathlib import Path
@@ -39,7 +39,6 @@ from spycipdb import log
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
-from spycipdb.components.hullrad import model_from_pdb, Sved
 
 from idpconfgen.libs.libmulticore import pool_function
 
@@ -85,10 +84,32 @@ for item in curr_fp_split:
         
 
 def pales_helper(pdb_path):
+    """
+    Main logic to handle external PALES shell command.
+
+    Parameters
+    ----------
+    pdb_path : str
+        Absolute path of PDB file.
+
+    Returns
+    -------
+    pdb_name_ext : str
+        PDB file name with extension.
+    
+    rdc_bc : dict
+        Dictionary of ???    
+    """
     # TODO: incomplete, need to figure out output format
     rdc_bc = []
+    pdb_name_ext = pdb_path.rsplit('/', 1)[-1]
     
-    return pdb_path, rdc_bc
+    p = subprocess.Popen(f"{PALES_FP} -pdb {pdb_path}")
+    pales_out = p.communicate()
+    
+    # do some processing
+    
+    return pdb_name_ext, rdc_bc
 
 
 
@@ -122,11 +143,27 @@ def main(
     """
     init_files(log, LOGFILESNAME)
     
+    # check to see if PALES is properly configured
+    try:
+        subprocess.check_output([PALES_FP, "-help"])
+    except Exception:
+        log.info(S('WARNING: PALES v6.0 is not properly configured. Exiting...'))
+        return
+    
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
     str_pdbpaths = [str(path) for path in pdbs2operate]
     log.info(S('done'))
     
+    
+    log.info(T(f'back calculaing using {ncores} workers'))
+    execute = partial(
+        report_on_crash,
+        pales_helper,
+        )
+    execute_pool = pool_function(execute, str_pdbpaths, ncores=ncores)
+    
+    # process output
     
     if _istarfile:
         shutil.rmtree(tmpdir)

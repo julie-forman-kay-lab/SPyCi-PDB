@@ -87,7 +87,7 @@ ap.add_argument(
 
 def crysol_helper(pdb_path, lm):
     """
-    Main logic to handel external crysol shell command.
+    Main logic to handle external crysol shell command.
 
     Parameters
     ----------
@@ -110,7 +110,7 @@ def crysol_helper(pdb_path, lm):
     value = []
     
     wrkdir = os.getcwd()
-    pdb_name_ext = pdb_path.rsplit('/',1)[-1]
+    pdb_name_ext = pdb_path.rsplit('/', 1)[-1]
     pdb_name = pdb_name_ext[0 : pdb_name_ext.index('.')]
     paths = wrkdir + "/" + pdb_name
     
