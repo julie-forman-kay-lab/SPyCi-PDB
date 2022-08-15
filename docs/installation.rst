@@ -177,3 +177,23 @@ have ATSAS v3.X installed.
 Test your installation via::
 
     crysol -h
+
+PALES v6.0
+``````````
+
+.. note::
+    PALES installation is only required for the :code:`rdc` module.
+
+A package of PALES v6.0 for Linux is already included in the ``thirdparty/`` folder.
+Downloaded and extracted from the `Bax website <https://spin.niddk.nih.gov/bax/software/PALES/index.html>`_.
+
+For use with Linux Ubuntu 20.04 LTS x64, you must install the i386 architecture
+along with required package libraries::
+
+    sudo dpkg --add-architecture i386
+    sudo apt-get update
+    sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 libx11-6:i386
+
+If the last command above fails, run the following instead::
+
+    sudo apt-get install multiarch-support
