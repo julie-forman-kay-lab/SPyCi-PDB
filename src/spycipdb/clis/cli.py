@@ -24,6 +24,7 @@ from spycipdb.clis import(
     cli_cs,
     cli_saxs,
     cli_rh,
+    cli_rdc,
     cli_smfret,
     )
 
@@ -40,6 +41,7 @@ Core back-calculator functions:
     * {cli_cs._name}
     * {cli_saxs._name}
     * {cli_rh._name}
+    * {cli_rdc._name}
     * {cli_smfret._name}
 """
 
@@ -63,6 +65,7 @@ libcli.add_subparser(subparsers, cli_jc)
 libcli.add_subparser(subparsers, cli_cs)
 libcli.add_subparser(subparsers, cli_saxs)
 libcli.add_subparser(subparsers, cli_rh)
+libcli.add_subparser(subparsers, cli_rdc)
 libcli.add_subparser(subparsers, cli_smfret)
 
 def load_args():
