@@ -12,16 +12,15 @@ Developed as a standalone program with integration into the IDPConformerGenerato
 
 .. end-description
 
-How to Install
---------------
+Documentation
+=============
 
-Installation instructions are described in ``docs/installation.rst``.
+More detailed documentation can be found at: ``READTHEDOCS LINK``.
 
-How to Use
-----------
-
-Usage instructions are described in the file ``docs/usage.rst``.
-See also the examples in the ``example/`` folder.
+Within the repository you can find:
+#. Installation instructions in ``docs/installation.rst``.
+#. Usage instructions in ``docs/usage.rst``.
+#. See also the examples in the ``example/`` folder.
 
 How to Cite
 -----------
