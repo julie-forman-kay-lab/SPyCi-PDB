@@ -146,11 +146,19 @@ def main(
     """
     init_files(log, LOGFILESNAME)
     
+    if ncores > 4:
+        log.info(S(
+            'WARNING: UCBShift models are RAM hungry! '
+            'Consider running with lower number of workers if you '
+            'do not have sufficient RAM.'
+            ))
+    
     if ph < 2 or ph > 12:
-        log.info(S('WARNING: Predictions for proteins in extreme pH '
-                   'conditions are likely to be erroneous. '
-                   'Take prediction results at your own risk!'
-                   ))
+        log.info(S(
+            'WARNING: Predictions for proteins in extreme pH '
+            'conditions are likely to be erroneous. '
+            'Take prediction results at your own risk!'
+            ))
     
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
