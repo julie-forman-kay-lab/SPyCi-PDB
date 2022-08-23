@@ -2,6 +2,9 @@
 Changelog
 =========
 
+* Update README documentation
+* Update ReadTheDocs format and associated docs
+
 v0.0.14 (2022-08-23)
 ------------------------------------------------------------
 
