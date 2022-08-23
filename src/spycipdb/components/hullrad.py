@@ -489,9 +489,9 @@ if useNumpy:
         useScipy = True
     except:
         pass
-
-print('useNumpy: ', useNumpy)
-print('useScipy: ', useScipy)
+# @menoliu comment out print statement
+#print('useNumpy: ', useNumpy)
+#print('useScipy: ', useScipy)
 
 # Amino Acid mass, volumes,partial specific volumes and unified side chain sphere radius
 # Mass is minus water (from SEDNTERP database)

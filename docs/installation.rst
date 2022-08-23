@@ -125,9 +125,10 @@ UCBShift
     We are assuming we're in the ``SPyCi-PDB`` directory and the Python
     environment is deactivated.
 
-Clone the UCBShift repository from the `THG-Lab <https://github.com/THGLab>`_ GitHub::
+Clone the UCBShift repository from `my fork https://github.com/menoliu/CSpred`_ on
+GitHub.::
 
-    git clone https://github.com/THGLab/CSpred
+    git clone https://github.com/menoliu/CSpred
 
 Enter the ``CSpred`` folder and make a ``models`` directory, then download and
 extract the `trained models <https://datadryad.org/stash/dataset/doi:10.6078/D1B974>`_

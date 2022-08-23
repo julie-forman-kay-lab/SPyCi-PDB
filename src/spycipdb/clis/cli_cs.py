@@ -97,7 +97,7 @@ ap.add_argument(
     )
 
 libcli.add_argument_output(ap)
-#libcli.add_argument_ncores(ap)
+libcli.add_argument_ncores(ap)
 
 TMPDIR = '__tmpcs__'
 ap.add_argument(
@@ -146,11 +146,19 @@ def main(
     """
     init_files(log, LOGFILESNAME)
     
+    if ncores > 4:
+        log.info(S(
+            'WARNING: UCBShift models are RAM hungry! '
+            'Consider running with lower number of workers if you '
+            'do not have sufficient RAM.'
+            ))
+    
     if ph < 2 or ph > 12:
-        log.info(S('WARNING: Predictions for proteins in extreme pH '
-                   'conditions are likely to be erroneous. '
-                   'Take prediction results at your own risk!'
-                   ))
+        log.info(S(
+            'WARNING: Predictions for proteins in extreme pH '
+            'conditions are likely to be erroneous. '
+            'Take prediction results at your own risk!'
+            ))
     
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
@@ -158,39 +166,30 @@ def main(
     log.info(S('done'))
     
     log.info(T(f'back calculaing using {ncores} workers'))
-    
-    # TODO: multiprocessing not working because UCBSHift is iterative
-    # e.g. worker 1 needs blast/ dir but worker 3 has already removed it...
-    '''
     execute = partial(
         report_on_crash,
         calc_sing_pdb,
         pH=ph,
         )
     execute_pool = pool_function(execute, str_pdbpaths, ncores=ncores)
-    '''
     
     _output = {}
-    for path in str_pdbpaths:
-        name = path.rsplit('/',1)[-1]
-        log.info(S(f'Processing {name}...'))
+    for result in execute_pool:
         per_struct = {}
         format = {}
-        preds = calc_sing_pdb(path, pH=ph)
+        format['res'] = result[1].RESNUM.values.astype(int).tolist()
+        format['resname'] = result[1].RESNAME.values.tolist()
         
-        format['res'] = preds.RESNUM.values.astype(int).tolist()
-        format['resname'] = preds.RESNAME.values.tolist()
+        per_struct['H'] = result[1].H_UCBShift.values.astype(float).tolist()
+        per_struct['HA'] = result[1].HA_UCBShift.values.astype(float).tolist()
+        per_struct['C'] = result[1].C_UCBShift.values.astype(float).tolist()
+        per_struct['CA'] = result[1].CA_UCBShift.values.astype(float).tolist()
+        per_struct['CB'] = result[1].CB_UCBShift.values.astype(float).tolist()
+        per_struct['N'] = result[1].CB_UCBShift.values.astype(float).tolist()
         
-        per_struct['H'] = preds.H_UCBShift.values.astype(float).tolist()
-        per_struct['HA'] = preds.HA_UCBShift.values.astype(float).tolist()
-        per_struct['C'] = preds.C_UCBShift.values.astype(float).tolist()
-        per_struct['CA'] = preds.CA_UCBShift.values.astype(float).tolist()
-        per_struct['CB'] = preds.CB_UCBShift.values.astype(float).tolist()
-        per_struct['N'] = preds.CB_UCBShift.values.astype(float).tolist()
-        
+        _output[result[0]] = per_struct
         _output['format'] = format
-        _output[name] = per_struct
-        log.info(S('done'))
+    
     log.info(S('done'))
     
     log.info(T('Writing output onto disk'))
