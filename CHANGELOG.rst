@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.0.14 (2022-08-23)
+------------------------------------------------------------
+
 * Upgrade CS module for multiprocessing with UCBShift
 * Update installation instructions for UCBShift
 
