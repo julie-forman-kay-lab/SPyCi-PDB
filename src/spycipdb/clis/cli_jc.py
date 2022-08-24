@@ -9,7 +9,7 @@ USAGE:
     $ spycipdb jc <PDB-FILES> [--output] [--ncores]
     
 REQUIREMENTS:
-    Experimental data must be comma-delimited with at least the following columns:
+    Experimental data must be comma-delimited with the following column:
     
     resnum
     
@@ -74,8 +74,9 @@ ap.add_argument(
 
 def calc_jc(fexp, pdb):
     """
-    Main logic for back-calculating JC data
-    with residues of interest derived from experimental template.
+    Back-calculate JC data.
+    
+    Requires residues of interest derived from experimental template.
     
     Parameters
     ----------
@@ -110,8 +111,7 @@ def main(
         **kwargs,
         ):
     """
-    Main logic for processing PDB structures and
-    outputting back-calculated JC values.
+    Process PDB structures and return back-calculated JC values.
     
     Parameters
     ----------
@@ -159,7 +159,6 @@ def main(
     with open(output, mode="w") as fout:
         fout.write(json.dumps(_output, indent=4))
     log.info(S('done'))
-    
     
     if _istarfile:
         shutil.rmtree(tmpdir)
