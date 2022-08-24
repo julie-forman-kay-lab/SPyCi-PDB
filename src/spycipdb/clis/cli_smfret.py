@@ -12,11 +12,12 @@ USAGE:
     $ spycipdb smfret <PDB-FILES> [--exp-file] [--output] [--ncores]
 
 REQUIREMENTS:
-    Experimental data must be comma-delimited with at least the following columns:
+    Experimental data must be comma-delimited with the following columns:
     
     res1,res2,scaler
     
-    Where res1/res2 is the residue number for the first and second residue respectively.
+    Where res1/res2 is the residue number for the
+    first and second residue respectively.
     Scaler is the r0 Foster radius of the dye pair.
 
 OUTPUT:
@@ -89,6 +90,7 @@ ap.add_argument(
 
 
 def get_exp_format_smfret(fexp):
+    """Get format from experimental template."""
     format = {}
     exp = pd.read_csv(fexp)
     
@@ -101,8 +103,9 @@ def get_exp_format_smfret(fexp):
 
 def calc_smfret(fexp, pdb):
     """
-    Main logic for back-calculating smFRET values
-    taking into consideration residue pairs and
+    Back calculate smFRET values.
+    
+    Take into consideration residue pairs and
     scale from experimental data.
     """
     fret_bc = []
@@ -155,8 +158,9 @@ def main(
         **kwargs,
         ):
     """
-    Main logic for back-calculating smFRET values from PDB structures
-    given experimental file template.
+    Back calculate smFRET values from PDB structures.
+    
+    Requires experimental file template.
 
     Parameters
     ----------
@@ -203,7 +207,6 @@ def main(
     with open(output, mode="w") as fout:
         fout.write(json.dumps(_output, indent=4))
     log.info(S('done'))
-    
         
     if _istarfile:
         shutil.rmtree(tmpdir)
