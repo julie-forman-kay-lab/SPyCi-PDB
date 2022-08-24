@@ -5,8 +5,8 @@ Uses third-party software to do so.
 Default is PALES v6.0 for Red Hat Linux.
 
 Publication:
-"Prediction of Sterically Induced Alignment in a Dilute Liquid Crystalline Phase:
-Aid to Protein Structure Determination by NMR"
+"Prediction of Sterically Induced Alignment in a Dilute
+Liquid Crystalline Phase: Aid to Protein Structure Determination by NMR"
 Markus Zweckstetter and Ad Bax
 Journal of the American Chemical Society 2000 122 (15), 3791-3792
 DOI: 10.1021/ja0000908
@@ -35,7 +35,9 @@ REQUIREMENTS:
        12    LEU     HN    12    LEU      N     11.677      1.000  1.00
        14    GLY     HN    14    GLY      N     10.553      1.000  1.00
        15    GLU     HN    15    GLU      N     11.154      1.000  1.00
-    For more information, please see: https://spin.niddk.nih.gov/bax/software/PALES/
+    
+    For more information, please see the "Data Format" section of:
+    https://spin.niddk.nih.gov/bax/software/PALES/
 
 OUTPUT:
     Output is in standard .JSON format as follows:
@@ -117,7 +119,7 @@ for item in curr_fp_split:
 
 def pales_helper(exp, pdb_path):
     """
-    Main logic to handle external PALES shell command.
+    Handle external PALES shell command.
 
     Parameters
     ----------
@@ -155,7 +157,7 @@ def pales_helper(exp, pdb_path):
     subprocess.run(
         f"{PALES_FP} -inD {exp} -pdb {pdb_path} -outD {outpath}",
         shell=True,
-        capture_output=True,                  
+        capture_output=True,
         )
     
     with open(outpath, 'r') as pales_out:
@@ -188,8 +190,7 @@ def main(
         **kwargs,
         ):
     """
-    Main logic for using UCBShift to predict chemical shift
-    values for PDB structures and output.
+    Back-calculate RDCs from PDB and experimental file.
 
     Parameters
     ----------
@@ -239,13 +240,11 @@ def main(
     
     # TODO: future PR, do LRDC module
         
-    
     # process output
     log.info(T('Writing output onto disk'))
     with open(output, mode="w") as fout:
         fout.write(json.dumps(_output, indent=4))
     log.info(S('done'))
-    
     
     if _istarfile:
         shutil.rmtree(tmpdir)
