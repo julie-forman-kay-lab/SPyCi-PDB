@@ -1,3 +1,5 @@
+# pylint: skip-file
+# flake8: noqa
 """
 HullRad
 Version 8.1 
@@ -137,15 +139,16 @@ python HullRadV8.1.py [PDBcode].pdb
     or 
 python HullRadV8.1.py [PDBcode].cif
 """
-
-import os
-import sys
-import math
-import string
-import shlex, subprocess
 import gzip
+import math
 import mimetypes
+import os
 import re
+import shlex
+import string
+import subprocess
+import sys
+
 
 class MMCIFWrapperSyntaxError(Exception):
 

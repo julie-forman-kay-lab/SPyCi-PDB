@@ -11,6 +11,7 @@ from os import cpu_count
 from spycipdb import __version__
 from spycipdb.libs.libparse import values_to_dict
 
+
 detailed = "detailed instructions:\n\n{}"
 
 
@@ -28,9 +29,8 @@ def maincli(ap, main):
 class FolderOrTar(argparse.Action):
     """Checks if input is a folder, files, or tarball."""
 
-
     def __call__(self, parser, namespace, values, option_string=None):
-        """Checks the extension of input."""
+        """Check the extension of input."""
         if values[0].endswith('.tar'):
             setattr(namespace, self.dest, values[0])
         else:
@@ -39,7 +39,6 @@ class FolderOrTar(argparse.Action):
 
 class ArgsToTuple(argparse.Action):
     """Convert list of arguments in tuple."""
-
 
     def __call__(self, parser, namespace, values, option_string=None):
         """Call the function."""
@@ -70,7 +69,6 @@ class ParamsToDict(argparse.Action):
 
 class CustomParser(argparse.ArgumentParser):
     """Custom parser class."""
-    
     
     def error(self, message):
         """Present error message."""

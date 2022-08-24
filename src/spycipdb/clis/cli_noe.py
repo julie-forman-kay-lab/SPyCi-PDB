@@ -12,12 +12,13 @@ USAGE:
     $ spycipdb noe <PDB-FILES> [--exp-file] [--output] [--ncores]
 
 REQUIREMENTS:
-    Experimental data must be comma-delimited with at least the following columns:
+    Experimental data must be comma-delimited with the following columns:
     
     res1,atom1,atom1_multiple_assignments,res2,atom2,atom2_multiple_assignments
     
-    Where res1/atom1 is the residue number and atom name respectively for the first residue
-    and res2/atom2 is the residue number and atom name respectively for the second residue.
+    Where res1/atom1 is the residue number and atom name respectively for
+    the first residue and res2/atom2 is the residue number and atom name
+    respectively for the second residue.
     Multiple assignments are either 0 or 1 (no/yes respectively).
 
 OUTPUT:
@@ -38,24 +39,21 @@ OUTPUT:
         ...
     }
 """
-import json
 import argparse
+import json
 import shutil
-import pandas as pd
-from pathlib import Path
 from functools import partial
+from pathlib import Path
+
+import pandas as pd
+from idpconfgen.libs.libmulticore import pool_function
+from idpconfgen.libs.libstructure import Structure, col_name, col_resSeq
 
 from spycipdb import log
 from spycipdb.libs import libcli
-from spycipdb.logger import S, T, init_files, report_on_crash
 from spycipdb.libs.libfuncs import get_pdb_paths, get_scalar
+from spycipdb.logger import S, T, init_files, report_on_crash
 
-from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libstructure import(
-    Structure,
-    col_name,
-    col_resSeq,
-    )
 
 LOGFILESNAME = '.spycipdb_noe'
 _name = 'noe'
@@ -88,24 +86,25 @@ ap.add_argument(
 
 
 def get_exp_format_noe(fexp):
+    """Get format from experimental template."""
     format = {}
     exp = pd.read_csv(fexp)
     
     format['res1'] = exp.res1.values.astype(int).tolist()
     format['atom1'] = exp.atom1.values.tolist()
-    format['atom1_multiple_assignments'] = exp.atom1_multiple_assignments.values.tolist()
+    format['atom1_multiple_assignments'] = exp.atom1_multiple_assignments.values.tolist()  # noqa: E501
     format['res2'] = exp.res2.values.astype(int).tolist()
     format['atom2'] = exp.atom2.values.tolist()
-    format['atom2_multiple_assignments'] = exp.atom2_multiple_assignments.values.tolist()
+    format['atom2_multiple_assignments'] = exp.atom2_multiple_assignments.values.tolist()  # noqa: E501
     
     return format
 
 
 def calc_noe(fexp, pdb):
     """
-    Main logic for back-calculating NOE data
-    with atom-pairs and multi-assigns derived
-    from experimental template
+    Back-calculate NOE data.
+    
+    Atom-pairs and multi-assigns derived from experimental template.
     """
     dist = []
     
@@ -172,8 +171,7 @@ def main(
         **kwargs,
         ):
     """
-    Main logic for processing PDB structures and
-    outputting back-calculated NOE values.
+    Process PDB structures and output back-calculated NOE values.
     
     Parameters
     ----------
@@ -219,7 +217,6 @@ def main(
     with open(output, mode="w") as fout:
         fout.write(json.dumps(_output, indent=4))
     log.info(S('done'))
-    
     
     if _istarfile:
         shutil.rmtree(tmpdir)

@@ -43,20 +43,21 @@ OUTPUT:
         ...
     }
 """
-import sys
-import os
-import json
 import argparse
+import json
+import os
 import shutil
-from pathlib import Path
+import sys
 from functools import partial
+from pathlib import Path
+
+from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
 
-from idpconfgen.libs.libmulticore import pool_function
 
 # Interesting way to import from repository that cannot be
 # installed as a module ;-)
@@ -72,7 +73,8 @@ for item in curr_fp_split:
         cspred_fp += item + "/"
 sys.path.insert(0, cspred_fp)
 
-from CSpred import calc_sing_pdb
+from CSpred import calc_sing_pdb  # noqa: E402
+
 
 LOGFILESNAME = '.spycipdb_cs'
 _name = 'cs'
@@ -120,8 +122,7 @@ def main(
         **kwargs,
         ):
     """
-    Main logic for using UCBShift to predict chemical shift
-    values for PDB structures and output.
+    Use UCBShift to predict chemical shift for PDB structures.
 
     Parameters
     ----------
