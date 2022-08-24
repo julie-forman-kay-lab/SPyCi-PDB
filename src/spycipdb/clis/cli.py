@@ -17,7 +17,7 @@ import sys
 from spycipdb.libs import libcli
 from spycipdb.logger import S
 from spycipdb import __version__, log
-from spycipdb.clis import(
+from spycipdb.clis import (
     cli_pre,
     cli_noe,
     cli_jc,
@@ -68,9 +68,11 @@ libcli.add_subparser(subparsers, cli_rh)
 libcli.add_subparser(subparsers, cli_rdc)
 libcli.add_subparser(subparsers, cli_smfret)
 
+
 def load_args():
     """Load user input arguments."""
     return ap.parse_args()
+
 
 def maincli():
     """

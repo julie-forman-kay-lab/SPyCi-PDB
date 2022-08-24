@@ -72,7 +72,7 @@ for item in curr_fp_split:
         cspred_fp += item + "/"
 sys.path.insert(0, cspred_fp)
 
-from CSpred import calc_sing_pdb
+from CSpred import calc_sing_pdb  # noqa: E402
 
 LOGFILESNAME = '.spycipdb_cs'
 _name = 'cs'
@@ -120,8 +120,7 @@ def main(
         **kwargs,
         ):
     """
-    Main logic for using UCBShift to predict chemical shift
-    values for PDB structures and output.
+    Use UCBShift to predict chemical shift for PDB structures.
 
     Parameters
     ----------
