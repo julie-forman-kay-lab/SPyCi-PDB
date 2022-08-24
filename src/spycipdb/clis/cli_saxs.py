@@ -87,7 +87,7 @@ ap.add_argument(
 
 def crysol_helper(pdb_path, lm):
     """
-    Main logic to handle external crysol shell command.
+    Handle external crysol shell command.
 
     Parameters
     ----------
@@ -111,17 +111,17 @@ def crysol_helper(pdb_path, lm):
     
     wrkdir = os.getcwd()
     pdb_name_ext = pdb_path.rsplit('/', 1)[-1]
-    pdb_name = pdb_name_ext[0 : pdb_name_ext.index('.')]
+    pdb_name = pdb_name_ext[0: pdb_name_ext.index('.')]
     paths = wrkdir + "/" + pdb_name
     
     p = subprocess.Popen(
         f"crysol {pdb_path} --lm={lm} --shell=water",
         stdout=subprocess.PIPE,
-        shell=True,                              
+        shell=True,
         )
     p.communicate()  # waits for subprocess to stop running
     
-    with open(paths+".abs", mode='r') as crysol_out:
+    with open(paths + ".abs", mode='r') as crysol_out:
         data = crysol_out.readlines()
         data.pop(0)
         for line in data:
@@ -133,10 +133,10 @@ def crysol_helper(pdb_path, lm):
     saxs_bc['value'] = value
     
     # removing crysol generated files
-    os.remove(paths+".abs")
-    os.remove(paths+".alm")
-    os.remove(paths+".log")
-    os.remove(paths+".int")
+    os.remove(paths + ".abs")
+    os.remove(paths + ".alm")
+    os.remove(paths + ".log")
+    os.remove(paths + ".int")
     
     return pdb_name_ext, saxs_bc
 
@@ -150,8 +150,7 @@ def main(
         **kwargs,
         ):
     """
-    Main logic for using UCBShift to predict chemical shift
-    values for PDB structures and output.
+    Use CRYSOLv3 to predict SAXS values from PDBs.
 
     Parameters
     ----------
@@ -184,17 +183,14 @@ def main(
         return
     
     if lm < 1 or lm > 100:
-        log.info(
-            S('WARNING: maximum order of harmonics '
-            'is not within the range of 1-100 inclusive. '
-            ))
+        log.info(S('WARNING: maximum order of harmonics is not within the range of 1-100 inclusive.'))  # noqa: E501
+        
         return
     
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
     str_pdbpaths = [str(path) for path in pdbs2operate]
     log.info(S('done'))
-
     
     log.info(T(f'back calculaing using {ncores} workers'))
     execute = partial(
@@ -213,7 +209,6 @@ def main(
     with open(output, mode="w") as fout:
         fout.write(json.dumps(_output, indent=4))
     log.info(S('done'))
-
 
     if _istarfile:
         shutil.rmtree(tmpdir)
