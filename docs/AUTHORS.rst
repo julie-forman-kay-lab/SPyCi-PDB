@@ -9,8 +9,8 @@ Main Developers/Maintainers
 Contributors
 ------------
 
-* `João M. C. Teixeira`_  (Co-op student University of Toronto, Canada)
-* `Jie (Jerry) Li`_ (PhD student University of California Berkeley, USA)
+* `João M. C. Teixeira`_  (Postdoctoral researcher, Utrecht University, Netherlands)
+* `Jie (Jerry) Li`_ (PhD student, University of California Berkeley, USA)
 
 Acknowledgements
 ----------------
