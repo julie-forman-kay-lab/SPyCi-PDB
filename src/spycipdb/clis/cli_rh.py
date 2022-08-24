@@ -6,7 +6,8 @@ Default is HullRad 8.1.
 
 Publication:
 Fleming, P.J. and Fleming, K.G.
-"HullRad: Fast Calculations of Folded and Disordered Protein and Nucleic Acid Hydrodynamic Properties"
+"HullRad: Fast Calculations of Folded and Disordered Protein
+and Nucleic Acid Hydrodynamic Properties"
 Biophysical Journal, 114:856-869, February 27, 2018
 DOI: 10.1016/j.bpj.2018.01.002
 
@@ -70,11 +71,14 @@ ap.add_argument(
 
 
 def hullrad_helper(pdb_path):
-    pdb_name_ext = pdb_path.rsplit('/',1)[-1]
+    """Return translational hydrodynamic radius given PDB."""
+    pdb_name_ext = pdb_path.rsplit('/', 1)[-1]
     
     all_atm_rec, num_MG, num_MN, model_array = model_from_pdb(pdb_path)
-    s,Dt,Dr,vbar_prot,Rht,ffo_hyd_P,M,Ro,Rhr,int_vis,a_b_ratio,Ft,Rg,Dmax,tauC, \
-        asphr,AA,NA,GL,DT,useNumpy = Sved(all_atm_rec,num_MG,num_MN,model_array)
+    
+    s, Dt, Dr, vbar_prot, Rht, ffo_hyd_P, M, Ro, Rhr, int_vis, a_b_ratio, \
+        Ft, Rg, Dmax, tauC, asphr, AA, NA, GL, DT, useNumpy \
+        = Sved(all_atm_rec, num_MG, num_MN, model_array)
 
     return pdb_name_ext, Rht
 
@@ -87,8 +91,7 @@ def main(
         **kwargs,
         ):
     """
-    Main logic for using UCBShift to predict chemical shift
-    values for PDB structures and output.
+    Use HullRad to predict Rh values.
 
     Parameters
     ----------
@@ -113,7 +116,6 @@ def main(
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
     str_pdbpaths = [str(path) for path in pdbs2operate]
     log.info(S('done'))
-    
     
     log.info(T(f'back calculaing using {ncores} workers'))
     execute = partial(
