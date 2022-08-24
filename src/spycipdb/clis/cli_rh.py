@@ -26,19 +26,20 @@ OUTPUT:
         ...
     }
 """
-import json
 import argparse
+import json
 import shutil
-from pathlib import Path
 from functools import partial
+from pathlib import Path
+
+from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
+from spycipdb.components.hullrad import Sved, model_from_pdb
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
-from spycipdb.components.hullrad import model_from_pdb, Sved
 
-from idpconfgen.libs.libmulticore import pool_function
 
 LOGFILESNAME = '.spycipdb_rh'
 _name = 'rh'

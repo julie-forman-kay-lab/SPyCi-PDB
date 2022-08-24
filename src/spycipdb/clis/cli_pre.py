@@ -32,24 +32,21 @@ OUTPUT:
         ...
     }
 """
-import json
 import argparse
+import json
 import shutil
-import pandas as pd
-from pathlib import Path
 from functools import partial
+from pathlib import Path
+
+import pandas as pd
+from idpconfgen.libs.libmulticore import pool_function
+from idpconfgen.libs.libstructure import Structure, col_name, col_resSeq
 
 from spycipdb import log
 from spycipdb.libs import libcli
+from spycipdb.libs.libfuncs import get_pdb_paths, get_scalar
 from spycipdb.logger import S, T, init_files, report_on_crash
-from spycipdb.libs.libfuncs import get_scalar, get_pdb_paths
 
-from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libstructure import (
-    Structure,
-    col_name,
-    col_resSeq,
-    )
 
 LOGFILESNAME = '.spycipdb_pre'
 _name = 'pre'

@@ -39,25 +39,22 @@ TODO: currently assumes 'CA' as atom labeled
 TODO: provide alternative strategies of back-calculating and
     interpreting smFRET data.
 """
-import json
 import argparse
+import json
 import shutil
+from functools import partial
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from functools import partial
+from idpconfgen.libs.libmulticore import pool_function
+from idpconfgen.libs.libstructure import Structure, col_name, col_resSeq
 
 from spycipdb import log
 from spycipdb.libs import libcli
-from spycipdb.logger import S, T, init_files, report_on_crash
 from spycipdb.libs.libfuncs import get_pdb_paths, get_scalar
+from spycipdb.logger import S, T, init_files, report_on_crash
 
-from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libstructure import (
-    Structure,
-    col_name,
-    col_resSeq,
-    )
 
 LOGFILESNAME = '.spycipdb_smfret'
 _name = 'smfret'

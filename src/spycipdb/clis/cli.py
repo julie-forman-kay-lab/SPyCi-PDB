@@ -14,19 +14,20 @@ USAGE:
 import argparse
 import sys
 
-from spycipdb.libs import libcli
-from spycipdb.logger import S
 from spycipdb import __version__, log
 from spycipdb.clis import (
-    cli_pre,
-    cli_noe,
-    cli_jc,
     cli_cs,
-    cli_saxs,
-    cli_rh,
+    cli_jc,
+    cli_noe,
+    cli_pre,
     cli_rdc,
+    cli_rh,
+    cli_saxs,
     cli_smfret,
     )
+from spycipdb.libs import libcli
+from spycipdb.logger import S
+
 
 _prog, _description, _usageage = libcli.parse_doc_params(__doc__)
 

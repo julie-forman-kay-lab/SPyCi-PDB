@@ -4,8 +4,7 @@ SPyCi-PDB Exceptions.
 Inspired from:
 https://github.com/julie-forman-kay-lab/IDPConformerGenerator/blob/3aef6b085ec09eeebc5812639a5eb6832c0215cd/src/idpconfgen/core/exceptions.py
 """
-from spycipdb import log
-from spycipdb import count_string_formatters
+from spycipdb import count_string_formatters, log
 
 
 class SPyCiPDBException(Exception):

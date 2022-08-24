@@ -29,20 +29,21 @@ OUTPUT:
         ...
     }
 """
-import os
-import subprocess
-import json
 import argparse
+import json
+import os
 import shutil
-from pathlib import Path
+import subprocess
 from functools import partial
+from pathlib import Path
+
+from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
 
-from idpconfgen.libs.libmulticore import pool_function
 
 LOGFILESNAME = '.spycipdb_saxs'
 _name = 'saxs'

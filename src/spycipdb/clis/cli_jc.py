@@ -26,21 +26,22 @@ OUTPUT:
         ...
     }
 """
+import argparse
+import json
+import shutil
+from functools import partial
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-import json
-import argparse
-import shutil
-from pathlib import Path
-from functools import partial
+from idpconfgen.libs.libhigherlevel import get_torsions
+from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
 
-from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libhigherlevel import get_torsions
 
 LOGFILESNAME = '.spycipdb_jc'
 _name = 'jc'
