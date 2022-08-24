@@ -29,8 +29,8 @@ OUTPUT:
                     'res2': [],
                     'scale': [],
                     },
-        'pdb1': [values],
-        'pdb2': [values],
+        'pdb1': [smfret_values],
+        'pdb2': [smfret_values],
         ...
     }
     

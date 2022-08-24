@@ -1,3 +1,10 @@
+SPyCi-PDB
+=========
+
+.. include::  ../README.rst
+   :start-after: .. start-description
+   :end-before: .. end-description
+
 ========
 Contents
 ========
@@ -5,14 +12,12 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   readme
-   configuration
    installation
    usage
    contributing
-   reference/index
-   changelog
+   citing
    AUTHORS
+   changelog
 
 Indices and tables
 ==================

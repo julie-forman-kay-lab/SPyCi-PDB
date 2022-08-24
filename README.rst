@@ -3,25 +3,40 @@ SPyCi-PDB
 
 .. start-description
 
-Structural Python (Back) Calculator Interface for PDBs
+**Structural Python (Back) Calculator Interface for PDBs**
 
-**Goal:** User friendly Python3 based interface to generate back-calculated experimental data for singular and multiple (ensemble) PDB structures.
+**Goal:** User friendly Python3 based interface to generate
+back-calculated experimental data for singular and multiple
+(ensembles of) PDB structures.
+
+**Back-Calculators:** The current back calculators integreated are:
+
+#. PRE, NOE, J-Coupling, smFRET: Internal
+#. Chemical shifts (CS): `UCBShift <https://github.com/THGLab/CSpred>`_
+#. SAXS: `CRYSOLv3 <https://www.embl-hamburg.de/biosaxs/crysol.html>`_
+#. Hydrodynamic Radius (Rh): `HullRad <http://52.14.70.9/>`_
+#. Residual Dipolar Couplings (RDC): `PALES <https://spin.niddk.nih.gov/bax/>`_
+
+Please note for third-party software, installation instructions have been fully
+documented and tested for Linux Ubuntu Focal Fossa (20.04.X LTS) and Bionic Beaver (18.04.X LTS).
+
+To make new requests and/or additions, please see ``docs/contributing.rst``.
 
 **Developer Notes:** project CI based on `@joaomcteixeira <https://github.com/joaomcteixeira>`_'s `Python-Project-Skeleton template <https://github.com/joaomcteixeira/python-project-skeleton>`_.
 Developed as a standalone program with integration into the IDPConformerGenerator platform in mind.
 
 .. end-description
 
-How to Install
---------------
+Documentation
+=============
 
-Installation instructions are described in ``docs/installation.rst``.
+More detailed documentation can be found at: ``READTHEDOCS LINK``.
 
-How to Use
-----------
+Within the repository you can find:
 
-Usage instructions are described in the file ``docs/usage.rst``.
-See also the examples in the ``example/`` folder.
+#. Installation instructions in ``docs/installation.rst``.
+#. Usage instructions in ``docs/usage.rst``.
+#. See also the examples in the ``example/`` folder.
 
 How to Cite
 -----------
@@ -35,6 +50,6 @@ If you use SPyCi-PDB, please cite::
 .. end-citing
 
 Version
--------
+=======
 
 v0.0.14

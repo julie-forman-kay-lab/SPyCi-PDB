@@ -16,8 +16,8 @@ REQUIREMENTS:
     
     res1,atom1,res2,atom2
     
-    Where res1/atom1 is the atom number and name respectively for the first residue
-    and res2/atom2 is the atom number and name respectively for the second residue.
+    Where res1/atom1 is the residue number and atom name respectively for the first residue
+    and res2/atom2 is the residue number and atom name respectively for the second residue.
 
 OUTPUT:
     Output is in standard .JSON format as follows, with the first

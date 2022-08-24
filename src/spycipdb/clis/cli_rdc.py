@@ -47,8 +47,8 @@ OUTPUT:
                    resname2: [],
                    atomname2: [],
                    },
-        'pdb1': [values],
-        'pdb2': [values],
+        'pdb1': [rdc_values],
+        'pdb2': [rdc_values],
         ...
     }
 """

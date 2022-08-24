@@ -38,3 +38,5 @@ Having just :code:`-n` will utilize all but one CPU thread.
 
 Every module is equipped with :code:`--help` sections with detailed usage
 examples and documentation for each functionality.
+
+.. end-description
