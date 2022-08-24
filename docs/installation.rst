@@ -188,7 +188,7 @@ PALES v6.0
 A package of PALES v6.0 for Linux is already included in the ``thirdparty/`` folder.
 Downloaded and extracted from the `Bax website <https://spin.niddk.nih.gov/bax/software/PALES/index.html>`_.
 
-For use with x64 bit Linux Ubuntu 20.04.X LTS and 18.06.X, you must install the i386 architecture
+For use with x64 bit Linux Ubuntu 20.04.X LTS and 18.04.X, you must install the i386 architecture
 along with required package libraries::
 
     sudo dpkg --add-architecture i386
