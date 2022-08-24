@@ -3,10 +3,12 @@ from idpconfgen.libs.libio import extract_from_tar, read_path_bundle
 
 
 def get_scalar(x, y, z):
+    """Find scalar quantity using Pythagorean theorem."""
     return (x**2 + y**2 + z**2)**0.5
 
 
 def get_pdb_paths(pdb_files, tmpdir):
+    """Get paths of PDB files from a tarball or folder."""
     try:
         pdbs2operate = extract_from_tar(pdb_files, output=tmpdir, ext='.pdb')
         _istarfile = True
