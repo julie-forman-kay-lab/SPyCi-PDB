@@ -12,12 +12,13 @@ USAGE:
     $ spycipdb pre <PDB-FILES> [--exp-file] [--output] [--ncores]
 
 REQUIREMENTS:
-    Experimental data must be comma-delimited with at least the following columns:
+    Experimental data must be comma-delimited with the following columns:
     
     res1,atom1,res2,atom2
     
-    Where res1/atom1 is the residue number and atom name respectively for the first residue
-    and res2/atom2 is the residue number and atom name respectively for the second residue.
+    Where res1/atom1 is the residue number and atom name respectively
+    for the first residue and res2/atom2 is the residue number and
+    atom name respectively for the second residue.
 
 OUTPUT:
     Output is in standard .JSON format as follows, with the first
@@ -44,7 +45,7 @@ from spycipdb.logger import S, T, init_files, report_on_crash
 from spycipdb.libs.libfuncs import get_scalar, get_pdb_paths
 
 from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libstructure import(
+from idpconfgen.libs.libstructure import (
     Structure,
     col_name,
     col_resSeq,
@@ -81,6 +82,7 @@ ap.add_argument(
 
 
 def get_exp_format_pre(fexp):
+    """Get format based on experimental file."""
     format = {}
     exp = pd.read_csv(fexp)
     
@@ -93,10 +95,7 @@ def get_exp_format_pre(fexp):
 
 
 def calc_pre(fexp, pdb):
-    """
-    Main logic for back-calculating PRE data
-    with atom-pairs derived from experimental template.
-    """
+    """Back calculates PRE data based on atom-pairs from template."""
     dist = []
     
     exp = pd.read_csv(fexp)
@@ -108,7 +107,7 @@ def calc_pre(fexp, pdb):
     s = Structure(pdb)
     s.build()
     
-    for i in range (exp.shape[0]):
+    for i in range(exp.shape[0]):
         r1 = int(res1[i])
         r2 = int(res2[i])
         for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
@@ -144,8 +143,7 @@ def main(
         **kwargs,
         ):
     """
-    Main logic for back-calculating PRE values from PDB structures
-    given experimental file template.
+    Back-calculate PRE values from PDB structures.
 
     Parameters
     ----------
@@ -192,7 +190,6 @@ def main(
     with open(output, mode="w") as fout:
         fout.write(json.dumps(_output, indent=4))
     log.info(S('done'))
-    
 
     if _istarfile:
         shutil.rmtree(tmpdir)
