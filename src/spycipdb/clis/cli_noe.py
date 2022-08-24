@@ -16,8 +16,9 @@ REQUIREMENTS:
     
     res1,atom1,atom1_multiple_assignments,res2,atom2,atom2_multiple_assignments
     
-    Where res1/atom1 is the atom number and name respectively for the first residue
-    and res2/atom2 is the atom number and name respectively for the second residue.
+    Where res1/atom1 is the residue number and atom name respectively for the first residue
+    and res2/atom2 is the residue number and atom name respectively for the second residue.
+    Multiple assignments are either 0 or 1 (no/yes respectively).
 
 OUTPUT:
     Output is in standard .JSON format as follows, with the first
