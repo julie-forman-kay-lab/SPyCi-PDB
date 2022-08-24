@@ -7,10 +7,10 @@ native on any system Python can run, as long as third-party back-calculator
 installation requirements are met.
 
 Please note that the IDPConformerGenerator library is required for parsing
-PDB structure co-ordinates.
+PDB structure co-ordinates. Details for IDPConformerGenerator
+can be found `here <https://github.com/julie-forman-kay-lab/IDPConformerGenerator>`_.
 
 Full installation instructures are highlighted below.
-
 
 From Source
 -----------
@@ -37,7 +37,7 @@ Anaconda is used as your Python package manager::
     | ``source spycienv/bin/activate``
     | ``pip install -r requirements.txt``
 
-    If you have difficulties installing ``spycipdb``, raise an Issue in the
+    If you have difficulties installing ``spycipdb``, raise an issue in the
     main GitHub repository, and we will help you.
 
 Install ``spycipdb`` in development mode in order for your installation to be
@@ -73,14 +73,14 @@ To update to the latest version, navigate to the repository folder, activate the
 Your installation will become up to date with the latest developments.
 
 
-Installing IDPConformerGenerator On Top of SPyCi-PDB
-----------------------------------------------------
+Installing IDPConformerGenerator
+--------------------------------
 
 .. note::
     You should already be inside the ``SPyCi-PDB`` directory.
-    The ``spycipdb`` conda environment should not be active. Deactivate using:
-    
-    | conda deactivate
+    The ``spycipdb`` conda environment should not be active. Deactivate using::
+        
+        conda deactivate
     
     if you're using ``virtualenv``, remain in the environment.
 
@@ -131,7 +131,7 @@ GitHub.::
     git clone https://github.com/menoliu/CSpred
 
 Enter the ``CSpred`` folder and make a ``models`` directory, then download and
-extract the `trained models <https://datadryad.org/stash/dataset/doi:10.6078/D1B974>`_
+extract the latest `trained models <https://datadryad.org/stash/dataset/doi:10.6078/D1B974>`_
 to ``CSpred/models`` directory.
 
 Move back into the ``SPyCi-PDB`` directory and enter the ``thirdparty/ucbshift_reqs`` folder::
@@ -188,13 +188,13 @@ PALES v6.0
 A package of PALES v6.0 for Linux is already included in the ``thirdparty/`` folder.
 Downloaded and extracted from the `Bax website <https://spin.niddk.nih.gov/bax/software/PALES/index.html>`_.
 
-For use with Linux Ubuntu 20.04 LTS x64, you must install the i386 architecture
+For use with x64 bit Linux Ubuntu 20.04.X LTS and 18.06.X, you must install the i386 architecture
 along with required package libraries::
 
     sudo dpkg --add-architecture i386
-    sudo apt-get update
-    sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 libx11-6:i386
+    sudo apt update
+    sudo apt install libc6:i386 libncurses5:i386 libstdc++6:i386 libx11-6:i386
 
 If the last command above fails, run the following instead::
 
-    sudo apt-get install multiarch-support
+    sudo apt install multiarch-support
