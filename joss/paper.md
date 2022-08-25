@@ -31,6 +31,13 @@ bibliography: paper.bib
 
 # Installation
 
+To install **spycipdb**, follow the instructions provided on the corresponding documentation
+webpage or `docs/installation.rst` in the repository. As **spycipdb** is written completely in Python,
+it's comptable with any platform able to execute Python (>=3.8 but <4.0). However, certain third-party
+extensions to perform back-calculations (SAXS and RDC) have only been tested on 64-bit Ubuntu 
+18.04.X LTS and 20.04.X LTS, as well as WSL 2.0 on 64-bit Windows 11. It is recommended to read the
+detailed installation and troubleshooting documentation before using Anaconda or virtualenv
+to install and configure **spycipdb**.
 
 # Use cases
 
