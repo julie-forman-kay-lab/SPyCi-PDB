@@ -2,6 +2,9 @@
 Changelog
 =========
 
+* Update tests to exclude Py37
+* Include paper and bibliography for JOSS
+
 v0.1.0 (2022-08-24)
 ------------------------------------------------------------
 
