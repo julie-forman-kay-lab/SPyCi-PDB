@@ -15,6 +15,13 @@ authors:
     orcid: 0000-0002-8357-8507
     affiliation: "1, 2"
     corresponding: true
+  - name: Oufan Zhang
+    affiliation: "3, 4"
+  - name: Jie Li
+    affiliation: "3, 4"
+  - name: Teresa Head-Gordon
+    orcid: 0000-0003-0025-8987
+    affiliation: "3, 4, 5, 6"
   - name: Julie D. Forman-Kay
     orcid: 0000-0001-8265-972X
     affiliation: "1, 2"
@@ -24,6 +31,14 @@ affiliations:
     index: 1
   - name: "Department of Biochemistry, University of Toronto, Toronto, Ontario, M5S 1A8, Canada"
     index: 2
+  - name: "Pitzer Center for Theoretical Chemistry, University of California, Berkeley, California 94720-1460, USA"
+    index: 3
+  - name: "Department of Chemistry, University of California, Berkeley, California 94720-1460, USA"
+    index: 4
+  - name: "Department of Chemical and Biomolecular Engineering, University of California, Berkeley, California 94720-1462, USA"
+    index: 5
+  - name: "Department of Bioengineering, University of California, Berkeley, California 94720-1762, USA"
+    index: 6
 date: 25 August 2022
 bibliography: paper.bib
 ---
