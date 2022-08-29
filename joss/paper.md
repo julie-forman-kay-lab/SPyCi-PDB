@@ -45,22 +45,22 @@ bibliography: paper.bib
 
 # Summary
 
-The protein folding problem has been sought out since the early 1960s [10.1146/annurev.biophys.37.092707.153558] and although
+The protein folding problem has been sought out since the early 1960s [@Dill2008] and although
 recent technological advances has made it possible to solve structures of stable, folded proteins: such as Nuclear Magnetic
-Resonance spectroscopy [@nmrstructure], X-ray crystallography [@xraystructure], and more recently Cryo-electron microscopy 
-[@cryostructure]. Modeling intrinsically disordered proteins and disorered regions (IDPs/IDRs) remain challenging due to
-their highly dynamic nature and low-propensity to conform to an energy-minima folded structure [@idpproblem1].
+Resonance spectroscopy [@Kanelis2001], X-ray crystallography [@Smyth2000], and more recently Cryo-electron microscopy 
+[@Malhotra2019]. Modeling intrinsically disordered proteins and disorered regions (IDPs/IDRs) remain challenging due to
+their highly dynamic nature and low-propensity to conform to an energy-minima folded structure [@Mittag2007].
 
 Currently, the approaches to model IDPs/IDRs can be generalized into two groups of thought. The first, and more traditional
-method is to generate conformational ensembles of IDPs/IDRs *de novo* using sampling techniques presented in TraDES [https://pubmed.ncbi.nlm.nih.gov/10737933/; https://pubmed.ncbi.nlm.nih.gov/11746699/],
-Flexible-meccano [10.1093/bioinformatics/bts172], FastFloppyTail [@FFT], IDPConformerGenerator [], and others [@ESTANA2019381] that primarily uses the torsion angle distributions
-found in high-resolution folded protein structures deposited in the RCSB Protein Data Bank [@RCSB]. Another popular, but computationally
+method is to generate conformational ensembles of IDPs/IDRs *de novo* using sampling techniques presented in TraDES [@Feldman2000; @Feldman2001],
+Flexible-meccano [@Ozenne2012], FastFloppyTail [@Ferrie2020], IDPConformerGenerator [@Teixeira2022], and others [@Estaa2019] that primarily uses the torsion angle distributions
+found in high-resolution folded protein structures deposited in the RCSB Protein Data Bank [@Berman2000]. Another popular, but computationally
 expensive approach to generate conformational ensembles *ab initio* is the use of different force-fields within an Molecular Dyanmics (MD)
 simulation.
 
-After generating the initial pool of structures, back-calculations to experimental data and reweighting using Monte-Carlo [@ENSEMBLE]
-or Bayesian statistics [https://doi.org/10.1038/s42004-020-0323-0; 10.1007/978-1-0716-0270-6_15] must be performed to obtain
-high quality structures that have a better fitment with solution NMR, SAXS, smFRET, and other experimentally obtained data from these IDPs/IDRs.
+After generating the initial pool of structures, back-calculations to experimental data and reweighting using Monte-Carlo [@Krzeminski2012]
+or Bayesian statistics [@Lincoff2020; @Bottaro2020] must be performed to obtain high quality structures that have a better fitment
+with solution NMR, SAXS, smFRET, and other experimentally obtained data from these IDPs/IDRs.
 An emerging method to generate conformations of IDPs/IDRs uses machine learning generative models that use ensembles generated 
 from sampling or MD techniques as training data and reinforces learning with experimental and back-calculated datatypes.
 
