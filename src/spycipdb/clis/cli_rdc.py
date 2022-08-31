@@ -56,15 +56,14 @@ OUTPUT:
 """
 import argparse
 import json
-import os
 import shutil
-import subprocess
 from functools import partial
 from pathlib import Path
 
 from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
+from spycipdb.components.calculators import pales_helper
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
@@ -105,80 +104,6 @@ ap.add_argument(
     type=Path,
     default=TMPDIR,
     )
-
-# obtaining absolute path of pales executable from current file path
-current_file_path = os.path.realpath(__file__)
-curr_fp_split = current_file_path.split('/')
-PALES_FP = ""
-for item in curr_fp_split:
-    if item == "SPyCi-PDB":
-        PALES_FP += item + "/thirdparty/pales/linux/pales"
-        break
-    else:
-        PALES_FP += item + "/"
-        
-
-def pales_helper(exp, pdb_path):
-    """
-    Handle external PALES shell command.
-
-    Parameters
-    ----------
-    exp : str
-        Absolute path of experimental file formatted per PALES
-        standard.
-    
-    pdb_path : str
-        Absolute path of PDB file.
-
-    Returns
-    -------
-    format : dict
-        Format of what atoms from which residues are
-        back-calculated
-    
-    pdb_name_ext : str
-        PDB file name with extension.
-    
-    rdc_bc : list
-        List of RDC values. Formatting is given already.
-    """
-    rdc_bc = []
-    format = {
-        "resnum1": [],
-        "resname1": [],
-        "atomname1": [],
-        "resnum2": [],
-        "resname2": [],
-        "atomname2": [],
-        }
-    pdb_name_ext = pdb_path.rsplit('/', 1)[-1]
-    outpath = pdb_name_ext + ".txt"
-    
-    subprocess.run(
-        f"{PALES_FP} -inD {exp} -pdb {pdb_path} -outD {outpath}",
-        shell=True,
-        capture_output=True,
-        )
-    
-    with open(outpath, 'r') as pales_out:
-        for line in pales_out:
-            linesplit = line.split()
-            try:
-                if linesplit[0].isdigit():
-                    format['resnum1'].append(int(linesplit[0]))
-                    format['resname1'].append(linesplit[1])
-                    format['atomname1'].append(linesplit[2])
-                    format['resnum2'].append(int(linesplit[3]))
-                    format['resname2'].append(linesplit[4])
-                    format['atomname2'].append(linesplit[5])
-                    rdc_bc.append(float(linesplit[8]))
-            except IndexError:
-                continue
-    
-    os.remove(outpath)
-    
-    return format, pdb_name_ext, rdc_bc
 
 
 def main(

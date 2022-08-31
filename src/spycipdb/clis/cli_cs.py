@@ -45,35 +45,17 @@ OUTPUT:
 """
 import argparse
 import json
-import os
 import shutil
-import sys
 from functools import partial
 from pathlib import Path
 
 from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
+from spycipdb.components.calculators import calc_sing_pdb
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
-
-
-# Interesting way to import from repository that cannot be
-# installed as a module ;-)
-# https://www.geeksforgeeks.org/python-import-module-from-different-directory/
-current_file_path = os.path.realpath(__file__)
-curr_fp_split = current_file_path.split('/')
-cspred_fp = ""
-for item in curr_fp_split:
-    if item == "SPyCi-PDB":
-        cspred_fp += item + "/" + "CSpred"
-        break
-    else:
-        cspred_fp += item + "/"
-sys.path.insert(0, cspred_fp)
-
-from CSpred import calc_sing_pdb  # noqa: E402
 
 
 LOGFILESNAME = '.spycipdb_cs'

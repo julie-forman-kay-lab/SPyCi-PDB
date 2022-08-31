@@ -45,13 +45,13 @@ import shutil
 from functools import partial
 from pathlib import Path
 
-import pandas as pd
 from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libstructure import Structure, col_name, col_resSeq
 
 from spycipdb import log
+from spycipdb.components.calculators import calc_noe
+from spycipdb.components.parsers import get_exp_format_noe
 from spycipdb.libs import libcli
-from spycipdb.libs.libfuncs import get_pdb_paths, get_scalar
+from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
 
 
@@ -83,83 +83,6 @@ ap.add_argument(
     type=Path,
     default=TMPDIR,
     )
-
-
-def get_exp_format_noe(fexp):
-    """Get format from experimental template."""
-    format = {}
-    exp = pd.read_csv(fexp)
-    
-    format['res1'] = exp.res1.values.astype(int).tolist()
-    format['atom1'] = exp.atom1.values.tolist()
-    format['atom1_multiple_assignments'] = exp.atom1_multiple_assignments.values.tolist()  # noqa: E501
-    format['res2'] = exp.res2.values.astype(int).tolist()
-    format['atom2'] = exp.atom2.values.tolist()
-    format['atom2_multiple_assignments'] = exp.atom2_multiple_assignments.values.tolist()  # noqa: E501
-    
-    return format
-
-
-def calc_noe(fexp, pdb):
-    """
-    Back-calculate NOE data.
-    
-    Atom-pairs and multi-assigns derived from experimental template.
-    """
-    dist = []
-    
-    exp = pd.read_csv(fexp)
-    res1 = exp.res1.values.astype(int)
-    atom1_name = exp.atom1.values
-    res2 = exp.res2.values.astype(int)
-    atom2_name = exp.atom2.values
-    multi1 = exp.atom1_multiple_assignments.values
-    multi2 = exp.atom2_multiple_assignments.values
-    
-    s = Structure(pdb)
-    s.build()
-    
-    for i in range(exp.shape[0]):
-        r1 = int(res1[i])
-        r2 = int(res2[i])
-        atom1_list = []
-        atom2_list = []
-        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
-            if r == r1:
-                if atom1_name[i] == 'H':
-                    atom1_list.append(s.coords[j, :])
-                    break
-                if atom1_name[i] in s.data_array[j, col_name]:
-                    atom1_list.append(s.coords[j, :])
-                if len(atom1_list) == 2:
-                    break
-                if not multi1[i] and len(atom1_list) == 1:
-                    break
-        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
-            if r == r2:
-                if atom2_name[i] == 'H':
-                    atom2_list.append(s.coords[j, :])
-                    break
-                if atom2_name[i] in s.data_array[j, col_name]:
-                    atom2_list.append(s.coords[j, :])
-                if len(atom2_list) == 2:
-                    break
-                if not multi2[i] and len(atom2_list) == 1:
-                    break
-
-        combos = 0.0
-        num_combos = 0
-
-        for first_atom in atom1_list:
-            for second_atom in atom2_list:
-                dv = first_atom - second_atom
-                assert dv.shape == (3,)
-                combos += (get_scalar(dv[0], dv[1], dv[2])) ** (-6.)
-                num_combos += 1
-
-        dist.append((combos / float(num_combos)) ** (-1 / 6))
-    
-    return pdb, dist
 
 
 def main(

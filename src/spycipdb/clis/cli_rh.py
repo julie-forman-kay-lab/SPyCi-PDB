@@ -35,7 +35,7 @@ from pathlib import Path
 from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
-from spycipdb.components.hullrad import Sved, model_from_pdb
+from spycipdb.components.calculators import hullrad_helper
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
@@ -69,19 +69,6 @@ ap.add_argument(
     type=Path,
     default=TMPDIR,
     )
-
-
-def hullrad_helper(pdb_path):
-    """Return translational hydrodynamic radius given PDB."""
-    pdb_name_ext = pdb_path.rsplit('/', 1)[-1]
-    
-    all_atm_rec, num_MG, num_MN, model_array = model_from_pdb(pdb_path)
-    
-    s, Dt, Dr, vbar_prot, Rht, ffo_hyd_P, M, Ro, Rhr, int_vis, a_b_ratio, \
-        Ft, Rg, Dmax, tauC, asphr, AA, NA, GL, DT, useNumpy \
-        = Sved(all_atm_rec, num_MG, num_MN, model_array)
-
-    return pdb_name_ext, Rht
 
 
 def main(

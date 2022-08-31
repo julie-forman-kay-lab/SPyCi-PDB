@@ -45,14 +45,13 @@ import shutil
 from functools import partial
 from pathlib import Path
 
-import numpy as np
-import pandas as pd
 from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libstructure import Structure, col_name, col_resSeq
 
 from spycipdb import log
+from spycipdb.components.calculators import calc_smfret
+from spycipdb.components.parsers import get_exp_format_smfret
 from spycipdb.libs import libcli
-from spycipdb.libs.libfuncs import get_pdb_paths, get_scalar
+from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
 
 
@@ -84,66 +83,6 @@ ap.add_argument(
     type=Path,
     default=TMPDIR,
     )
-
-
-def get_exp_format_smfret(fexp):
-    """Get format from experimental template."""
-    format = {}
-    exp = pd.read_csv(fexp)
-    
-    format['res1'] = exp.res1.values.astype(int).tolist()
-    format['res2'] = exp.res2.values.astype(int).tolist()
-    format['scale'] = exp.scale.values.tolist()
-    
-    return format
-
-
-def calc_smfret(fexp, pdb):
-    """
-    Back calculate smFRET values.
-    
-    Take into consideration residue pairs and
-    scale from experimental data.
-    """
-    fret_bc = []
-    
-    exp = pd.read_csv(fexp)
-    res1 = exp.res1.values.astype(int)
-    res2 = exp.res2.values.astype(int)
-    scale = exp.scale.values
-    
-    s = Structure(pdb)
-    s.build()
-    
-    for i in range(exp.shape[0]):
-        r1 = int(res1[i])
-        r2 = int(res2[i])
-        r1p = 0
-        r2p = 0
-        
-        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
-            if r == r1 and s.data_array[j, col_name] == 'CA':
-                r1p = j
-                break
-        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
-            if r == r2 and s.data_array[j, col_name] == 'CA':
-                r2p = j
-                break
-            
-        # distance between 2 CA atoms
-        dv = s.coords[r1p, :] - s.coords[r2p, :]
-        assert dv.shape == (3,)
-        d = get_scalar(dv[0], dv[1], dv[2])
-
-        # scale_factor to adjust for dye size and CA to label distances
-        scale_factor = ((np.abs(r1 - r2) + 7) / np.abs(r1 - r2)) ** 0.5
-        d = d * scale_factor
-        eff = 1.0 / (1.0 + (d / scale[i]) ** 6.0)
-        fret_bc.append(eff)
-    
-    fret_bc = np.reshape(fret_bc, (-1, exp.shape[0])).tolist()
-    
-    return pdb, fret_bc
 
 
 def main(
