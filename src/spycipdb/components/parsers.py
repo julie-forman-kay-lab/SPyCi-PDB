@@ -1,4 +1,4 @@
-"""Contains functions to retrieve formats of experimental files for SPyCi-PDB"""
+"""Functions to retrieve formats of experimental files for SPyCi-PDB."""
 import pandas as pd
 
 

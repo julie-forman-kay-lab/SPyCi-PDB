@@ -1,15 +1,16 @@
-"""Contains all the different calculators used throughout SPyCi-PDB"""
+"""Contains all the different calculators used throughout SPyCi-PDB."""
 import os
-import sys
 import subprocess
-import pandas as pd
-import numpy as np
+import sys
 
+import numpy as np
+import pandas as pd
 from idpconfgen.libs.libhigherlevel import get_torsions
 from idpconfgen.libs.libstructure import Structure, col_name, col_resSeq
 
-from spycipdb.libs.libfuncs import get_scalar
 from spycipdb.components.hullrad import Sved, model_from_pdb
+from spycipdb.libs.libfuncs import get_scalar
+
 
 # Interesting way to import from repository that cannot be
 # installed as a module ;-)
@@ -25,7 +26,7 @@ for item in curr_fp_split:
         cspred_fp += item + "/"
 sys.path.insert(0, cspred_fp)
 
-from CSpred import calc_sing_pdb  # noqa: E402
+from CSpred import calc_sing_pdb  # noqa: E402, F401
 
 
 def calc_jc(fexp, pdb):
