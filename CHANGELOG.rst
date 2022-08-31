@@ -3,6 +3,7 @@ Changelog
 =========
 
 * Modularize all calculator components
+* Remove Python 3.7 from requirements
 
 v0.1.0 (2022-08-24)
 ------------------------------------------------------------
