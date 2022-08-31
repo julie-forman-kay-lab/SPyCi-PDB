@@ -31,7 +31,6 @@ OUTPUT:
 """
 import argparse
 import json
-import os
 import shutil
 import subprocess
 from functools import partial
@@ -43,6 +42,7 @@ from spycipdb import log
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
+from spycipdb.components.calculators import crysol_helper
 
 
 LOGFILESNAME = '.spycipdb_saxs'
@@ -84,62 +84,6 @@ ap.add_argument(
     type=Path,
     default=TMPDIR,
     )
-
-
-def crysol_helper(pdb_path, lm):
-    """
-    Handle external crysol shell command.
-
-    Parameters
-    ----------
-    pdb_path : str
-        Absolute path of PDB file.
-    
-    lm : int
-        Maximum order of harmonics used for CRYSOL
-
-    Returns
-    -------
-    pdb_name_ext : str
-        PDB file name with extension.
-    
-    saxs_bc : dict
-        Dictionary of index and values for each back-calculation.
-    """
-    saxs_bc = {}
-    index = []
-    value = []
-    
-    wrkdir = os.getcwd()
-    pdb_name_ext = pdb_path.rsplit('/', 1)[-1]
-    pdb_name = pdb_name_ext[0: pdb_name_ext.index('.')]
-    paths = wrkdir + "/" + pdb_name
-    
-    p = subprocess.Popen(
-        f"crysol {pdb_path} --lm={lm} --shell=water",
-        stdout=subprocess.PIPE,
-        shell=True,
-        )
-    p.communicate()  # waits for subprocess to stop running
-    
-    with open(paths + ".abs", mode='r') as crysol_out:
-        data = crysol_out.readlines()
-        data.pop(0)
-        for line in data:
-            splitted = line.split()
-            index.append(float(splitted[0]))
-            value.append(float(splitted[1]))
-        
-    saxs_bc['index'] = index
-    saxs_bc['value'] = value
-    
-    # removing crysol generated files
-    os.remove(paths + ".abs")
-    os.remove(paths + ".alm")
-    os.remove(paths + ".log")
-    os.remove(paths + ".int")
-    
-    return pdb_name_ext, saxs_bc
 
 
 def main(

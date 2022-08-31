@@ -38,14 +38,14 @@ import shutil
 from functools import partial
 from pathlib import Path
 
-import pandas as pd
 from idpconfgen.libs.libmulticore import pool_function
-from idpconfgen.libs.libstructure import Structure, col_name, col_resSeq
 
 from spycipdb import log
 from spycipdb.libs import libcli
-from spycipdb.libs.libfuncs import get_pdb_paths, get_scalar
+from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
+from spycipdb.components.calculators import calc_pre
+from spycipdb.components.parsers import get_exp_format_pre
 
 
 LOGFILESNAME = '.spycipdb_pre'
@@ -76,59 +76,6 @@ ap.add_argument(
     type=Path,
     default=TMPDIR,
     )
-
-
-def get_exp_format_pre(fexp):
-    """Get format based on experimental file."""
-    format = {}
-    exp = pd.read_csv(fexp)
-    
-    format['res1'] = exp.res1.values.astype(int).tolist()
-    format['atom1'] = exp.atom1.values.tolist()
-    format['res2'] = exp.res2.values.astype(int).tolist()
-    format['atom2'] = exp.atom2.values.tolist()
-    
-    return format
-
-
-def calc_pre(fexp, pdb):
-    """Back calculates PRE data based on atom-pairs from template."""
-    dist = []
-    
-    exp = pd.read_csv(fexp)
-    res1 = exp.res1.values.astype(int)
-    atom1_name = exp.atom1.values
-    res2 = exp.res2.values.astype(int)
-    atom2_name = exp.atom2.values
-    
-    s = Structure(pdb)
-    s.build()
-    
-    for i in range(exp.shape[0]):
-        r1 = int(res1[i])
-        r2 = int(res2[i])
-        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
-            if r == r1:
-                if atom1_name[i] == 'H':
-                    atom1 = s.coords[j, :]
-                    break
-                if atom1_name[i] in s.data_array[j, col_name]:
-                    atom1 = s.coords[j, :]
-                    break
-        for j, r in enumerate(s.data_array[:, col_resSeq].astype(int)):
-            if r == r2:
-                if atom2_name[i] == 'H':
-                    atom2 = s.coords[j, :]
-                    break
-                if atom2_name[i] in s.data_array[j, col_name]:
-                    atom2 = s.coords[j, :]
-                    break
-                
-        dv = atom1 - atom2
-        assert dv.shape == (3,)
-        dist.append(get_scalar(dv[0], dv[1], dv[2]))
-    
-    return pdb, dist
 
 
 def main(

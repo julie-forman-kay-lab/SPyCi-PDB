@@ -32,15 +32,14 @@ import shutil
 from functools import partial
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
-from idpconfgen.libs.libhigherlevel import get_torsions
 from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
+from spycipdb.components.calculators import calc_jc
 
 
 LOGFILESNAME = '.spycipdb_jc'
@@ -71,36 +70,6 @@ ap.add_argument(
     type=Path,
     default=TMPDIR,
     )
-
-
-def calc_jc(fexp, pdb):
-    """
-    Back-calculate JC data.
-    
-    Requires residues of interest derived from experimental template.
-    
-    Parameters
-    ----------
-    fexp : str or Path
-        To the experimental file template
-    
-    pdb : Path
-        To the PDB file
-    
-    Returns
-    -------
-    jc_bc : list
-        Of JC values
-    
-    pdb : Path
-        Of the PDB calculated
-    """
-    exp = pd.read_csv(fexp)
-    # align torsion index as the first residue doesn't have phi torsion
-    resn = exp.resnum.values - 2
-    jc_bc = np.cos(get_torsions(pdb)[2::3][resn] - np.radians(60))
-    
-    return pdb, jc_bc.tolist()
 
 
 def main(
