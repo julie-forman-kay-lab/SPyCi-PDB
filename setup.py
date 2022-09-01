@@ -73,8 +73,9 @@ setup(
         'Discussion Forum': 'https://github.com/julie-forman-kay-lab/SPyCi-PDB/discussions',
         },
     keywords=[
-        'ci', 'continuous-integration', 'project-template',
-        'project-skeleton', 'sample-project',
+        'spycipdb', 'back-calculator', 'biochemistry', 'biophysics',
+        'structural biology', 'idpconformergenerator', 'nmr',
+        'saxs', 'smfret', 'pre', 'noe', 'cs', 'rh', 'rdc',
         # eg: 'keyword1', 'keyword2', 'keyword3',
         ],
     python_requires='>=3.8, <4',

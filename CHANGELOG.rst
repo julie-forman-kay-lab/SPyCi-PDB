@@ -2,8 +2,13 @@
 Changelog
 =========
 
+* Update failing tests
+* Upload manuscript, bibliography, and tests for JOSS (#21)
+
 v0.1.3 (2022-09-01)
 ------------------------------------------------------------
+
+* Update RtD link in README.rst
 
 v0.1.2 (2022-08-31)
 ------------------------------------------------------------

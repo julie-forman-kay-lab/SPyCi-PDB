@@ -1,10 +1,13 @@
 graft docs
 graft src
+graft example
+graft thirdparty
 
 include *.rst
 include LICENSE
 include requirements.txt
 include CODE_OF_CONDUCT.md
+include *.yml
 
 exclude .appveyor.yml
 exclude .bumpversion.cfg
@@ -19,6 +22,8 @@ exclude .travis.yml
 
 prune devtools
 prune tests
+prune joss
+prune .vscode
 
 global-exclude *.py[cod] __pycache__/* *.so *.dylib 
 global-exclude tags
