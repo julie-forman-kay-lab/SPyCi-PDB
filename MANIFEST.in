@@ -16,6 +16,8 @@ recursive-include thirdparty *.tab
 recursive-include thirdparty *.tbl
 recursive-include thirdparty *.txt
 recursive-include thirdparty *.yml
+recursive-include joss *.bib
+recursive-include joss *.md
 
 exclude .appveyor.yml
 exclude .bumpversion.cfg
