@@ -30,7 +30,7 @@ Developed as a standalone program with integration into the IDPConformerGenerato
 Documentation
 =============
 
-More detailed documentation can be found at: ``READTHEDOCS LINK``.
+More detailed documentation can be found at: https://spyci-pdb.readthedocs.io/en/stable/
 
 Within the repository you can find:
 
