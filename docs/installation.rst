@@ -125,7 +125,7 @@ UCBShift
     We are assuming we're in the ``SPyCi-PDB`` directory and the Python
     environment is deactivated.
 
-Clone the UCBShift repository from `my fork https://github.com/menoliu/CSpred`_ on
+Clone the UCBShift repository from `my fork <https://github.com/menoliu/CSpred>`_ on
 GitHub.::
 
     git clone https://github.com/menoliu/CSpred

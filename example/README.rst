@@ -21,8 +21,6 @@ Microsoft Excel usage.
 To use the bare-bones version of :code:`spycipdb`, the PRE, NOE, JC, and
 smFRET modules do not require third-party applications.
 
-!!!!!!TODO: include other things that are not third-party!!!!!!
-
 For example, in the :code:`pre` module, view its help using the following::
 
     spycipdb pre -h
