@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.1.4 (2022-09-01)
+------------------------------------------------------------
+
 * Update failing tests
 * Upload manuscript, bibliography, and tests for JOSS (#21)
 
