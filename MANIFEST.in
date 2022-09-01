@@ -5,6 +5,17 @@ include *.rst
 include LICENSE
 include requirements.txt
 include CODE_OF_CONDUCT.md
+include *.yml
+
+recursive-include example *.rst
+recursive-include example *.txt
+recursive-include example *.xz
+recursive-include thirdparty *.com
+recursive-include thirdparty *.pdb
+recursive-include thirdparty *.tab
+recursive-include thirdparty *.tbl
+recursive-include thirdparty *.txt
+recursive-include thirdparty *.yml
 
 exclude .appveyor.yml
 exclude .bumpversion.cfg
