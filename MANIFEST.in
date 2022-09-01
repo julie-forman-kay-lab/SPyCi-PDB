@@ -19,11 +19,11 @@ exclude .readthedocs.yml
 exclude .codeclimate.yml
 exclude tox.ini
 exclude .travis.yml
-exclude .vscode
 
 prune devtools
 prune tests
 prune joss
+prune .vscode
 
 global-exclude *.py[cod] __pycache__/* *.so *.dylib 
 global-exclude tags
