@@ -45,11 +45,12 @@ jobs:
     - name: unit tests
       run: tox -e ${{ matrix.tox-envs }}
 
+    
     # from https://github.com/codecov/codecov-action
-    - name: Upload coverage to Codecov
-      if: matrix.tox-envs == 'test'
-      uses: codecov/codecov-action@v2
-      with:
-        files: ./coverage.xml
-        fail_ci_if_error: true
-        verbose: true
+    #- name: Upload coverage to Codecov
+    #  if: matrix.tox-envs == 'test'
+    #  uses: codecov/codecov-action@v2
+    #  with:
+    #    files: ./coverage.xml
+    #    fail_ci_if_error: true
+    #    verbose: true
