@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Edits to the manuscript per Aug 29 comments from Dr. Julie Forman-Kay
+
 v0.1.4 (2022-09-01)
 ------------------------------------------------------------
 
