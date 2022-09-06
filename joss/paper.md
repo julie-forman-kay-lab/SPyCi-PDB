@@ -73,19 +73,16 @@ fluorescence resonance energy transfer (`smfret`) values from all-atom PDB struc
 
 # Statement of Need
 
-As new software packages and *in silico* methodologies emerge to better model IDP/IDR structures, back-calculations to
-multiple experimental datatypes are required to quantitatively assess the conformers generated. **SPyCi-PDB** hopes to
-assist by providing a user-friendly, all-in-one package to reduce the time and confusion this step may bring as well as
-open opportunities for future collaborations and integrations of new experimental datatypes.
-
-Furthermore, **SPyCi-PDB** aims to unify different input and output data formats from different experimental datatypes
-to increase productivity and accelerate research. As stated in the documentation hosted by ReadTheDocs, input formats
-are conventional comma-delimited tables (e.g. `.CSV, .TXT`), while the output format is human-readable `.JSON` files that
-can be easily manipulated using Python or other software based on the user's ultimate needs.
-
-Lastly, **SPyCi-PDB** was developed with integration into the IDPConformerGenerator platform; created with
-modularity and best practices in mind, we hope to use this example as what we hope other researchers could do to contribute
-towards our ultimate goal of modelling IDPs and IDRs.
+As new software packages and *in silico* methodologies emerge to better model IDP/IDR structures,
+back-calculations to multiple experimental datatypes are required to quantitatively assess the conformers generated.
+**SPyCi-PDB** should assist by providing a user-friendly, all-in-one package to reduce time and confusion in this back-calculation step as well as
+open opportunities for future collaborations and integration of new experimental datatypes. Furthermore,
+**SPyCi-PDB** aims to unify different input and output data formats from different experimental datatypes
+to increase productivity and accelerate research. As stated in the documentation hosted by ReadTheDocs,
+input formats are conventional comma-delimited tables (e.g. `.CSV, .TXT`), while the output format is human-readable `.JSON` files that
+can be easily manipulated using Python or other software based on the user's ultimate needs. **SPyCi-PDB**
+was also developed to integrate into the IDPConformerGenerator platform. By creating a tool with modularity
+and best practices, we aim to encourage other researchers to contribute towards this platform to further the goal of improved modelling of IDPs and IDRs.
 
 # Implementation
 
