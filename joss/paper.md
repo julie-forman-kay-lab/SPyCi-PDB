@@ -89,23 +89,21 @@ towards our ultimate goal of modelling IDPs and IDRs.
 
 # Implementation
 
-As of the current release of 0.1.X, four out of eight modules of  **SPyCi-PDB**'s back-calculators (`pre`, `noe`, `jc`, `smfret`)
-use internal mathematical algorithms and PDB structure processing using IDPConformerGenerator libraries [@Teixeira2022].
+As of the current release of 0.1.X, four out of eight modules of  **SPyCi-PDB**'s back-calculators
+(`pre`, `noe`, `jc`, `smfret`) use internal mathematical algorithms and PDB structure processing using
+IDPConformerGenerator libraries [@Teixeira2022]. The `pre` and `noe` module calculates scalar distances
+between pairs of atoms according to the pairs derived from the experimental template. It utilizes an algorithm
+that matches atom names of each residue with allowance for multiple assignments for `noe`. The `jc` module uses
+the Karplus curve, a simple cosine function, to back-calculate the desired J-couplings according to residue
+number as provided by the experimental template file [need reference to Karplus curve].
+Finally, the `smfret` module takes into consideration residue pairs and a scale factor to adjust for dye
+size from the experimental setup to back-calculate distances between two CA atoms. The remaining 4 modules
+(`cs`, `saxs`, `rh`, `rdc`) call upon third-party academic software: UCBShift for chemical shifts [@Li2020],
+CRYSOL v3 for SAXS [@Franke2017], HullRad for Rh [@Fleming2018], and PALES for RDC [@Zweckstetter2000].  
 
-The `pre` and `noe` module calculates scalar distances between pairs of atoms according to the pairs
-derived from the experimental template. It utilizes an algorithm that matches atom names per residue
-with allowance for multiple assignments for `noe`. The `jc` module uses a simple cosine function
-to back-calculate the desired J-couplings according to residue number as provided by the experimental
-template file. Finally, the `smfret` module takes into consideration residue pairs and a scale factor
-to adjust for dye size from experimental data to back-calculate distances between two CA atoms.
-
-The remaining 4 modules (`cs`, `saxs`, `rh`, `rdc`) call upon third-party academic software per the following:
-UCBShift for chemical shifts [@Li2020], CRYSOL v3 for SAXS [@Franke2017], HullRad for Rh [@Fleming2018],
-and PALES for RDC [@Zweckstetter2000]. 
-
-Thorough testing have been performed to ensure smooth installation and troubleshooting as well as retaining
-the multiprocessing features that may not have been implemented in their standalone form. Future additions
-to the **SPyCi-PDB** interface suite are welcome and easy to perform given its design with modularity in mind.
+Thorough testing of each module has been performed to ensure smooth installation and troubleshooting as well
+as retaining or providing multiprocessing capabilities that may not have been implemented in their standalone form.
+Future additions to the **SPyCi-PDB** interface suite are welcome and easy to perform given its design with modularity in mind. 
 
 # Installation
 
