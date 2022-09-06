@@ -45,31 +45,39 @@ bibliography: paper.bib
 
 # Summary
 
-The protein folding problem has been sought out since the early 1960s [@Dill2008] and although
-recent technological advances has made it possible to solve structures of stable, folded proteins: such as Nuclear Magnetic
-Resonance spectroscopy [@Kanelis2001], X-ray crystallography [@Smyth2000], and more recently Cryo-electron microscopy 
-[@Malhotra2019]. Modeling intrinsically disordered proteins and disordered regions (IDPs/IDRs) remain challenging due to
-their highly dynamic nature and low-propensity to conform to an energy-minima folded structure [@Mittag2007].
+Determination of the structures of proteins have been a central scientific focus since the early 1960s [@Dill2008]
+with technological advances facilitating experimental structures of stable, folded proteins by nuclear magnetic
+resonance (NMR) spectroscopy [@Kanelis2001], X-ray crystallography [@Smyth2000], and cryo-electron microscopy [@Malhotra2019],
+as well as the recent computational prediction of structures [refs to AlphaFold and RoseTTAFold]. Modeling intrinsically
+disordered proteins and disordered regions (IDPs/IDRs), however, remains challenging due to their highly dynamic nature
+and low-propensity to form low energy folded structures [@Mittag2007].
 
-Currently, the approaches to model IDPs/IDRs can be generalized into two groups of thought. The first, and more traditional
-method is to generate conformational ensembles of IDPs/IDRs *de novo* using sampling techniques presented in TraDES [@Feldman2000; @Feldman2001],
-Flexible-meccano [@Ozenne2012], FastFloppyTail [@Ferrie2020], IDPConformerGenerator [@Teixeira2022], and others [@Estaa2019] that primarily uses the torsion angle distributions
-found in high-resolution folded protein structures deposited in the RCSB Protein Data Bank [@Berman2000]. Another popular, but computationally
-expensive approach to generate conformational ensembles *ab initio* is the use of different force-fields within an Molecular Dynamics (MD)
-simulation.
+Currently, approaches to model IDPs/IDRs generally start with initial pools of structures sampling potentially accessible
+conformations and then utilize experimental data to narrow the pool. One method to generate initial conformational ensembles
+of IDPs/IDRs uses sampling techniques such as in TraDES [@Feldman2000; @Feldman2001], Flexible-meccano [@Ozenne2012],
+FastFloppyTail [@Ferrie2020], IDPConformerGenerator [@Teixeira2022], and others [@Estaa2019] that rely on the torsion
+angle distributions found in high-resolution folded protein structures deposited in the RCSB Protein Data Bank [@Berman2000].
+Another more computationally expensive approach generates conformational ensembles using Molecular Dynamics (MD)
+simulations with different force-fields [needs refs]. 
 
-After generating the initial pool of structures, back-calculations to experimental data and reweighting using Monte-Carlo [@Krzeminski2012]
-or Bayesian statistics [@Lincoff2020; @Bottaro2020] must be performed to obtain high quality structures that have a better fitment
-with solution NMR, SAXS, smFRET, and other experimentally obtained data from these IDPs/IDRs.
-An emerging method to generate conformations of IDPs/IDRs uses machine learning generative models that use ensembles generated 
-from sampling or MD techniques as training data and reinforces learning with experimental and back-calculated datatypes.
+After generating the initial pool of structures, back-calculations to experimental data and reweighting using
+Monte-Carlo [@Krzeminski2012] or Bayesian statistics [@Lincoff2020; @Bottaro2020] can be performed to define structural
+ensembles that better match solution NMR, small-angle X-ray scattering (SAXS), single molecule fluorescence (SMF), and
+other experimentally obtained data from these IDPs/IDRs. An emerging method generates conformations of IDPs/IDRs uses
+machine learning generative models based on ensembles generated from sampling or MD techniques as training data and
+reinforces learning with experimental data. Both of these general approaches rely on back-calculation of "experimental
+observables" from coordinates of conformers within the ensembles, a task that is increasingly complex due to the various
+models for interpretation of experimental data and the numerous tools available. 
 
-**SPyCi-PDB** focuses on streamlining the back-calculation stage by acting as a platform for internal back-calculator functions as well as
-published third-party software. The development of **SPyCi-PDB** was inspired as a way to minimize the existing issues with different
-data-formats from softwares and scripts within the IDP/IDR research community and improves accessibility to non-computational researchers.
-In this release, **SPyCi-PDB** can back-calculate paramagnetic resonance entropy (`pre`), nuclear overhauser effect (`noe`), 3J-HNHA coupling (`jc`),
-chemical shifts (`cs`), small angle X-ray scattering (`saxs`), hydrodynamic radius (`rh`), residual dipolar couplings (`rdc`), and single-molecule 
-fluorescence resonance energy transfer (`smfret`) values from all-atom PDB structures of IDP/IDR conformations.
+Here we present **SPyCi-PDB**, designed to facilitate and streamline this back-calculation stage by acting as a
+platform for internal back-calculator functions as well as published third-party software, utilizing PDB structures
+of disordered protein conformations. One goal of **SPyCi-PDB** is to minimize the existing issues with different
+data-formats from software and scripts within the IDP/IDR research community and improve accessibility to
+non-computational researchers. In this release, **SPyCi-PDB** can back-calculate NMR chemical shifts (`cs`),
+paramagnetic resonance enhancement (`pre`), nuclear Overhauser effect (`noe`), 3J-HNHA coupling (`jc`), and residual
+dipolar coupling (`rdc`) data; hydrodynamic radius (`rh`) data from NMR, light scattering or size exclusion chromatography;
+SAXS (`saxs`); and single-molecule fluorescence resonance energy transfer (`smfret`) values from all-atom PDB structures of
+IDP/IDR conformations.
 
 # Statement of Need
 
