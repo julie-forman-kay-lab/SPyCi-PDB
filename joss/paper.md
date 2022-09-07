@@ -115,7 +115,7 @@ that matches atom names of each residue with allowance for multiple assignments 
 the Karplus curve, a simple cosine function, to back-calculate the desired J-couplings according to residue
 number as provided by the experimental template file [@Perez2001]. Finally, the `smfret` (4) module takes into
 consideration residue pairs and a scale factor to adjust for dye size from the experimental setup to back-calculate
-distances between two CA atoms. The equations mentioned above are as follows:
+distances between two alpha-Carbon (CA) atoms. The equations mentioned above are as follows:
 
 $$
 \begin{aligned}
@@ -157,10 +157,10 @@ $ spycipdb -h
 ```
 
 To provide an example, we showcase the built-in PRE module with `pre` used to back-calculate
-PRE distances given an experimental data template:
+PRE distances given an experimental data template as seen in the `example/` folder:
 
 ```bash
-$ spycipdb pre /path/pdbs/ -e pdbs_PRE.txt -n 16 -o bc_pdbs_PRE.json
+$ spycipdb pre /drksh3_csss_100/ -e /example/drksh3_exp_data/drksh3_PRE.txt -n 16 -o bc_pdbs_PRE.json
 ```
 
 Users can specify a directory or tarball (.TAR) with `N` number of PDB files and an experimental template file
