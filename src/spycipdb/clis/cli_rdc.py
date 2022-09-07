@@ -24,7 +24,7 @@ REQUIREMENTS:
     DATA SEQUENCE GEWTYDDATK TFTVTE
 
     VARS   RESID_I RESNAME_I ATOMNAME_I RESID_J RESNAME_J ATOMNAME_J D DD W
-    FORMAT %5d     %6s       %6s        %5d     %6s    %6s %9.3f %9.3f %.2f
+    FORMAT %%5d    %%6s      %%6s       %%5d    %%6s   %%6s %%9.3f %%9.3f %%.2f
 
         2    THR     HN     2    THR      N      1.464      1.000  1.00
         3    TYR     HN     3    TYR      N      7.057      1.000  1.00
