@@ -121,7 +121,7 @@ $$
 \begin{aligned}
 \sqrt{\delta x^2 + \delta y^2 + \delta z^2}\ (1)\\\\
 \sqrt[6]{(\frac{(\delta x^2 + \delta y^2 + \delta z^2)^3}{N}}\ (2)\\\\
-\cos(\varphi - \frac{10800^{\circ}}{\pi})\ (3)\\\\
+\cos(\varphi - \frac{\pi}{3})\ (3)\\\\
 \frac{1}{1 + (\frac{D \cdot \sqrt{\frac{|R_1 - R_2|+7}{R_1 - R_2}}}{S})^6}\ (4)
 \end{aligned}
 $$
