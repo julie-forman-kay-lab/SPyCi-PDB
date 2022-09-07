@@ -58,7 +58,7 @@ of IDPs/IDRs uses sampling techniques such as in TraDES [@Feldman2000; @Feldman2
 FastFloppyTail [@Ferrie2020], IDPConformerGenerator [@Teixeira2022], and others [@Estaa2019] that rely on the torsion
 angle distributions found in high-resolution folded protein structures deposited in the RCSB Protein Data Bank [@Berman2000].
 Another more computationally expensive approach generates conformational ensembles using Molecular Dynamics (MD)
-simulations with different force-fields [needs refs]. 
+simulations with different force-fields [@Salvi2016; @Robustelli2018].
 
 After generating the initial pool of structures, back-calculations to experimental data and reweighting using
 Monte-Carlo [@Krzeminski2012] or Bayesian statistics [@Lincoff2020; @Bottaro2020] can be performed to define structural
@@ -100,7 +100,7 @@ IDPConformerGenerator libraries [@Teixeira2022]. The `pre` and `noe` module calc
 between pairs of atoms according to the pairs derived from the experimental template. It utilizes an algorithm
 that matches atom names of each residue with allowance for multiple assignments for `noe`. The `jc` module uses
 the Karplus curve, a simple cosine function, to back-calculate the desired J-couplings according to residue
-number as provided by the experimental template file [need reference to Karplus curve].
+number as provided by the experimental template file [@Perez2001].
 Finally, the `smfret` module takes into consideration residue pairs and a scale factor to adjust for dye
 size from the experimental setup to back-calculate distances between two CA atoms. The remaining 4 modules
 (`cs`, `saxs`, `rh`, `rdc`) call upon third-party academic software: UCBShift for chemical shifts [@Li2020],
