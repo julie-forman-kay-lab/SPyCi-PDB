@@ -45,10 +45,10 @@ bibliography: paper.bib
 
 # Summary
 
-Determination of the structures of proteins have been a central scientific focus since the early 1960s [@Dill2008]
+Structural determination of proteins have been a central scientific focus since the early 1960s [@Dill2008]
 with technological advances facilitating experimental structures of stable, folded proteins by nuclear magnetic
 resonance (NMR) spectroscopy [@Kanelis2001], X-ray crystallography [@Smyth2000], and cryo-electron microscopy [@Malhotra2019],
-as well as the recent computational prediction of structures [refs to AlphaFold and RoseTTAFold]. Modeling intrinsically
+as well as the recent computational prediction of structures [@Jumper2021; @Baek2021]. Modeling intrinsically
 disordered proteins and disordered regions (IDPs/IDRs), however, remains challenging due to their highly dynamic nature
 and low-propensity to form low energy folded structures [@Mittag2007].
 
@@ -83,14 +83,23 @@ IDP/IDR conformations.
 
 As new software packages and *in silico* methodologies emerge to better model IDP/IDR structures,
 back-calculations to multiple experimental datatypes are required to quantitatively assess the conformers generated.
-**SPyCi-PDB** should assist by providing a user-friendly, all-in-one package to reduce time and confusion in this back-calculation step as well as
+The current state of back-calculating PRE and NOE distances for dynamic protein systems, are not robust as the correlation
+of two interacting groups of protons, in the case of NOEs, cannot be described by a simple distance. Furthermore, the data
+from PRE back-calculations are improperly used in IDPs as a wider range of distances are sampled for disordered compared
+to folded proteins. Although advancements in back-calculation of chemical shifts has been made, as seen in UCBShift [@Li2020],
+improvements can still be made as the error in some cases is larger than the deviation of the back-calculated values. Given
+the rapid developing nature of different software tools to perform back-calculations, **SPyCi-PDB** should assist by providing
+a user-friendly, all-in-one package to reduce time and confusion in this back-calculation step as well as
 open opportunities for future collaborations and integration of new experimental datatypes. Furthermore,
 **SPyCi-PDB** aims to unify different input and output data formats from different experimental datatypes
 to increase productivity and accelerate research. As stated in the documentation hosted by ReadTheDocs,
 input formats are conventional comma-delimited tables (e.g. `.CSV, .TXT`), while the output format is human-readable `.JSON` files that
 can be easily manipulated using Python or other software based on the user's ultimate needs. **SPyCi-PDB**
-was also developed to integrate into the IDPConformerGenerator platform. By creating a tool with modularity
-and best practices, we aim to encourage other researchers to contribute towards this platform to further the goal of improved modelling of IDPs and IDRs.
+was also developed to integrate into the IDPConformerGenerator platform. 
+
+Ultimately, given the complicated and dynamic exchanging nature of IDPs, back-calculators will still need to be developed
+with these features in mind. By creating a tool with modularity and best practices, we aim to encourage other
+researchers to contribute towards this platform to further the goal of improved modelling of IDPs and IDRs.
 
 # Implementation
 
@@ -100,15 +109,15 @@ IDPConformerGenerator libraries [@Teixeira2022]. The `pre` and `noe` module calc
 between pairs of atoms according to the pairs derived from the experimental template. It utilizes an algorithm
 that matches atom names of each residue with allowance for multiple assignments for `noe`. The `jc` module uses
 the Karplus curve, a simple cosine function, to back-calculate the desired J-couplings according to residue
-number as provided by the experimental template file [@Perez2001].
-Finally, the `smfret` module takes into consideration residue pairs and a scale factor to adjust for dye
-size from the experimental setup to back-calculate distances between two CA atoms. The remaining 4 modules
-(`cs`, `saxs`, `rh`, `rdc`) call upon third-party academic software: UCBShift for chemical shifts [@Li2020],
-CRYSOL v3 for SAXS [@Franke2017], HullRad for Rh [@Fleming2018], and PALES for RDC [@Zweckstetter2000].  
+number as provided by the experimental template file [@Perez2001]. Finally, the `smfret` module takes into
+consideration residue pairs and a scale factor to adjust for dye size from the experimental setup to back-calculate
+distances between two CA atoms. The remaining 4 modules (`cs`, `saxs`, `rh`, `rdc`) call upon third-party academic
+software: UCBShift for chemical shifts [@Li2020], CRYSOL v3 for SAXS [@Franke2017], HullRad for Rh [@Fleming2018],
+and PALES for RDC [@Zweckstetter2000].
 
 Thorough testing of each module has been performed to ensure smooth installation and troubleshooting as well
 as retaining or providing multiprocessing capabilities that may not have been implemented in their standalone form.
-Future additions to the **SPyCi-PDB** interface suite are welcome and easy to perform given its design with modularity in mind. 
+Future additions to the **SPyCi-PDB** interface suite are welcome and easy to perform given its design with modularity in mind.
 
 # Installation
 
@@ -117,7 +126,7 @@ web page or `docs/installation.rst` in the repository. As **spycipdb** is writte
 it is compatible with any platform able to execute Python (>=3.8 but <4.0). However, certain third-party
 extensions to perform back-calculations (SAXS and RDC) have only been tested on 64-bit Ubuntu 18.04.X LTS
 and 20.04.X LTS, as well as WSL 2.0 on 64-bit Windows 11. It is recommended that users read the detailed
-installation and troubleshooting documentation before using Anaconda or virtualenv to install and configure **spycipdb**. 
+installation and troubleshooting documentation before using Anaconda or virtualenv to install and configure **spycipdb**.
 
 # Example Usage
 
