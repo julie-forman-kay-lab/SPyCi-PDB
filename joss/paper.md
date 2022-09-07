@@ -103,7 +103,11 @@ researchers to contribute towards this platform to further the goal of improved 
 
 # Implementation
 
-As of the current release of version 0.1.X, four out of eight modules of  **SPyCi-PDB**'s back-calculators
+As **spycipdb** is written completely in Python, it is compatible with any platform able to execute Python
+(>=3.8, <4.0). However, certain third-party extensions to perform back-calculations (SAXS and RDC) have
+only been tested on 64-bit Ubuntu 18.04.X LTS and 20.04.X LTS, as well as WSL 2.0 on 64-bit Windows 11.
+
+In the production version 0.1.X, four out of eight modules of  **SPyCi-PDB**'s back-calculators
 (`pre`, `noe`, `jc`, `smfret`) use internal mathematical algorithms and PDB structure processing using
 IDPConformerGenerator libraries [@Teixeira2022]. The `pre` (1) and `noe` (2) module calculates scalar distances
 between pairs of atoms according to the pairs derived from the experimental template. It utilizes an algorithm
@@ -115,29 +119,32 @@ distances between two CA atoms. The equations mentioned above are as follows:
 
 $$
 \begin{aligned}
-(1)\ \sqrt{\delta x^2 + \delta y^2 + \delta z^2}\\\\
-(2)\ \sqrt[6]{(\frac{(\delta x^2 + \delta y^2 + \delta z^2)^3}{N}}\\\\
-(3)\ \cos(\varphi - \frac{10800^{\circ}}{\pi})\\\\
-(4)\ \frac{1.0}{1.0 + (\frac{D \cdot \sqrt{\frac{|R_1 - R_2|+7}{R_1 - R_2}}}{S})^6}
+\sqrt{\delta x^2 + \delta y^2 + \delta z^2}\ (1)\\\\
+\sqrt[6]{(\frac{(\delta x^2 + \delta y^2 + \delta z^2)^3}{N}}\ (2)\\\\
+\cos(\varphi - \frac{10800^{\circ}}{\pi})\ (3)\\\\
+\frac{1}{1 + (\frac{D \cdot \sqrt{\frac{|R_1 - R_2|+7}{R_1 - R_2}}}{S})^6}\ (4)
 \end{aligned}
 $$
 
-The remaining 4 modules (`cs`, `saxs`, `rh`, `rdc`) call upon third-party academic software: UCBShift for
-chemical shifts [@Li2020], CRYSOL v3 for SAXS [@Franke2017], HullRad for Rh [@Fleming2018], and PALES for RDC [@Zweckstetter2000]. Thorough testing of each module has been performed to ensure smooth installation and troubleshooting as well as retaining or providing multiprocessing capabilities that may not have been implemented in their standalone form. When choosing third-party software, we prioritized recent published endeavors written in Python for ease of integration such as UCBShift, and HullRad.
+Where δx, δy, δz are the cartesian differences between two atoms of interest (1, 2), N represents the number of combinations
+for NOE atom pairs (2), φ is the Phi torsion angle of interest (3), D is the scalar distance between the residues of interest
+with R_1 and R_2 being the vector cartesian co-ordinates for the residues and S being the scale factor according to experimental information.
+
+The remaining 4 modules (`cs`, `saxs`, `rh`, `rdc`) call upon third-party academic software: UCBShift, a machine learning algorithm that
+uses structural alignment for experimental chemical shift replication and employs a random forest regression on curated data to most accurately
+predict protein chemical shifts [@Li2020]; CRYSOL v3, an updated version of the well established SAXS back-calculator from ATSAS that can now
+evaluate the hydration shell by populating the protein structure with dummy water for SAXS calculations [@Franke2017];
+HullRad, to calculate hydrodynamic radis (Rh) by using a convex hull model to estimate the hydrodynamic properties of a macromolecule [@Fleming2018];
+PALES, using the obstruction model to derive dipolar coupling (RDC) information from the average orientation of the a 3-D structural model [@Zweckstetter2000].
+Thorough testing of each module has been performed to ensure smooth installation and troubleshooting as well as retaining or providing
+multiprocessing capabilities that may not have been implemented in their standalone form. When choosing third-party software, we prioritized
+recent published endeavors written in Python for ease of integration such as UCBShift, and HullRad.
 
 We are also open to integrate other options for back-calculators such as DEER-PREdict [@Tesei2021] for PREs, and alternative
 methods to calculating experimental datatypes internally such as using a parameterizable fluoresence liftime and the Förster
 distance as used in the Naudi-Fabra et al. study of describing intrinsically disordered proteins using
-smFRET, NMR, and SAXS [@Naudi-Fabra2021]. Future additions to the **SPyCi-PDB** interface suite are welcome and easy to perform given its design with modularity in mind.
-
-# Installation
-
-To install **spycipdb**, follow the instructions provided on the corresponding documentation
-web page or `docs/installation.rst` in the repository. As **spycipdb** is written completely in Python,
-it is compatible with any platform able to execute Python (>=3.8 but <4.0). However, certain third-party
-extensions to perform back-calculations (SAXS and RDC) have only been tested on 64-bit Ubuntu 18.04.X LTS
-and 20.04.X LTS, as well as WSL 2.0 on 64-bit Windows 11. It is recommended that users read the detailed
-installation and troubleshooting documentation before using Anaconda or virtualenv to install and configure **spycipdb**.
+smFRET, NMR, and SAXS [@Naudi-Fabra2021]. Future additions to the **SPyCi-PDB** interface suite are welcome and easy to perform
+given its design with modularity in mind.
 
 # Example Usage
 
