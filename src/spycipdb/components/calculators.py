@@ -343,6 +343,7 @@ def calc_smfret(fexp, pdb):
         d = get_scalar(dv[0], dv[1], dv[2])
 
         # scale_factor to adjust for dye size and CA to label distances
+        # TODO: change r1 and r2 to r1p and r2p respectively
         scale_factor = ((np.abs(r1 - r2) + 7) / np.abs(r1 - r2)) ** 0.5
         d = d * scale_factor
         eff = 1.0 / (1.0 + (d / scale[i]) ** 6.0)
