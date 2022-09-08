@@ -170,8 +170,8 @@ def main(
         per_struct['CB'] = result[1].CB_UCBShift.values.astype(float).tolist()
         per_struct['N'] = result[1].CB_UCBShift.values.astype(float).tolist()
         
-        _output[result[0]] = per_struct
         _output['format'] = format
+        _output[result[0]] = per_struct
     
     log.info(S('done'))
     

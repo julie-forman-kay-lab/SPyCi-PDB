@@ -2,6 +2,10 @@
 Changelog
 =========
 
+* Edits to the manuscript per Aug 29 comments from Dr. Julie Forman-Kay
+* Fix documentation error for RDC module
+* Fix small issue of CS module output
+
 v0.1.4 (2022-09-01)
 ------------------------------------------------------------
 
