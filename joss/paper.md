@@ -45,39 +45,13 @@ bibliography: paper.bib
 
 # Summary
 
-Structural determination of proteins have been a central scientific focus since the early 1960s [@Dill2008]
-with technological advances facilitating experimental structures of stable, folded proteins by nuclear magnetic
-resonance (NMR) spectroscopy [@Kanelis2001], X-ray crystallography [@Smyth2000], and cryo-electron microscopy [@Malhotra2019],
-as well as the recent computational prediction of structures [@Jumper2021; @Baek2021]. Modeling intrinsically
-disordered proteins and disordered regions (IDPs/IDRs), however, remain challenging due to their highly dynamic nature
-and low-propensity to form low energy folded structures [@Mittag2007].
+Structural determination of proteins has been a central scientific focus since the early 1960s [@Dill2008] with technological advances facilitating experimental structures of stable, folded proteins by nuclear magnetic resonance (NMR) spectroscopy [@Kanelis2001], X-ray crystallography [@Smyth2000], and cryo-electron microscopy [@Malhotra2019], as well as the recent computational prediction of structures [@Jumper2021; @Baek2021]. Modeling intrinsically disordered proteins (IDPs) and intrinsically disordered regions (IDRs), however, remains challenging due to their highly dynamic nature and low propensity to form low energy folded structures [@Mittag2007]. 
 
-Currently, approaches to model IDPs/IDRs generally start with initial pools of structures sampling potentially accessible
-conformations and then utilize experimental data to narrow the pool. One method to generate initial conformational ensembles
-of IDPs/IDRs uses sampling techniques such as in TraDES [@Feldman2000; @Feldman2001], Flexible-meccano [@Ozenne2012],
-FastFloppyTail [@Ferrie2020], IDPConformerGenerator [@Teixeira2022], and others [@Estaa2019] that rely on the torsion
-angle distributions found in high-resolution folded protein structures deposited in the RCSB Protein Data Bank [@Berman2000].
-Another more computationally expensive approach generates conformational ensembles using Molecular Dynamics (MD)
-simulations with different force-fields [@Salvi2016; @Robustelli2018].
+Currently, approaches to model IDPs/IDRs generally start with initial pools of structures that sample potentially accessible conformations and then utilize experimental data to narrow the pool. One method to generate initial conformational ensembles of IDPs/IDRs uses sampling techniques such as in TraDES [@Feldman2000; @Feldman2001], Flexible-meccano [@Ozenne2012], FastFloppyTail [@Ferrie2020], IDPConformerGenerator [@Teixeira2022], and others [@Estaa2019] that rely on the torsion angle distributions found in high-resolution folded protein structures deposited in the RCSB Protein Data Bank [@Berman2000]. Another more computationally expensive approach generates conformational ensembles using molecular dynamics (MD) simulations with different force-fields [@Salvi2016; @Robustelli2018]. 
 
-After generating the initial pool of structures, back-calculations to experimental data and reweighting using
-Monte-Carlo [@Krzeminski2012] or Bayesian statistics [@Lincoff2020; @Bottaro2020] can be performed to define structural
-ensembles that better match solution NMR, small-angle X-ray scattering (SAXS), single molecule fluorescence (SMF), and
-other experimentally obtained data from these IDPs/IDRs. An emerging method to generate conformations of IDPs/IDRs uses
-machine learning generative models based on ensembles generated from sampling or MD techniques as training data and
-reinforces learning with experimental data [@Zhang2022]. Both of these general approaches rely on back-calculation of "experimental
-observables" from coordinates of conformers within the ensembles, a task that is increasingly complex due to the various
-models for interpretation of experimental data and the numerous tools available.
+After generating the initial pool of structures, back-calculations to experimental data and reweighting using Monte-Carlo [@Krzeminski2012] or Bayesian statistics [@Lincoff2020; @Bottaro2020] can be performed to define structural ensembles that better match solution NMR, small-angle X-ray scattering (SAXS), single molecule fluorescence (SMF), and other experimentally obtained data from these IDPs/IDRs. An emerging method to generate conformations of IDPs/IDRs uses machine learning generative models based on ensembles generated from sampling or MD techniques as training data and reinforces learning with experimental data [@Zhang2022]. Both of these general approaches rely on back-calculation of "experimental observables" from coordinates of conformers within the ensembles, a task that is increasingly complex due to the various models for interpretation of experimental data and the numerous tools available. 
 
-Here we present **SPyCi-PDB**, designed to facilitate and streamline this back-calculation stage by acting as a
-platform for internal back-calculator functions as well as published third-party software, utilizing PDB structures
-of disordered protein conformations. One goal of **SPyCi-PDB** is to minimize the existing issues with different
-data-formats from software and scripts within the IDP/IDR research community and improve accessibility to
-non-computational researchers. In this release, **SPyCi-PDB** can back-calculate NMR chemical shifts (`cs`),
-paramagnetic resonance enhancement (`pre`), nuclear Overhauser effect (`noe`), 3J-HNHA coupling (`jc`), and residual
-dipolar coupling (`rdc`) data; hydrodynamic radius (`rh`) data from NMR, light scattering or size exclusion chromatography;
-SAXS (`saxs`); and single-molecule fluorescence resonance energy transfer (`smfret`) values from all-atom PDB structures of
-IDP/IDR conformations.
+Here we present **SPyCi-PDB**, designed to facilitate and streamline this back-calculation stage by acting as a platform for internal back-calculator functions as well as published third-party software, utilizing PDB structures of disordered protein conformations. One goal of **SPyCi-PDB** is to minimize the existing issues with different data-formats from software and scripts within the IDP/IDR research community and improve accessibility to researchers with a range of computational expertise. In this release, **SPyCi-PDB** can back-calculate NMR chemical shift (`cs`), paramagnetic resonance enhancement (`pre`), nuclear Overhauser effect (`noe`), <sup>3</sup>J-HNHA coupling (`jc`), and residual dipolar coupling (`rdc`) data; hydrodynamic radius (`rh`) data from NMR, light scattering or size exclusion chromatography; SAXS (`saxs`); and single-molecule fluorescence resonance energy transfer (`smfret`) values from all-atom PDB structures of IDP/IDR conformations. 
 
 # Statement of Need
 
