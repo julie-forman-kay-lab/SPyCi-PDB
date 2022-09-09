@@ -61,19 +61,9 @@ Ultimately, given the complicated and dynamic exchanging nature of IDPs, new bac
 
 # Implementation
 
-As **spycipdb** is written completely in Python, it is compatible with any platform able to execute Python
-(>=3.8, <4.0). However, certain third-party extensions to perform back-calculations (SAXS and RDC) have
-only been tested on 64-bit Ubuntu 18.04.X LTS and 20.04.X LTS, as well as WSL 2.0 on 64-bit Windows 11.
+As **spycipdb** is written completely in Python, it is compatible with any platform able to execute Python (>=3.8, <4.0). However, certain third-party extensions to perform back-calculations (SAXS and RDC) have only been tested on 64-bit Ubuntu 18.04.X LTS and 20.04.X LTS, as well as WSL 2.0 on 64-bit Windows 11. 
 
-In the production version 0.1.X, four out of eight modules of  **SPyCi-PDB**'s back-calculators
-(`pre`, `noe`, `jc`, `smfret`) use internal mathematical algorithms and PDB structure processing using
-IDPConformerGenerator libraries [@Teixeira2022]. The `pre` (1) and `noe` (2) module calculates scalar distances
-between pairs of atoms according to the pairs derived from the experimental template. It utilizes an algorithm
-that matches atom names of each residue with allowance for multiple assignments for `noe`. The `jc` (3) module uses
-the Karplus curve, a simple cosine function, to back-calculate the desired J-couplings according to residue
-number as provided by the experimental template file [@Perez2001]. Finally, the `smfret` (4) module takes into
-consideration residue pairs and a scale factor to adjust for dye size from the experimental setup to back-calculate
-distances between two alpha-Carbon (CA) atoms. The equations mentioned above are as follows:
+In the production version 0.1.X, four out of eight modules of **SPyCi-PDB**'s back-calculators (`pre`, `noe`, `jc`, `smfret`) use internal mathematical algorithms and PDB structure processing using IDPConformerGenerator libraries [@Teixeira2022]. The `pre` (1) and `noe` (2) module calculates scalar distances between pairs of atoms according to the pairs derived from the experimental template. It utilizes an algorithm that matches atom names of each residue with allowance for multiple assignments for `noe`. The `jc` (3) module uses the Karplus curve, a simple cosine function, to back-calculate the desired J-couplings according to residue number as provided by the experimental template file [@Perez2001]. Finally, the `smfret` (4) module takes into consideration residue pairs and a scale factor to adjust for dye size from the experimental setup to back-calculate distances between two alpha-Carbon (CA) atoms [@ Lincoff2020]. The equations mentioned above are as follows: 
 
 $$
 \begin{aligned}
@@ -84,45 +74,13 @@ $$
 \end{aligned}
 $$
 
-Where δx, δy, δz are the cartesian differences between two atoms of interest (1, 2), N represents the number of combinations
-for NOE atom pairs (2), φ is the Phi torsion angle of interest (3), D is the scalar distance between the residues of interest
-with R_1 and R_2 being the vector cartesian co-ordinates for the residues and S being the scale factor according to experimental information.
+Where δx, δy, δz are the cartesian differences between two atoms of interest (1, 2), N represents the number of combinations for NOE atom pairs (2), φ is the Phi torsion angle of interest (3), D is the scalar distance between the residues of interest with R<sub>1</sub> and R<sub>2</sub> being the vector cartesian co-ordinates for the residues and S being the scale factor according to experimental information. 
 
-The remaining 4 modules (`cs`, `saxs`, `rh`, `rdc`) call upon third-party academic software: UCBShift, a machine learning algorithm that
-uses structural alignment for experimental chemical shift replication and employs a random forest regression on curated data to most accurately
-predict protein chemical shifts [@Li2020]; CRYSOL v3, an updated version of the well established SAXS back-calculator from ATSAS that can now
-evaluate the hydration shell by populating the protein structure with dummy water for SAXS calculations [@Franke2017];
-HullRad, to calculate hydrodynamic radis (Rh) by using a convex hull model to estimate the hydrodynamic properties of a macromolecule [@Fleming2018];
-PALES, using the obstruction model to derive dipolar coupling (RDC) information from the average orientation of the a 3-D structural model [@Zweckstetter2000].
-Thorough testing of each module has been performed to ensure smooth installation and troubleshooting as well as retaining or providing
-multiprocessing capabilities that may not have been implemented in their standalone form. When choosing third-party software, we prioritized
-recent published endeavors written in Python for ease of integration such as UCBShift, and HullRad.
+The remaining 4 modules (`cs`, `saxs`, `rh`, `rdc`) call upon third-party academic software: UCBShift, a machine learning algorithm that uses structural alignment for experimental chemical shift replication and employs a random forest regression on curated data to most accurately predict protein chemical shifts [@Li2020]; CRYSOL v3, an updated version of the well-established SAXS back-calculator from ATSAS that can now evaluate the hydration shell by populating the protein structure with dummy water for SAXS calculations [@Franke2017]; HullRad, to calculate hydrodynamic radius (Rh) by using a convex hull model to estimate the hydrodynamic properties of a macromolecule [@Fleming2018]; and PALES, using the steric obstruction model to derive dipolar coupling (RDC) information from the average orientation of the 3D coordinates [@Zweckstetter2000]. Thorough testing of each module has been performed to ensure smooth installation and troubleshooting as well as retaining or providing multiprocessing capabilities that may not have been implemented in their standalone forms. When choosing third-party software, we prioritized those written in Python for ease of integration.
 
-We are also open to integrate other options for back-calculators such as DEER-PREdict [@Tesei2021] for PREs, and alternative
-methods to calculating experimental datatypes internally such as using a parameterizable fluoresence liftime and the Förster
-distance as used in the Naudi-Fabra et al. study of describing intrinsically disordered proteins using
-smFRET, NMR, and SAXS [@Naudi-Fabra2021]. Future additions to the **SPyCi-PDB** interface suite are welcome and easy to perform
-given its design with modularity in mind.
+We plan to integrate other options for back-calculators, such as DEER-PREdict [@Tesei2021] for PREs, and alternative methods to calculating experimental datatypes internally such as using a parameterizable fluorescence lifetime and the Förster distance, as used in the Naudi-Fabra et al. study of describing intrinsically disordered proteins using smFRET, NMR, and SAXS [@Naudi-Fabra2021]. Future additions to the **SPyCi-PDB** interface suite are welcome and easy to perform given its design with modularity in mind.
 
-# Example Usage
-
-The current version of **spycipdb** has eight command-line modules that execute different
-back-calculation routines for PDB formatted protein structure files. Usage examples, along
-with input/output formats are provided both in the project's documentation hosted on ReadTheDocs and by the command:
-
-```bash
-$ spycipdb -h
-```
-
-To provide an example, we showcase the built-in PRE module with `pre` used to back-calculate
-PRE distances given an experimental data template as seen in the `example/` folder:
-
-```bash
-$ spycipdb pre /drksh3_csss_100/ -e /example/drksh3_exp_data/drksh3_PRE.txt -n 16 -o bc_pdbs_PRE.json
-```
-
-Users can specify a directory or tarball (.TAR) with `N` number of PDB files and an experimental template file
-`--exp-file`,`-e`, along with how many cores/workers to use `--ncores`,`-n` and the output file `--output`,`-o`.
+Detailed installation/troubleshooting instructions, real-world usage examples, and input/output formats are provided both in the project's documentation hosted on ReadTheDocs (https://spyci-pdb.readthedocs.io/en/stable/) and within the modules through the `--help` argument.
 
 # Acknowledgements
 
