@@ -5,11 +5,9 @@ SPyCi-PDB
 
 **Structural Python (Back) Calculator Interface for PDBs**
 
-**Goal:** User friendly Python3 based interface to generate
-back-calculated experimental data for singular and multiple
-(ensembles of) PDB structures.
+**Goal:** User friendly Python3 based interface to generate back-calculated experimental data for singular and multiple (ensembles of) PDB structures.
 
-**Back-Calculators:** The current back calculators integreated are:
+**Back-Calculators:** The current back calculators integrated are:
 
 #. PRE, NOE, J-Coupling, smFRET: Internal
 #. Chemical shifts (CS): `UCBShift <https://github.com/THGLab/CSpred>`_
