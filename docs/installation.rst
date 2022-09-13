@@ -77,7 +77,7 @@ Installing IDPConformerGenerator
 --------------------------------
 
 .. note::
-    You should already be inside the ``SPyCi-PDB`` directory.
+    You should be in the same directory as where ``SPyCi-PDB`` was cloned to.
     The ``spycipdb`` conda environment should not be active. Deactivate using::
         
         conda deactivate
@@ -108,6 +108,7 @@ virtualenv was used to install SPyCi-PDB::
 Go back to the ``SPyCi-PDB`` directory and reinstall ``spycipdb``::
 
     cd ..
+    cd SPyCi-PDB
     python setup.py develop --no-deps
 
 
