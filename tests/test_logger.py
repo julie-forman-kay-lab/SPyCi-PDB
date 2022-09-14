@@ -1,3 +1,4 @@
+"""Test logging functions of spycipdb."""
 from functools import partial
 
 import pytest

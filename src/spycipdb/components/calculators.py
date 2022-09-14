@@ -18,7 +18,7 @@ from spycipdb.libs.libfuncs import get_scalar
 current_file_path = os.path.realpath(__file__)
 curr_fp_split = current_file_path.split('/')
 cspred_fp = ""
-for i, item in enumerate(curr_fp_split):
+for item in curr_fp_split:
     if item == "SPyCi-PDB":
         cspred_fp += "CSpred"
         break
