@@ -13,12 +13,8 @@ def test_init_files():
     init_files(log, '.dummy')
     paths = [Path('.dummy').with_suffix(p) for p in ['.log', '.error', '.debug']]
     assert all(p.exists() for p in paths)
-    try:
-        for p in paths:
-            p.unlink()
-    # Should only be in the case for windows test cases
-    except PermissionError:
-        assert True
+    for p in paths:
+        p.unlink()
 
 
 def test_T():
