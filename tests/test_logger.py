@@ -10,8 +10,8 @@ from spycipdb.logger import S, T, init_files, report_on_crash
 
 def test_init_files():
     """Test init log files."""
-    init_files(log, '.dummy')
-    paths = [Path('.dummy').with_suffix(p) for p in ['.log', '.error', '.debug']]
+    init_files(log, 'dummy')
+    paths = [Path('dummy').with_suffix(p) for p in ['.log', '.error', '.debug']]
     assert all(p.exists() for p in paths)
     for p in paths:
         p.unlink()
