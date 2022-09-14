@@ -2,6 +2,9 @@
 Changelog
 =========
 
+* Edits to manuscript per Sept 7 comments from Dr. Julie Forman-Kay
+* Add figure 1 to paper
+
 v0.1.5 (2022-09-08)
 ------------------------------------------------------------
 
