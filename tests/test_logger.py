@@ -1,7 +1,7 @@
 """Test logging functions of spycipdb."""
-from functools import partial
-
 import pytest
+import time
+from functools import partial
 
 from spycipdb import Path, log
 from spycipdb.core.exceptions import ReportOnCrashError
@@ -10,9 +10,10 @@ from spycipdb.logger import S, T, init_files, report_on_crash
 
 def test_init_files():
     """Test init log files."""
-    init_files(log, 'dummy')
-    paths = [Path('dummy').with_suffix(p) for p in ['.log', '.error', '.debug']]
+    init_files(log, '.spycidummy')
+    paths = [Path('.spycidummy').with_suffix(p) for p in ['.log', '.error', '.debug']]
     assert all(p.exists() for p in paths)
+    time.sleep(0.1)
     for p in paths:
         p.unlink()
 
