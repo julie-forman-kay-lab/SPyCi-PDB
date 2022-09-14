@@ -1,5 +1,4 @@
 """Test logging functions of spycipdb."""
-import time
 from functools import partial
 
 import pytest
@@ -11,12 +10,15 @@ from spycipdb.logger import S, T, init_files, report_on_crash
 
 def test_init_files():
     """Test init log files."""
-    init_files(log, '.spycidummy')
-    paths = [Path('.spycidummy').with_suffix(p) for p in ['.log', '.error', '.debug']]  # noqa: E501
+    init_files(log, '.dummy')
+    paths = [Path('.dummy').with_suffix(p) for p in ['.log', '.error', '.debug']]
     assert all(p.exists() for p in paths)
-    time.sleep(0.1)
-    for p in paths:
-        p.unlink()
+    try:
+        for p in paths:
+            p.unlink()
+    # Should only be in the case for windows test cases
+    except PermissionError:
+        assert True
 
 
 def test_T():
