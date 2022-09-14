@@ -1,10 +1,11 @@
+"""Houses main internal back-calculators for SPyCi-PDB."""
 import numpy as np
 import pandas as pd
-
 from idpconfgen.libs.libhigherlevel import get_torsions
 from idpconfgen.libs.libstructure import Structure, col_name, col_resSeq
 
 from spycipdb.libs.libfuncs import get_scalar
+
 
 def calc_jc(fexp, pdb):
     """

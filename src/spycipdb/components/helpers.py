@@ -5,6 +5,7 @@ import sys
 
 from spycipdb.components.hullrad import Sved, model_from_pdb
 
+
 # Interesting way to import from repository that cannot be
 # installed as a module ;-)
 # https://www.geeksforgeeks.org/python-import-module-from-different-directory/
@@ -21,6 +22,7 @@ for item in curr_fp_split:
 sys.path.insert(0, cspred_fp)
 
 from CSpred import calc_sing_pdb  # noqa: E402, F401
+
 
 # obtaining absolute path of pales executable from current file path
 current_file_path = os.path.realpath(__file__)

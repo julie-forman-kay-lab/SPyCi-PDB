@@ -1,24 +1,25 @@
 """Test internal calculator functions."""
-import json
+# `noqa` temporary for now
+import json  # noqa: F401
 
-from spycipdb.core.calculators import (
+from spycipdb.core.calculators import (  # noqa: F401
     calc_jc,
     calc_noe,
     calc_pre,
     calc_smfret,
     )
 
-from . import (
+from . import (  # noqa: F401
     asyn_test,
     drk_test,
-    jc_exp_expected,
-    noe_exp_expected,
-    pre_exp_expected,
     fret_exp_expected,
-    jc_output,
-    noe_output,
-    pre_output,
     fret_output,
+    jc_exp_expected,
+    jc_output,
+    noe_exp_expected,
+    noe_output,
+    pre_exp_expected,
+    pre_output,
     )
 
 
@@ -27,5 +28,3 @@ from . import (
 #     pdb, jc_bc = calc_jc(jc_exp_expected, drk_test)
 #     with open(jc_output, 'r') as f:
 #         expected = json.load(f)
-
-        
