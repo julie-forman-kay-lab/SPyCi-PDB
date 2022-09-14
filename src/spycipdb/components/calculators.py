@@ -14,21 +14,18 @@ from spycipdb.libs.libfuncs import get_scalar
 
 # Interesting way to import from repository that cannot be
 # installed as a module ;-)
-# Only to be used if CSpred is cloned into the same folder as SPyCi-PDB repo
 # https://www.geeksforgeeks.org/python-import-module-from-different-directory/
-"""
 current_file_path = os.path.realpath(__file__)
 curr_fp_split = current_file_path.split('/')
 cspred_fp = ""
-for item in curr_fp_split:
+for i, item in enumerate(curr_fp_split):
     if item == "SPyCi-PDB":
-        cspred_fp += item + "/" + "CSpred"
+        cspred_fp += "CSpred"
         break
     else:
         cspred_fp += item + "/"
-"""
-# Assumes CSpred is correctly installed in the parent folder of SPyCi-PDB
-sys.path.insert(0, "../CSpred")
+# Assumes CSpred is correctly installed in the directory housing SPyCi-PDB
+sys.path.insert(0, cspred_fp)
 
 from CSpred import calc_sing_pdb  # noqa: E402, F401
 
