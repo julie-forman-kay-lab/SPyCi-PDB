@@ -122,9 +122,8 @@ UCBShift
 ````````
 
 .. note::
-    UCBShift installation is only required for the :code:`cs` module.
-    We are assuming we're in the ``SPyCi-PDB`` directory and the Python
-    environment is deactivated.
+    You should be in the same directory as where ``SPyCi-PDB`` was cloned to
+    and the Python environment is deactivated.
 
 Clone the UCBShift repository from `my fork <https://github.com/menoliu/CSpred>`_ on
 GitHub.::
@@ -138,6 +137,7 @@ to ``CSpred/models`` directory.
 Move back into the ``SPyCi-PDB`` directory and enter the ``thirdparty/ucbshift_reqs`` folder::
 
     cd ..
+    cd SPyCi-PDB
     cd ./thirdparty/ucbshift_reqs
 
 Run the following commands to install ``UCBShift`` dependencies if
@@ -164,7 +164,8 @@ Again with virtualenv::
 
 .. note::
     ``idpconfgen`` may need to be reinstalled while the ``spycipdb`` or
-    ``spycienv`` is active as well after installing UCBShift
+    ``spycienv`` is active as well after installing UCBShift using::
+        ``python setup.py develop --no-deps``
 
 ATSAS v3.1.1 - CRYSOL v3.0
 ``````````````````````````
