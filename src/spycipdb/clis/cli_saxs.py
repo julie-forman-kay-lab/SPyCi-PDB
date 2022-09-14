@@ -39,7 +39,7 @@ from pathlib import Path
 from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
-from spycipdb.components.calculators import crysol_helper
+from spycipdb.components.helpers import crysol_helper
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash

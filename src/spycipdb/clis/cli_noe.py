@@ -48,8 +48,8 @@ from pathlib import Path
 from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
-from spycipdb.components.calculators import calc_noe
-from spycipdb.components.parsers import get_exp_format_noe
+from spycipdb.core.calculators import calc_noe
+from spycipdb.core.parsers import get_exp_format_noe
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash

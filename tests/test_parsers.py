@@ -1,5 +1,5 @@
 """Test parsing functions in SPyCi-PDB."""
-from spycipdb.components.parsers import (
+from spycipdb.core.parsers import (
     get_exp_format_noe,
     get_exp_format_pre,
     get_exp_format_smfret,
