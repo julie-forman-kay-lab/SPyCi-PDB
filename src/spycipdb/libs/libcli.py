@@ -9,7 +9,6 @@ import sys
 from os import cpu_count
 
 from spycipdb import __version__
-from spycipdb.libs.libparse import values_to_dict
 
 
 detailed = "detailed instructions:\n\n{}"
@@ -43,28 +42,6 @@ class ArgsToTuple(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         """Call the function."""
         setattr(namespace, self.dest, tuple(values))
-
-
-class ParamsToDict(argparse.Action):
-    """
-    Convert command-line parameters in an argument to a dictionary.
-
-    Adapted from https://github.com/joaomcteixeira/taurenmd
-
-    Example
-    -------
-    Where ``-x`` is an optional argument of the command-line client
-    interface.
-        >>> par1=1 par2='my name' par3=[1,2,3]
-        >>> {'par1': 1, 'par2': 'my name', 'par3': [1, 2, 3]}
-    """
-
-    def __call__(self, parser, namespace, values, option_string=None):
-        """Execute."""
-        param_dict = values_to_dict(values)
-
-        namespace.plotvars = param_dict
-        setattr(namespace, self.dest, True)
 
 
 class CustomParser(argparse.ArgumentParser):
