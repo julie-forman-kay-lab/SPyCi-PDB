@@ -2,6 +2,7 @@
 import json
 
 from spycipdb.core.calculators import calc_jc, calc_noe, calc_pre, calc_smfret
+from numpy.testing import assert_allclose
 
 from . import (
     asyn_test,
@@ -23,7 +24,7 @@ def test_calc_jc():
     with open(jc_output, 'r') as f:
         loadedf = json.load(f)
         expected = list(loadedf.values())[0]
-        assert expected == jc_bc
+        assert_allclose(expected, jc_bc, rtol=1e-5, atol=0)
 
 
 def test_calc_noe():
@@ -32,7 +33,7 @@ def test_calc_noe():
     with open(noe_output, 'r') as f:
         loadedf = json.load(f)
         expected = list(loadedf.values())[0]
-        assert expected == noe_bc
+        assert_allclose(expected, noe_bc, rtol=1e-5, atol=0)
 
 
 def test_calc_pre():
@@ -41,7 +42,7 @@ def test_calc_pre():
     with open(pre_output, 'r') as f:
         loadedf = json.load(f)
         expected = list(loadedf.values())[0]
-        assert expected == pre_bc
+        assert_allclose(expected, pre_bc, rtol=1e-5, atol=0)
 
 
 def test_calc_smfret():
@@ -50,4 +51,4 @@ def test_calc_smfret():
     with open(fret_output, 'r') as f:
         loadedf = json.load(f)
         expected = list(loadedf.values())[0]
-        assert expected == fret_bc
+        assert_allclose(expected, fret_bc, rtol=1e-5, atol=0)
