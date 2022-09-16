@@ -1,11 +1,8 @@
 """Contains general variables for spycipdb unit tests."""
 
-from spycipdb.libs import Path
+from pathlib import Path
 
-datap = Path(
-    Path(__file__).myparents(),
-    'data',
-    )
+datap = Path(__file__).parent.resolve() / "data"
 
 jc_exp_expected = Path(datap, 'drksh3_JC.txt')
 noe_exp_expected = Path(datap, 'drksh3_NOE.txt')
