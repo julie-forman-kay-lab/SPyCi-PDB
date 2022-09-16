@@ -56,19 +56,6 @@ class Path(type(_Path())):
         return self.resolve().parent
 
 
-def assert_type(obj, typ):
-    """Assert an obj is of type."""
-    assert isinstance(obj, typ), f"Expected {typ} got {type(obj)}"
-
-
-def assert_subclass(objs, subclass):
-    """Assert there is a object of subclass."""
-    for obj in objs:
-        if issubclass(subclass, type(obj)):
-            return True
-    return False
-
-
 def count_string_formatters(s):
     """
     Count string formatters: ``{}``.
