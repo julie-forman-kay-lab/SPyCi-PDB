@@ -1,8 +1,9 @@
 """Test internal calculator functions."""
 import json
 
-from spycipdb.core.calculators import calc_jc, calc_noe, calc_pre, calc_smfret
 from numpy.testing import assert_allclose
+
+from spycipdb.core.calculators import calc_jc, calc_noe, calc_pre, calc_smfret
 
 from . import (
     asyn_test,
