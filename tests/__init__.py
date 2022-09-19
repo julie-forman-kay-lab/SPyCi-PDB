@@ -16,3 +16,6 @@ fret_output = Path(datap, 'asyn_fret_out.json')
 
 drk_test = Path(datap, 'drksh3_conf.pdb')
 asyn_test = Path(datap, 'asyn_conf.pdb')
+
+drk_test_tar = Path(datap, 'drksh3_conf.tar.xz')
+asyn_test_tar = Path(datap, 'asyn_conf.tar.xz')
