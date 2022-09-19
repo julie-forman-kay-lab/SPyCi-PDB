@@ -1,7 +1,6 @@
 SPyCi-PDB
 =========
-
-![SPyCi-PDB ASCII](docs/spycipdb_ascii1.png)
+.. image:: https://github.com/julie-forman-kay-lab/SPyCi-PDB/blob/0e7b60d50a021d741dd7db4e2b9fbb9605fec95b/docs/spycipdb_ascii1.png
 
 .. start-description
 
