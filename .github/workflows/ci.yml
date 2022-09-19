@@ -12,7 +12,7 @@ jobs:
     strategy:
       # fail-fast: false
       matrix:
-        platform: [ubuntu-latest, macos-latest, windows-latest]
+        platform: [ubuntu-latest, macos-latest]
         python-version: [3.8, 3.9, '3.10']
         # you can separate the tox-envs in different .yml files
         # see version 0.10.1
@@ -46,11 +46,12 @@ jobs:
       run: tox -e ${{ matrix.tox-envs }}
 
     
+    # Removed codecov upload for now given upload errors with codecov.io
     # from https://github.com/codecov/codecov-action
-    - name: Upload coverage to Codecov
-      if: matrix.tox-envs == 'test'
-      uses: codecov/codecov-action@v2
-      with:
-        files: ./coverage.xml
-        fail_ci_if_error: true
-        verbose: true
+    #- name: Upload coverage to Codecov
+    #  if: matrix.tox-envs == 'test'
+    #  uses: codecov/codecov-action@v2
+    #  with:
+    #    files: ./coverage.xml
+    #    fail_ci_if_error: true
+    #    verbose: true

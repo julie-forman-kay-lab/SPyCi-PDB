@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Create unit tests for internal calculators and parsers
+
 v0.1.6 (2022-09-14)
 ------------------------------------------------------------
 
