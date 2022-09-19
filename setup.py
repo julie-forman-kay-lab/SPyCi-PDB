@@ -36,7 +36,7 @@ long_description = '{}\n{}'.format(
 
 setup(
     name='spycipdb',
-    version='0.1.6',
+    version='0.1.7',
     description='Structural Python (Back) Calculator Interface for PDBs.',
     long_description=long_description,
     long_description_content_type='text/x-rst',
