@@ -1,6 +1,8 @@
 SPyCi-PDB
 =========
 
+![SPyCi-PDB ASCII](docs/spycipdb_ascii1.png)
+
 .. start-description
 
 **Structural Python (Back) Calculator Interface for PDBs**
