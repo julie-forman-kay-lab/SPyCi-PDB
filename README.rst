@@ -4,6 +4,14 @@ SPyCi-PDB
 
 .. start-description
 
+.. image:: https://github.com/julie-forman-kay-lab/SPyCi-PDB/actions/workflows/ci.yml/badge.svg?branch=main
+    :target: https://github.com/julie-forman-kay-lab/SPyCi-PDB/actions/workflows/ci.yml
+    :alt: Test Status
+
+.. image:: https://readthedocs.org/projects/spyci-pdb/badge/?version=stable
+    :target: https://spyci-pdb.readthedocs.io/en/stable/?badge=stable
+    :alt: Documentation Status
+
 **Structural Python (Back) Calculator Interface for PDBs**
 
 **Goal:** User friendly Python3 based interface to generate back-calculated experimental data for singular and multiple (ensembles of) PDB structures.
