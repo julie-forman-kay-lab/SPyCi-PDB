@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.1.11 (2022-09-28)
+------------------------------------------------------------
+
 * Bugfix for smFRET module with output formatting error
 
 v0.1.10 (2022-09-20)
