@@ -183,6 +183,5 @@ def calc_smfret(fexp, pdb):
         eff = 1.0 / (1.0 + (d / scale[i]) ** 6.0)
         fret_bc.append(eff)
     
-    fret_bc = np.reshape(fret_bc, (-1, exp.shape[0])).tolist()
-    
+    fret_bc = np.reshape(fret_bc, (-1, exp.shape[0])).tolist()[0]
     return pdb, fret_bc
