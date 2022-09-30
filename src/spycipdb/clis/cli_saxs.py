@@ -24,8 +24,9 @@ REQUIREMENTS:
 OUTPUT:
     Output is in standard .JSON format as follows:
     {
-        'pdb1': {'index': [], 'value': []},
-        'pdb2': {'index': [], 'value': []},
+        'format': [index],
+        'pdb1': [value],
+        'pdb2': [value],
         ...
     }
 """
@@ -147,7 +148,8 @@ def main(
     
     _output = {}
     for result in execute_pool:
-        _output[result[0]] = result[1]
+        _output['format'] = result[1]['index']
+        _output[result[0]] = result[1]['value']
     log.info(S('done'))
     
     log.info(T('Writing output onto disk'))
