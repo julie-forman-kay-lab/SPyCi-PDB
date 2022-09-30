@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Modify SAXS module to follow "format" in output
+
 v0.1.12 (2022-09-29)
 ------------------------------------------------------------
 
