@@ -52,7 +52,6 @@ from pathlib import Path
 from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
-from spycipdb.components.helpers import calc_sing_pdb
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
@@ -63,6 +62,15 @@ _name = 'cs'
 _help = 'CS back-calculator using UCBShift.'
 
 _prog, _des, _usage = libcli.parse_doc_params(__doc__)
+
+try:
+    from spycipdb.components.helpers import calc_sing_pdb
+except ImportError:
+    print(  # noqa: T201
+        "Note: UCBShift installation not found. "
+        "If you would like to use the Chemical Shift module "
+        "please refer to the UCBShift installation instructions."
+        )
 
 ap = libcli.CustomParser(
     prog=_prog,
