@@ -20,8 +20,11 @@ for item in curr_fp_split:
         cspred_fp += item + "/"
 # Assumes CSpred is correctly installed in the directory housing SPyCi-PDB
 sys.path.insert(0, cspred_fp)
-
-from CSpred import calc_sing_pdb  # noqa: E402, F401
+try:
+    from CSpred import calc_sing_pdb  # noqa: E402, F401
+except ModuleNotFoundError:
+    # Error message handled in `cli_cs.py`
+    pass
 
 
 # obtaining absolute path of pales executable from current file path

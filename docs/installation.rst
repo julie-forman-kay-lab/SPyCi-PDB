@@ -77,7 +77,7 @@ Installing IDPConformerGenerator
 --------------------------------
 
 .. note::
-    You should be in the same directory as where ``SPyCi-PDB`` was cloned to.
+    You should be in the parent directory where ``SPyCi-PDB`` was cloned to.
     The ``spycipdb`` conda environment should not be active. Deactivate using::
         
         conda deactivate
@@ -122,8 +122,10 @@ UCBShift
 ````````
 
 .. note::
-    You should be in the same directory as where ``SPyCi-PDB`` was cloned to
-    and the Python environment is deactivated.
+    Module is only required if you wish to perform Chemical Shift back-calculations.
+    
+    You should be in the parent directory where ``SPyCi-PDB`` was cloned to
+    with the Python environment is deactivated.
 
 Clone the UCBShift repository from `my fork <https://github.com/menoliu/CSpred>`_ on
 GitHub.::

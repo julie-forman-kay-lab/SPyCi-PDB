@@ -2,6 +2,9 @@
 Changelog
 =========
 
+* Automatically catch ``CSpred`` missing import issue
+* Addresses issue #31
+
 v0.1.13 (2022-09-30)
 ------------------------------------------------------------
 
