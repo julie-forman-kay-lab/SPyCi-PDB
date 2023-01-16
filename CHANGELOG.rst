@@ -2,6 +2,11 @@
 Changelog
 =========
 
+* Fixes input file extension validataion for PDB files
+* Implements data validation for input experimental files
+* Clarifies documentation for these changes
+* Addresses issues in #35
+
 v0.1.15 (2023-01-16)
 ------------------------------------------------------------
 
