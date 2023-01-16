@@ -33,7 +33,7 @@ Anaconda is used as your Python package manager::
     If you don't use Anaconda to manage your Python installations, you can use
     ``virtualenv`` and the ``requirements.txt`` file following the commands:
 
-    | ``virtualenv spycienv --python=3.9``
+    | ``virtualenv spycienv --python=3.8``
     | ``source spycienv/bin/activate``
     | ``pip install -r requirements.txt``
 
@@ -48,7 +48,7 @@ always up-to-date with the repository::
 .. note::
     The above applies also if you used ``virtualenv`` instead of ``conda``.
 
-**Remember** to active the ``spycipdb`` environment every time you open a new
+**Remember** to activate the ``spycipdb`` environment every time you open a new
 terminal window, from within the repository folder, choose yours::
 
     # Installation with Anaconda
@@ -65,7 +65,7 @@ To update to the latest version, navigate to the repository folder, activate the
     # if you used anaconda to create the python environment, run:
     conda env update -f requirements.yml
 
-    # if you used venv to create the python environment, run:
+    # if you used virtual env to create the python environment, run:
     pip install -r requirements.txt  --upgrade
 
     python setup.py develop --no-deps
@@ -88,6 +88,7 @@ UCBShift
 
 .. note::
     Module is only required if you wish to perform Chemical Shift back-calculations.
+    The following installation will revert Python to version 3.8.15.
     
     You should be in the parent directory where ``SPyCi-PDB`` was cloned to
     with the Python environment is deactivated.
@@ -117,22 +118,26 @@ virtualenv was used to install SPyCi-PDB::
 
     pip install -r ucbshift_requirements.txt
 
-Go back to the ``SPyCi-PDB`` directory and reinstall ``spycipdb``::
+Go back to the ``SPyCi-PDB`` directory and reinstall ``spycipdb`` and
+``idpconfgen``::
     
     conda activate spycipdb
     cd ../..
     python setup.py develop --no-deps
+    cd ./src/idpconfgen/
+    python setup.py develop --no-deps
 
-Again with virtualenv::
+The following is the same with virtualenv::
 
     source spycienv/bin/activate
     cd ../..
     python setup.py develop --no-deps
+    cd ./src/idpconfgen/
+    python setup.py develop --no-deps
 
-.. note::
-    ``idpconfgen`` may need to be reinstalled while the ``spycipdb`` or
-    ``spycienv`` is active as well after installing UCBShift using::
-        ``python setup.py develop --no-deps``
+Currently, reinstallation is required as UCBShift changes the Python version.
+We will be working on a fix to streamline this process soon by using package
+handlers such as ``PyPi``. Thank you for your patience.
 
 ATSAS v3.1.1 - CRYSOL v3.0
 ``````````````````````````
