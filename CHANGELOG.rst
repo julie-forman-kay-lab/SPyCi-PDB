@@ -2,6 +2,9 @@
 Changelog
 =========
 
+* Install IDPConformerGenerator while resolving the conda env
+* Addresses bug in issue #33
+
 v0.1.14 (2022-11-28)
 ------------------------------------------------------------
 
