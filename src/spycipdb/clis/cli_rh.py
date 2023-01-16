@@ -103,6 +103,13 @@ def main(
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
     str_pdbpaths = [str(path) for path in pdbs2operate]
+    if len(pdbs2operate) == 0:
+        log.info(
+            'No .pdb files were found based on the input. Make sure the '
+            'folder/tarball contains .pdb files. Only .tar, .tar.xz, .tar.gz '
+            'tarballs are accepted.'
+        )
+        return
     log.info(S('done'))
     
     log.info(T(f'back calculaing using {ncores} workers'))
