@@ -132,6 +132,13 @@ def main(
     
     _output = {}
     _output['format'] = get_exp_format_pre(exp_file)
+    if get_exp_format_pre(exp_file) == False:
+        log.info(
+            'Incorrect experimental file format for PRE subclient. '
+            'Text file must have the following columns: '
+            )
+        log.info('res1,atom1,res2,atom2')
+        return
     for result in execute_pool:
         _output[result[0].stem] = result[1]
     log.info(S('done'))

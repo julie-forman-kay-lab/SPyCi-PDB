@@ -142,6 +142,13 @@ def main(
     
     _output = {}
     _output['format'] = get_exp_format_smfret(exp_file)
+    if get_exp_format_smfret(exp_file) == False:
+        log.info(
+            'Incorrect experimental file format for smFRET subclient. '
+            'Text file must have the following columns: '
+            )
+        log.info('res1,res2,scaler')
+        return
     for results in execute_pool:
         _output[results[0].stem] = results[1]
     log.info(S('done'))

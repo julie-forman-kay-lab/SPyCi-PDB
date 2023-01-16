@@ -139,6 +139,13 @@ def main(
     
     _output = {}
     _output['format'] = get_exp_format_noe(exp_file)
+    if get_exp_format_noe(exp_file) == False:
+        log.info(
+            'Incorrect experimental file format for NOE subclient. '
+            'Text file must have the following columns: '
+            )
+        log.info('res1,atom1,atom1_multiple_assignments,res2,atom2,atom2_multiple_assignments')  #noqa: E501
+        return
     for result in execute_pool:
         _output[result[0].stem] = result[1]
     log.info(S('done'))

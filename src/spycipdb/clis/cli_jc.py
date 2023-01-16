@@ -127,7 +127,15 @@ def main(
     
     _output = {}
     exp = pd.read_csv(exp_file)
-    _output['format'] = exp.resnum.values.tolist()
+    try:
+        _output['format'] = exp.resnum.values.tolist()
+    except AttributeError:
+        log.info(
+            'Incorrect experimental file format for JC subclient. '
+            'Text file must have the following columns: '
+            )
+        log.info('resum')
+        return
     for result in execute_pool:
         _output[result[0].stem] = result[1]
     log.info(S('done'))
