@@ -72,44 +72,9 @@ To update to the latest version, navigate to the repository folder, activate the
 
 Your installation will become up to date with the latest developments.
 
-
-Installing IDPConformerGenerator
---------------------------------
-
-.. note::
-    You should be in the parent directory where ``SPyCi-PDB`` was cloned to.
-    The ``spycipdb`` conda environment should not be active. Deactivate using::
-        
-        conda deactivate
-    
-    if you're using ``virtualenv``, remain in the environment.
-
-Clone from the official repository::
-
-    git clone https://github.com/julie-forman-kay-lab/IDPConformerGenerator
-
-Navigate to the new ``IDPConformerGenerator`` folder::
-
-    cd IDPConformerGenerator
-
-Run the following commands to install ``idpconfgen`` dependencies if
-Anaconda is used as your Python package manager::
-
-    conda env update --name spycipdb --file requirements.yml --prune
-    conda activate spycipdb
-    python setup.py develop --no-deps
-    
-Run the following commands to install ``idpconfgen`` dependencies if
-virtualenv was used to install SPyCi-PDB::
-
-    pip install -r requirements.txt
-    python setup.py develop --no-deps
-
-Go back to the ``SPyCi-PDB`` directory and reinstall ``spycipdb``::
-
-    cd ..
-    cd SPyCi-PDB
-    python setup.py develop --no-deps
+Please note that IDPConformerGenerator will be installed alongside SPyCi-PDB
+as the library is required for processing PDB files. You can find the installation
+of IDPConformerGenerator in ``src/idpconfgen/``.
 
 
 Installing Third-party Software
