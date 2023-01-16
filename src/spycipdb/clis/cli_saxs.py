@@ -141,7 +141,7 @@ def main(
             'No .pdb files were found based on the input. Make sure the '
             'folder/tarball contains .pdb files. Only .tar, .tar.xz, .tar.gz '
             'tarballs are accepted.'
-        )
+            )
         return
     log.info(S('done'))
     
