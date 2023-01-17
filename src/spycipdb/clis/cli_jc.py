@@ -37,6 +37,7 @@ from idpconfgen.libs.libmulticore import pool_function
 
 from spycipdb import log
 from spycipdb.core.calculators import calc_jc
+from spycipdb.core.exceptions import SPyCiPDBException
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
@@ -108,7 +109,7 @@ def main(
     
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
-    if len(pdbs2operate) == 0:
+    if len(pdbs2operate) == 0 or pdbs2operate == None:
         log.info(
             'No .pdb files were found based on the input. Make sure the '
             'folder/tarball contains .pdb files. Only .tar, .tar.xz, .tar.gz '
@@ -129,13 +130,13 @@ def main(
     exp = pd.read_csv(exp_file)
     try:
         _output['format'] = exp.resnum.values.tolist()
-    except AttributeError:
-        log.info(
+    except AttributeError as err:
+        errmsg = (
             'Incorrect experimental file format for JC subclient. '
             'Text file must have the following columns: '
+            'resnum'
             )
-        log.info('resum')
-        return
+        raise SPyCiPDBException(errmsg) from err
     for result in execute_pool:
         _output[result[0].stem] = result[1]
     log.info(S('done'))

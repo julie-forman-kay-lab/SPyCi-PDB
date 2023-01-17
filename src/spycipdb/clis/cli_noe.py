@@ -120,7 +120,7 @@ def main(
     init_files(log, LOGFILESNAME)
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
-    if len(pdbs2operate) == 0:
+    if len(pdbs2operate) == 0 or pdbs2operate == None:
         log.info(
             'No .pdb files were found based on the input. Make sure the '
             'folder/tarball contains .pdb files. Only .tar, .tar.xz, .tar.gz '
@@ -139,13 +139,6 @@ def main(
     
     _output = {}
     _output['format'] = get_exp_format_noe(exp_file)
-    if get_exp_format_noe(exp_file) is False:
-        log.info(
-            'Incorrect experimental file format for NOE subclient. '
-            'Text file must have the following columns: '
-            )
-        log.info('res1,atom1,atom1_multiple_assignments,res2,atom2,atom2_multiple_assignments')  # noqa: E501
-        return
     for result in execute_pool:
         _output[result[0].stem] = result[1]
     log.info(S('done'))

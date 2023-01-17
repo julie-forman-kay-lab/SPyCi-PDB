@@ -123,7 +123,7 @@ def main(
     
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
-    if len(pdbs2operate) == 0:
+    if len(pdbs2operate) == 0 or pdbs2operate == None:
         log.info(
             'No .pdb files were found based on the input. Make sure the '
             'folder/tarball contains .pdb files. Only .tar, .tar.xz, .tar.gz '
@@ -142,13 +142,6 @@ def main(
     
     _output = {}
     _output['format'] = get_exp_format_smfret(exp_file)
-    if get_exp_format_smfret(exp_file) is False:
-        log.info(
-            'Incorrect experimental file format for smFRET subclient. '
-            'Text file must have the following columns: '
-            )
-        log.info('res1,res2,scaler')
-        return
     for results in execute_pool:
         _output[results[0].stem] = results[1]
     log.info(S('done'))
