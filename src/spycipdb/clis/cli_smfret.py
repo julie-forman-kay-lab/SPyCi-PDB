@@ -142,7 +142,7 @@ def main(
     
     _output = {}
     _output['format'] = get_exp_format_smfret(exp_file)
-    if get_exp_format_smfret(exp_file) == False:
+    if get_exp_format_smfret(exp_file) is False:
         log.info(
             'Incorrect experimental file format for smFRET subclient. '
             'Text file must have the following columns: '
