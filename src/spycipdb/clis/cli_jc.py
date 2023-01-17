@@ -34,6 +34,7 @@ from pathlib import Path
 
 import pandas as pd
 from idpconfgen.libs.libmulticore import pool_function
+from idpconfgen.libs.libstructure import Structure, col_resSeq
 
 from spycipdb import log
 from spycipdb.core.calculators import calc_jc
@@ -118,18 +119,24 @@ def main(
         return
     log.info(S('done'))
     
-    log.info(T(f'back calculaing using {ncores} workers'))
-    execute = partial(
-        report_on_crash,
-        calc_jc,
-        exp_file,
-        )
-    execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
-    
     _output = {}
     exp = pd.read_csv(exp_file)
     try:
         _output['format'] = exp.resnum.values.tolist()
+        struc = Structure(pdbs2operate[0])
+        struc.build()
+        last_residue = int(struc.data_array[:, col_resSeq][-1])
+        resnums = exp.resnum.values.astype(int).tolist()
+        
+        for res in resnums:
+            if res <= 0 or res > last_residue:
+                errmsg = (
+                    'resnum cannot contain 0 or negative values '
+                    'and cannot be greater than the maximum number of '
+                    'residues in your PDB structure.'
+                    )
+                raise SPyCiPDBException(errmsg)
+        
     except AttributeError as err:
         errmsg = (
             'Incorrect experimental file format for JC subclient. '
@@ -137,6 +144,15 @@ def main(
             'resnum'
             )
         raise SPyCiPDBException(errmsg) from err
+    
+    log.info(T(f'back calculaing using {ncores} workers'))
+    execute = partial(
+        report_on_crash,
+        calc_jc,
+        exp_file,
+        )
+    execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
+
     for result in execute_pool:
         _output[result[0].stem] = result[1]
     log.info(S('done'))
