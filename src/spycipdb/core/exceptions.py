@@ -9,7 +9,7 @@ from spycipdb import count_string_formatters, log
 
 class SPyCiPDBException(Exception):
     r"""
-    IDPConfGen base exception.
+    SPyCi-PDB base exception.
 
     Parameters
     ----------

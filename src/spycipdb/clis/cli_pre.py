@@ -114,6 +114,12 @@ def main(
     
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
+    if len(pdbs2operate) == 0 or pdbs2operate is None:
+        log.info(
+            'No .pdb files were found based on the input. Make sure the '
+            'folder/tarball contains .pdb files. Only .tar, .tar.xz, .tar.gz '
+            'tarballs are accepted.'
+            )
     log.info(S('done'))
     
     log.info(T(f'back calculating using {ncores} workers'))
@@ -125,7 +131,7 @@ def main(
     execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
     
     _output = {}
-    _output['format'] = get_exp_format_pre(exp_file)
+    _output['format'], _ = get_exp_format_pre(exp_file, pdbs2operate[0])
     for result in execute_pool:
         _output[result[0].stem] = result[1]
     log.info(S('done'))

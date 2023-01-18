@@ -30,7 +30,7 @@ class FolderOrTar(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
         """Check the extension of input."""
-        if values[0].endswith('.tar'):
+        if values[0].endswith('.tar') or values[0].endswith('.tar.gz') or values[0].endswith('.tar.xz'):  # noqa: E501
             setattr(namespace, self.dest, values[0])
         else:
             setattr(namespace, self.dest, values)
@@ -141,8 +141,10 @@ def add_argument_pdb_files(parser):
     parser.add_argument(
         'pdb_files',
         help=(
-            'Paths to PDB files in the disk. '
-            'Accepts a TAR file.'
+            'Path to PDB file(s) on the disk. '
+            'Accepts a path to a directory containing .pdb files. '
+            'Accepts tarball formats with .tar, .tar.gz, .tar.xz '
+            'file extensions containing .pdb files.'
             ),
         nargs='+',
         action=FolderOrTar,

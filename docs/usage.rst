@@ -46,12 +46,19 @@ on 100 test conformers of the unfolded state of the drkN SH3 domain.
 Formatting for Input Files
 --------------------------
 
+Conformers will be required in the PDB format with the ``.pdb`` file extension.
+For tarballs and folders, only the ``.pdb`` files in the folder/tarball will
+be used. Accepted tarballs include ``.tar``, ``.tar.gz``, and ``.tar.xz`` file
+extensions.
+
 Most modules will require a sample experimental results template to base
 the back-calculations off of. Please note that experimental result VALUES
 are not required.
 
-All input files can be in the ``.TXT`` file format with comma-delimitation
+All input files can be in the ``.txt`` file format with comma-delimitation
 for values. Examples can be found in the ``example/drksh3_exp_data/`` folder.
+The required header formatting for the ``.txt`` file for each experimental
+module is highlighted below.
 
 **PRE module:** ``res1,atom1,res2,atom2``.
 Where res1/atom1 is the residue number and atom name respectively for

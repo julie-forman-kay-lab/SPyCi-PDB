@@ -34,9 +34,11 @@ from pathlib import Path
 
 import pandas as pd
 from idpconfgen.libs.libmulticore import pool_function
+from idpconfgen.libs.libstructure import Structure, col_resSeq
 
 from spycipdb import log
 from spycipdb.core.calculators import calc_jc
+from spycipdb.core.exceptions import SPyCiPDBException
 from spycipdb.libs import libcli
 from spycipdb.libs.libfuncs import get_pdb_paths
 from spycipdb.logger import S, T, init_files, report_on_crash
@@ -108,7 +110,40 @@ def main(
     
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
+    if len(pdbs2operate) == 0 or pdbs2operate is None:
+        log.info(
+            'No .pdb files were found based on the input. Make sure the '
+            'folder/tarball contains .pdb files. Only .tar, .tar.xz, .tar.gz '
+            'tarballs are accepted.'
+            )
+        return
     log.info(S('done'))
+    
+    _output = {}
+    exp = pd.read_csv(exp_file)
+    try:
+        _output['format'] = exp.resnum.values.tolist()
+        struc = Structure(pdbs2operate[0])
+        struc.build()
+        last_residue = int(struc.data_array[:, col_resSeq][-1])
+        resnums = exp.resnum.values.astype(int).tolist()
+        
+        for res in resnums:
+            if res <= 0 or res > last_residue:
+                errmsg = (
+                    'resnum cannot contain 0 or negative values '
+                    'and cannot be greater than the maximum number of '
+                    'residues in your PDB structure.'
+                    )
+                raise SPyCiPDBException(errmsg)
+        
+    except AttributeError as err:
+        errmsg = (
+            'Incorrect experimental file format for JC subclient. '
+            'Text file must have the following columns: '
+            'resnum'
+            )
+        raise SPyCiPDBException(errmsg) from err
     
     log.info(T(f'back calculaing using {ncores} workers'))
     execute = partial(
@@ -117,10 +152,7 @@ def main(
         exp_file,
         )
     execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
-    
-    _output = {}
-    exp = pd.read_csv(exp_file)
-    _output['format'] = exp.resnum.values.tolist()
+
     for result in execute_pool:
         _output[result[0].stem] = result[1]
     log.info(S('done'))
