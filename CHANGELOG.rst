@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.2.0 (2023-01-27)
+------------------------------------------------------------
+
 * Adds ``natsort`` as dependency to yield ordered results
 * Results will be sorted as how they will appear on your OS
 
