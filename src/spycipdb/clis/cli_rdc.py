@@ -61,6 +61,7 @@ from functools import partial
 from pathlib import Path
 
 from idpconfgen.libs.libmulticore import pool_function
+from natsort import os_sorted
 
 from spycipdb import log
 from spycipdb.components.helpers import pales_helper
@@ -155,7 +156,7 @@ def main(
             )
         return
     log.info(S('done'))
-    
+    str_pdbpaths = os_sorted(str_pdbpaths)
     log.info(T(f'back calculaing using {ncores} workers'))
     if pales:
         execute = partial(
@@ -163,7 +164,7 @@ def main(
             pales_helper,
             exp_file,
             )
-        execute_pool = pool_function(execute, str_pdbpaths, ncores=ncores)
+        execute_pool = pool_function(execute, str_pdbpaths, mode='imap', ncores=ncores)  # noqa: E501
         
         _output = {}
         for result in execute_pool:
