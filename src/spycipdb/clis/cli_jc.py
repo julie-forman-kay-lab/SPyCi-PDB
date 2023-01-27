@@ -35,6 +35,7 @@ from pathlib import Path
 import pandas as pd
 from idpconfgen.libs.libmulticore import pool_function
 from idpconfgen.libs.libstructure import Structure, col_resSeq
+from natsort import os_sorted
 
 from spycipdb import log
 from spycipdb.core.calculators import calc_jc
@@ -118,7 +119,7 @@ def main(
             )
         return
     log.info(S('done'))
-    
+    pdbs2operate = os_sorted(pdbs2operate)
     _output = {}
     exp = pd.read_csv(exp_file)
     try:
@@ -151,7 +152,7 @@ def main(
         calc_jc,
         exp_file,
         )
-    execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
+    execute_pool = pool_function(execute, pdbs2operate, method='imap', ncores=ncores)  # noqa: E501
 
     for result in execute_pool:
         _output[result[0].stem] = result[1]

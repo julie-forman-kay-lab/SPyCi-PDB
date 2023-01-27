@@ -38,6 +38,7 @@ from functools import partial
 from pathlib import Path
 
 from idpconfgen.libs.libmulticore import pool_function
+from natsort import os_sorted
 
 from spycipdb import log
 from spycipdb.components.helpers import crysol_helper
@@ -136,6 +137,7 @@ def main(
     log.info(T('reading input paths'))
     pdbs2operate, _istarfile = get_pdb_paths(pdb_files, tmpdir)
     str_pdbpaths = [str(path) for path in pdbs2operate]
+    str_pdbpaths = os_sorted(str_pdbpaths)
     if len(pdbs2operate) == 0 or pdbs2operate is None:
         log.info(
             'No .pdb files were found based on the input. Make sure the '
@@ -151,7 +153,7 @@ def main(
         crysol_helper,
         lm=lm,
         )
-    execute_pool = pool_function(execute, str_pdbpaths, ncores=ncores)
+    execute_pool = pool_function(execute, str_pdbpaths, method='imap', ncores=ncores)  # noqa: E501
     
     _output = {}
     for result in execute_pool:

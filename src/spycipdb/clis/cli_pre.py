@@ -39,6 +39,7 @@ from functools import partial
 from pathlib import Path
 
 from idpconfgen.libs.libmulticore import pool_function
+from natsort import os_sorted
 
 from spycipdb import log
 from spycipdb.core.calculators import calc_pre
@@ -121,14 +122,14 @@ def main(
             'tarballs are accepted.'
             )
     log.info(S('done'))
-    
+    pdbs2operate = os_sorted(pdbs2operate)
     log.info(T(f'back calculating using {ncores} workers'))
     execute = partial(
         report_on_crash,
         calc_pre,
         exp_file,
         )
-    execute_pool = pool_function(execute, pdbs2operate, ncores=ncores)
+    execute_pool = pool_function(execute, pdbs2operate, method='imap', ncores=ncores)  # noqa: E501
     
     _output = {}
     _output['format'], _ = get_exp_format_pre(exp_file, pdbs2operate[0])
