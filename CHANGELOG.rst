@@ -2,6 +2,9 @@
 Changelog
 =========
 
+* Update client setup
+* Add warning for updating the environment when pulling
+
 v0.2.0 (2023-01-27)
 ------------------------------------------------------------
 

@@ -76,6 +76,23 @@ Please note that IDPConformerGenerator will be installed alongside SPyCi-PDB
 as the library is required for processing PDB files. You can find the installation
 of IDPConformerGenerator in ``src/idpconfgen/``.
 
+Updating SPyCi-PDB
+------------------
+When new back-calculators are added or when dependencies change from the
+GitHub, please update your environemnt with the latest dependencies after
+performing a ``git pull``.
+
+To update an anaconda environment::
+
+    conda env update --file requirements.yml --prune
+
+To update a virtualenv environment::
+
+    pip install -r requirements.txt --upgrade
+
+Then perform ``setup.py`` again for good measure::
+
+    python setup.py develop --no-deps
 
 Installing Third-party Software
 ---------------------------------------
