@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.2.2 (2023-03-07)
+------------------------------------------------------------
+
 * Update installation documentation
 * Temporarily change requirements for default IDPConformerGenerator repository link
 
