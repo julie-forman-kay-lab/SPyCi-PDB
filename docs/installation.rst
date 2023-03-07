@@ -12,8 +12,23 @@ can be found `here <https://github.com/julie-forman-kay-lab/IDPConformerGenerato
 
 Full installation instructures are highlighted below.
 
-From Source
------------
+If you already have an ``idpconfgen`` environment
+-------------------------------------------------
+
+Update the environment with the dependencies seen in SPyCi-PDB::
+
+    conda env update --name idpconfgen --file requirements.yml --prune
+
+Or updating a virtualenv environment::
+
+    pip install -r requirements.txt --upgrade
+
+Install SPyCi-PDB on top of IDPConformerGenerator::
+
+    python setup.py develop --no-deps
+
+Standalone From Source
+----------------------
 
 Clone from the official repository::
 
@@ -79,7 +94,7 @@ of IDPConformerGenerator in ``src/idpconfgen/``.
 Updating SPyCi-PDB
 ------------------
 When new back-calculators are added or when dependencies change from the
-GitHub, please update your environemnt with the latest dependencies after
+GitHub, please update your environment with the latest dependencies after
 performing a ``git pull``.
 
 To update an anaconda environment::
@@ -136,7 +151,7 @@ virtualenv was used to install SPyCi-PDB::
     pip install -r ucbshift_requirements.txt
 
 Go back to the ``SPyCi-PDB`` directory and reinstall ``spycipdb`` and
-``idpconfgen``::
+``idpconfgen`` if needed.::
     
     conda activate spycipdb
     cd ../..
