@@ -6,4 +6,4 @@ scipy>=1.8.1, <2
 matplotlib>=3.5.2, <4
 natsort>=8, <9
 tox>=3.25.0, <4
-git+https://github.com/julie-forman-kay-lab/IDPConformerGenerator
+git+https://github.com/menoliu/IDPConformerGenerator@fix-239#egg=idpconfgen
