@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Update results in the figure to include PRE and NOE as per #43
+
 v0.2.3 (2023-03-27)
 ------------------------------------------------------------
 
