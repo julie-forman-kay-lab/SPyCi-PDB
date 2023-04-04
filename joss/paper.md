@@ -39,13 +39,13 @@ affiliations:
     index: 3
   - name: "Department of Chemistry, University of California, Berkeley, California 94720-1460, USA"
     index: 4
-  - name: "Bijvoet Centre for Biomolecular Research, Faculty of Science, Department of Chemistry, Utrecht University, Padualaan 8, 3584 CH Utrecht, the Netherlands"
+  - name: "Department of Biomedical Sciences, University of Padova, Padova 35131, Italy"
     index: 5
   - name: "Department of Chemical and Biomolecular Engineering, University of California, Berkeley, California 94720-1462, USA"
     index: 6
   - name: "Department of Bioengineering, University of California, Berkeley, California 94720-1762, USA"
     index: 7
-date: 19 September 2022
+date: 30 March 2023
 bibliography: paper.bib
 ---
 
@@ -84,11 +84,11 @@ Where δx, δy, δz are the cartesian differences between two atoms of interest 
 
 The remaining 4 modules (`cs`, `saxs`, `rh`, `rdc`) call upon third-party academic software: UCBShift, a machine learning algorithm that uses structural alignment for experimental chemical shift replication and employs a random forest regression on curated data to most accurately predict protein chemical shifts [@Li2020]; CRYSOL v3, an updated version of the well-established SAXS back-calculator from ATSAS that can now evaluate the hydration shell by populating the protein structure with dummy water [@Franke2017]; HullRad, to calculate hydrodynamic radius (Rh) by using a convex hull model to estimate the hydrodynamic properties of a macromolecule [@Fleming2018]; and PALES, using the steric obstruction model to derive dipolar coupling (RDC) information from the average orientation of the 3D coordinates [@Zweckstetter2000]. Thorough testing of each module has been performed to ensure smooth installation and troubleshooting as well as retaining or providing multiprocessing capabilities that may not have been implemented in their standalone forms. When choosing third-party software, we prioritized those written in Python for ease of integration.
 
-We plan to integrate other options for back-calculators, such as DEER-PREdict [@Tesei2021] for PREs, and alternative methods to calculating experimental datatypes internally such as using a parameterizable fluorescence lifetime and the Förster distance, as used in the Naudi-Fabra et al. study of describing intrinsically disordered proteins using smFRET, NMR, and SAXS [@Naudi-Fabra2021]. Future additions to the **SPyCi-PDB** interface suite are welcome and easy to perform given its modular design.
+We plan to integrate alternative methods to calculate experimental datatypes internally such as using a parameterizable fluorescence lifetime and the Förster distance, as used in the Naudi-Fabra et al. study of describing intrinsically disordered proteins using smFRET, NMR, and SAXS [@Naudi-Fabra2021]. Future additions to the **SPyCi-PDB** interface suite are welcome and easy to perform given its modular design.
 
-Detailed installation/troubleshooting instructions, real-world usage examples, and input/output formats are provided both in the project's documentation hosted on ReadTheDocs (https://spyci-pdb.readthedocs.io/en/stable/) and within the modules through the `--help` argument. Plots of sample outputs from the `jc` and `rh` modules using the example structures and data in the repository are shown in \autoref{fig}.
+Detailed installation/troubleshooting instructions, real-world usage examples, and input/output formats are provided both in the project's documentation hosted on ReadTheDocs (https://spyci-pdb.readthedocs.io/en/stable/) and within the modules through the `--help` argument. Plots of sample outputs from the `jc`, `rh`, `pre`, and `noe` modules using the example structures and data in the repository are shown in \autoref{fig}.
 
-![Plots of distributions of back-calculated experimental data of 100 structures of the unfolded state of the Drk N-terminal SH3 domain (drkN SH3) generated using IDPConformerGenerator [@Teixeira2022]. Panel (A) shows back-calculated <sup>3</sup>J-HNHA couplings in Hz based on the Karplus equation with A, B, and C constants from Lincoff et al. [@Lincoff2020]. Not every residue has a back-calculated J coupling based on the associated experimental file. Panel (B) shows the distribution of back-calculated Rh values in Angstroms using HullRad [@Fleming2018].\label{fig}](fig1.png)
+![Plots of distributions of back-calculated experimental data of 100 structures of the unfolded state of the Drk N-terminal SH3 domain (drkN SH3) generated using IDPConformerGenerator [@Teixeira2022]. Panel (A) shows back-calculated <sup>3</sup>J-HNHA couplings in Hz based on the Karplus equation with A, B, and C constants from Lincoff et al. [@Lincoff2020]. Not every residue has a back-calculated J coupling based on the associated experimental file. Panel (B) shows the distribution of back-calculated Rh values in Angstroms using HullRad [@Fleming2018]. Panels (C) and (D) show twenty randomy selected pairs of back-calculated PRE and NOE distances respectively as indicated by the index number corresponding to their experimental counterpart. The ranges of experimental values are represented as grey boxes while back-calculated values are shown as red dots.\label{fig}](fig1.png)
 
 # Acknowledgements
 
