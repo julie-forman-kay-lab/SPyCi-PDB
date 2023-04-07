@@ -63,17 +63,7 @@ libcli.add_argument_pdb_files(ap)
 libcli.add_argument_exp_file(ap)
 libcli.add_argument_output(ap)
 libcli.add_argument_ncores(ap)
-
-ap.add_argument(
-    '-p',
-    '--plot',
-    help=(
-        "Enables plotting if used. Saves plot to output folder. "
-        "Defaults to off, no plot generated."
-        ),
-    action="store_true",
-    default=False,
-    )
+libcli.add_argument_plot(ap)
 
 TMPDIR = '__tmpjc__'
 ap.add_argument(

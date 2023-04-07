@@ -16,7 +16,7 @@ Units for values are in Angstroms.
 
 USAGE:
     $ spycipdb rh <PDB-FILES>
-    $ spycipdb rh <PDB-FILES> [--output] [--ncores]
+    $ spycipdb rh <PDB-FILES> [--output] [--ncores] [--plot]
 
 OUTPUT:
     Output is in standard .JSON format as follows:
@@ -32,6 +32,8 @@ import shutil
 from functools import partial
 from pathlib import Path
 
+import matplotlib.pyplot as plt
+import pandas as pd
 from idpconfgen.libs.libmulticore import pool_function
 from natsort import os_sorted
 
@@ -56,9 +58,9 @@ ap = libcli.CustomParser(
     )
 
 libcli.add_argument_pdb_files(ap)
-
 libcli.add_argument_output(ap)
 libcli.add_argument_ncores(ap)
+libcli.add_argument_plot(ap)
 
 TMPDIR = '__tmprh__'
 ap.add_argument(
@@ -76,6 +78,7 @@ def main(
         pdb_files,
         output,
         ncores=1,
+        plot=False,
         tmpdir=TMPDIR,
         **kwargs,
         ):
@@ -94,6 +97,10 @@ def main(
     ncores : int, optional
         The number of cores to use.
         Defaults to 1.
+            
+    plot : Bool, optional
+        Whether to plot the back-calculated results or not.
+        Defaults to False.
     
     tmpdir : str or Path, optional
         Path to the temporary directory if working with .TAR files.
@@ -122,8 +129,10 @@ def main(
     execute_pool = pool_function(execute, str_pdbpaths, method='imap', ncores=ncores)  # noqa: E501
     
     _output = {}
+    rh = []
     for result in execute_pool:
         _output[result[0]] = result[1]
+        rh.append(result[1])
     log.info(S('done'))
     
     log.info(T('Writing output onto disk'))
@@ -133,7 +142,20 @@ def main(
 
     if _istarfile:
         shutil.rmtree(tmpdir)
+    
+    if plot:
+        dataframe = pd.DataFrame(rh)
 
+        fig, ax = plt.subplots()
+        fig.set_size_inches(2, 4)
+        ax.boxplot(dataframe, flierprops={'marker': 'o', 'markersize': 5})
+
+        ax.xaxis.set_ticklabels([])
+
+        plt.xlabel('Protein', fontsize=14)
+        plt.ylabel('Rh (Å)', fontsize=14)
+        plt.savefig("rh_plot.png", dpi=300, bbox_inches='tight')
+        
     return
 
 

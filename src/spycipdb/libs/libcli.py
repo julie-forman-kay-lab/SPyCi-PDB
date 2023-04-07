@@ -194,3 +194,17 @@ def add_argument_output(parser):
         type=str,
         default='output.json',
         )
+
+
+def add_argument_plot(parser):
+    """Add argument for plotting back-calculated result."""
+    parser.add_argument(
+        '-p',
+        '--plot',
+        help=(
+            "Enables plotting if used. Saves plot to output folder. "
+            "Defaults to off, no plot generated."
+            ),
+        action="store_true",
+        default=False,
+        )
