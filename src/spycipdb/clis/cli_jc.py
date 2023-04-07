@@ -6,7 +6,7 @@ to be faster than BioPython.
 
 USAGE:
     $ spycipdb jc <PDB-FILES>
-    $ spycipdb jc <PDB-FILES> [--output] [--ncores]
+    $ spycipdb jc <PDB-FILES> [--output] [--ncores] [--plot]
     
 REQUIREMENTS:
     Experimental data must be comma-delimited with the following column:
@@ -32,6 +32,7 @@ import shutil
 from functools import partial
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import pandas as pd
 from idpconfgen.libs.libmulticore import pool_function
 from idpconfgen.libs.libstructure import Structure, col_resSeq
@@ -63,6 +64,17 @@ libcli.add_argument_exp_file(ap)
 libcli.add_argument_output(ap)
 libcli.add_argument_ncores(ap)
 
+ap.add_argument(
+    '-p',
+    '--plot',
+    help=(
+        "Enables plotting if used. Saves plot to output folder. "
+        "Defaults to off, no plot generated."
+        ),
+    action="store_true",
+    default=False,
+    )
+
 TMPDIR = '__tmpjc__'
 ap.add_argument(
     '--tmpdir',
@@ -75,11 +87,35 @@ ap.add_argument(
     )
 
 
+def karplus_j(x):
+    """
+    Convert back-calculated units to hertz using the Karplus equation.
+    
+    Constants defined from Lincoff et al. 2020
+    (https://doi.org/10.1038/s42004-020-0323-0)
+
+    Parameters
+    ----------
+    x : float
+        Back calculated value.
+
+    Returns
+    -------
+        Value converted to Hertz.
+    """
+    a = 6.51
+    b = -1.76
+    c = 1.6
+    
+    return (a * (x ** 2)) + b * x + c
+
+
 def main(
         pdb_files,
         exp_file,
         output,
         ncores=1,
+        plot=False,
         tmpdir=TMPDIR,
         **kwargs,
         ):
@@ -102,6 +138,10 @@ def main(
     ncores : int, optional
         The number of cores to use.
         Defaults to 1.
+    
+    plot : Bool, optional
+        Whether to plot the back-calculated results or not.
+        Defaults to False.
     
     tmpdir : str or Path, optional
         Path to the temporary directory if working with .TAR files.
@@ -165,6 +205,33 @@ def main(
     
     if _istarfile:
         shutil.rmtree(tmpdir)
+    
+    if plot:
+        log.info(T('Plotting back-calculated data'))
+        rawdata = _output
+        RESIDUES = rawdata['format']
+        del rawdata['format']
+
+        aligned_data = {}
+        for res in RESIDUES:
+            aligned_data[res] = []
+
+        for conf in rawdata:
+            jc = rawdata[conf]
+            for i, res in enumerate(RESIDUES):
+                j = karplus_j(jc[i])
+                aligned_data[res].append(j)
+
+        dataframe = pd.DataFrame(aligned_data)
+
+        fig, ax = plt.subplots()
+        fig.set_size_inches(12, 4)
+        ax.boxplot(dataframe, flierprops={'marker': 'o', 'markersize': 3})
+        ax.set_xticklabels(RESIDUES)
+
+        plt.xlabel('Residue Number', fontsize=14)
+        plt.ylabel(r'$^3$J-HNHA Coupling (Hz)', fontsize=14)
+        plt.savefig("jc_plot.png", dpi=300, bbox_inches='tight')
 
     return
 
