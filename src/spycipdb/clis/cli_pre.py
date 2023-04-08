@@ -9,7 +9,7 @@ Error = 0.0001 as reported in Lincoff et al. 2020.
 
 USAGE:
     $ spycipdb pre <PDB-FILES> [--exp-file]
-    $ spycipdb pre <PDB-FILES> [--exp-file] [--output] [--ncores]
+    $ spycipdb pre <PDB-FILES> [--exp-file] [--output] [--ncores] [--plot]
 
 REQUIREMENTS:
     Experimental data must be comma-delimited with the following columns:
@@ -38,6 +38,7 @@ import shutil
 from functools import partial
 from pathlib import Path
 
+import pandas as pd
 from idpconfgen.libs.libmulticore import pool_function
 from natsort import os_sorted
 
@@ -45,7 +46,7 @@ from spycipdb import log
 from spycipdb.core.calculators import calc_pre
 from spycipdb.core.parsers import get_exp_format_pre
 from spycipdb.libs import libcli
-from spycipdb.libs.libfuncs import get_pdb_paths
+from spycipdb.libs.libfuncs import get_pdb_paths, plot_data_and_ranges
 from spycipdb.logger import S, T, init_files, report_on_crash
 
 
@@ -66,6 +67,7 @@ libcli.add_argument_pdb_files(ap)
 libcli.add_argument_exp_file(ap)
 libcli.add_argument_output(ap)
 libcli.add_argument_ncores(ap)
+libcli.add_argument_plot(ap)
 
 TMPDIR = '__tmppre__'
 ap.add_argument(
@@ -84,6 +86,7 @@ def main(
         exp_file,
         output,
         ncores=1,
+        plot=False,
         tmpdir=TMPDIR,
         **kwargs,
         ):
@@ -106,6 +109,10 @@ def main(
     ncores : int, optional
         The number of cores to use.
         Defaults to 1.
+                
+    plot : Bool, optional
+        Whether to plot the back-calculated results or not.
+        Defaults to False.
     
     tmpdir : str or Path, optional
         Path to the temporary directory if working with .TAR files.
@@ -144,6 +151,39 @@ def main(
 
     if _istarfile:
         shutil.rmtree(tmpdir)
+    
+    if plot:
+        log.info(T('Plotting back-calculated data'))
+        log.info(S('Please be patient if you have a large ensemble...'))
+        pre_exp_df = pd.read_csv(exp_file)
+        pre_ranges = []
+        pre_indices = []
+        for row in pre_exp_df.itertuples():
+            val = row.dist_value
+            upper = row.upper
+            lower = row.lower
+            ubound = val + upper
+            lbound = val - lower
+            pre_ranges.append((lbound, ubound))
+            pre_indices.append(row.Index)
+        
+        pre_vals = []
+        _output.pop("format")
+        for i in pre_indices:
+            temp_vals = []
+            for conf in _output:
+                temp_vals.append(_output[conf][i])
+            pre_vals.append(temp_vals)
+
+        plot_data_and_ranges(
+            pre_vals,
+            pre_ranges,
+            pre_indices,
+            "PRE",
+            "pre_plot.png"
+            )
+        
+        log.info(S('done'))
 
     return
 

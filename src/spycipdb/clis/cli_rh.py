@@ -144,8 +144,9 @@ def main(
         shutil.rmtree(tmpdir)
     
     if plot:
+        log.info(T('Plotting back-calculated data'))
+        
         dataframe = pd.DataFrame(rh)
-
         fig, ax = plt.subplots()
         fig.set_size_inches(2, 4)
         ax.boxplot(dataframe, flierprops={'marker': 'o', 'markersize': 5})
@@ -155,6 +156,8 @@ def main(
         plt.xlabel('Protein', fontsize=14)
         plt.ylabel('Rh (Å)', fontsize=14)
         plt.savefig("rh_plot.png", dpi=300, bbox_inches='tight')
+        
+        log.info(S('done'))
         
     return
 

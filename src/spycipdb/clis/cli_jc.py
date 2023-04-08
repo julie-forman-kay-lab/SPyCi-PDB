@@ -198,6 +198,7 @@ def main(
     
     if plot:
         log.info(T('Plotting back-calculated data'))
+        
         rawdata = _output
         RESIDUES = rawdata['format']
         del rawdata['format']
@@ -222,6 +223,8 @@ def main(
         plt.xlabel('Residue Number', fontsize=14)
         plt.ylabel(r'$^3$J-HNHA Coupling (Hz)', fontsize=14)
         plt.savefig("jc_plot.png", dpi=300, bbox_inches='tight')
+        
+        log.info(S('done'))
 
     return
 
