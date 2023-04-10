@@ -9,7 +9,7 @@ Error = 0.0001 as reported in Lincoff et al. 2020.
 
 USAGE:
     $ spycipdb noe <PDB-FILES> [--exp-file]
-    $ spycipdb noe <PDB-FILES> [--exp-file] [--output] [--ncores]
+    $ spycipdb noe <PDB-FILES> [--exp-file] [--output] [--ncores] [--plot]
 
 REQUIREMENTS:
     Experimental data must be comma-delimited with the following columns:
@@ -45,6 +45,7 @@ import shutil
 from functools import partial
 from pathlib import Path
 
+import pandas as pd
 from idpconfgen.libs.libmulticore import pool_function
 from natsort import os_sorted
 
@@ -52,7 +53,7 @@ from spycipdb import log
 from spycipdb.core.calculators import calc_noe
 from spycipdb.core.parsers import get_exp_format_noe
 from spycipdb.libs import libcli
-from spycipdb.libs.libfuncs import get_pdb_paths
+from spycipdb.libs.libfuncs import get_pdb_paths, plot_data_and_ranges
 from spycipdb.logger import S, T, init_files, report_on_crash
 
 
@@ -73,6 +74,7 @@ libcli.add_argument_pdb_files(ap)
 libcli.add_argument_exp_file(ap)
 libcli.add_argument_output(ap)
 libcli.add_argument_ncores(ap)
+libcli.add_argument_plot(ap)
 
 TMPDIR = '__tmpnoe__'
 ap.add_argument(
@@ -91,6 +93,7 @@ def main(
         exp_file,
         output,
         ncores=1,
+        plot=False,
         tmpdir=TMPDIR,
         **kwargs,
         ):
@@ -113,6 +116,10 @@ def main(
     ncores : int, optional
         The number of cores to use.
         Defaults to 1.
+    
+    plot : Bool, optional
+        Whether to plot the back-calculated results or not.
+        Defaults to False.
     
     tmpdir : str or Path, optional
         Path to the temporary directory if working with .TAR files.
@@ -152,6 +159,39 @@ def main(
     
     if _istarfile:
         shutil.rmtree(tmpdir)
+    
+    if plot:
+        log.info(T('Plotting back-calculated data'))
+        log.info(S('Please be patient if you have a large ensemble...'))
+        noe_exp_df = pd.read_csv(exp_file)
+        noe_ranges = []
+        noe_indices = []
+        for row in noe_exp_df.itertuples():
+            val = row.dist_value
+            upper = row.upper
+            lower = row.lower
+            ubound = val + upper
+            lbound = val - lower
+            noe_ranges.append((lbound, ubound))
+            noe_indices.append(row.Index)
+        
+        noe_vals = []
+        _output.pop("format")
+        for i in noe_indices:
+            temp_vals = []
+            for conf in _output:
+                temp_vals.append(_output[conf][i])
+            noe_vals.append(temp_vals)
+
+        plot_data_and_ranges(
+            noe_vals,
+            noe_ranges,
+            noe_indices,
+            "NOE",
+            "noe_plot.png"
+            )
+        
+        log.info(S('done'))
 
     return
 

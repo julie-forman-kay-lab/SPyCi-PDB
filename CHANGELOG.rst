@@ -2,6 +2,9 @@
 Changelog
 =========
 
+* Update results in the figure to include PRE and NOE as per #43
+* Add plotting feature to ``rh``, ``jc``, ``pre``, ``noe`` modeules
+
 v0.2.3 (2023-03-27)
 ------------------------------------------------------------
 

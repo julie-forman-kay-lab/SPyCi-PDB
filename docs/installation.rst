@@ -12,6 +12,21 @@ can be found `here <https://github.com/julie-forman-kay-lab/IDPConformerGenerato
 
 Full installation instructures are highlighted below.
 
+.. note::
+    As highlighted in ``requirements.txt``, listed below are all of the Python packages required.
+    The following list will be updated if more packages are added:
+
+    | ``numpy >= 1.22.4, < 2``
+    | ``numba >= 0.53.0, < 1``
+    | ``pybind11 >= 2.9.2, < 3``
+    | ``pandas >= 1.2.4, < 2``
+    | ``scipy >= 1.8.1, < 2``
+    | ``matplotlib >= 3.5.2, < 4``
+    | ``natsort >= 8, < 9``
+    | ``tox >= 3.25.0, < 4``
+    
+    As mentioned above, ``IDPConformerGenerator`` libraries are required.
+
 If you already have an ``idpconfgen`` environment
 -------------------------------------------------
 
