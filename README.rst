@@ -59,4 +59,4 @@ If you use SPyCi-PDB, please cite::
 Version
 =======
 
-v0.2.3
+v0.3.0
