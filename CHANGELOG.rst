@@ -2,6 +2,10 @@
 Changelog
 =========
 
+* Correct 'ATSAS 2.8' formatting in references of paper
+* Include in RtD documentation explanations of back-calculators
+* Combine formatting for input/output in usage section of RtD documentation
+
 v0.3.0 (2023-04-10)
 ------------------------------------------------------------
 
