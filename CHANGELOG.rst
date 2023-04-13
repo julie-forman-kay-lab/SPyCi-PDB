@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.3.2 (2023-04-13)
+------------------------------------------------------------
+
 * Update and make references uniform for manuscript
 
 v0.3.1 (2023-04-12)
