@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Update acknowledgements section of manuscript
+
 v0.3.2 (2023-04-13)
 ------------------------------------------------------------
 
