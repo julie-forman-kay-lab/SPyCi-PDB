@@ -140,7 +140,7 @@ UCBShift
     You should be in the parent directory where ``SPyCi-PDB`` was cloned to
     with the Python environment is deactivated.
 
-Clone the UCBShift repository from `my fork <https://github.com/menoliu/CSpred>`_ on
+Clone the UCBShift repository from `Zi Hao Liu's fork <https://github.com/menoliu/CSpred>`_ on
 GitHub.::
 
     git clone https://github.com/menoliu/CSpred
@@ -207,7 +207,7 @@ PALES v6.0
     PALES installation is only required for the :code:`rdc` module.
 
 A package of PALES v6.0 for Linux is already included in the ``thirdparty/`` folder.
-Downloaded and extracted from the `Bax website <https://spin.niddk.nih.gov/bax/software/PALES/index.html>`_.
+Downloaded and extracted from the `Ad Bax Group <https://spin.niddk.nih.gov/bax/software/PALES/index.html>`_.
 
 For use with x64 bit Linux Ubuntu 20.04.X LTS and 18.04.X, you must install the i386 architecture
 along with required package libraries::
