@@ -39,7 +39,7 @@ affiliations:
     index: 3
   - name: "Department of Chemistry, University of California, Berkeley, California 94720-1460, USA"
     index: 4
-  - name: "Department of Biomedical Sciences, University of Padova, Padova 35131, Italy"
+  - name: "Department of Biomedical Sciences, University of Padua, Padova 35131, Italy"
     index: 5
   - name: "Department of Chemical and Biomolecular Engineering, University of California, Berkeley, California 94720-1462, USA"
     index: 6
