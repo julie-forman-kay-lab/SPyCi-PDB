@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.3.5 (2023-05-02)
+------------------------------------------------------------
+
 * Implement minor editorial suggestions from issue #51
 
 v0.3.4 (2023-04-26)
