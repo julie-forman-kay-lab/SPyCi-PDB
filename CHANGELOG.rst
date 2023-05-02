@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Implement minor editorial suggestions from issue #51
+
 v0.3.4 (2023-04-26)
 ------------------------------------------------------------
 
