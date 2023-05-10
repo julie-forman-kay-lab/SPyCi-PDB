@@ -7,7 +7,7 @@ native on any system Python can run, as long as third-party back-calculator
 installation requirements are met.
 
 Please note that the IDPConformerGenerator library is required for parsing
-PDB structure co-ordinates. Details for IDPConformerGenerator
+PDB structure coordinates. Details for IDPConformerGenerator
 can be found `here <https://github.com/julie-forman-kay-lab/IDPConformerGenerator>`_.
 
 Full installation instructures are highlighted below.
