@@ -3,6 +3,8 @@ Changelog
 =========
 
 * Implement minor editorial suggestions from issue #51
+* Update affiliations and correct spelling inconsistencies in paper
+* Update README with Zenodo badge
 
 v0.3.4 (2023-04-26)
 ------------------------------------------------------------
