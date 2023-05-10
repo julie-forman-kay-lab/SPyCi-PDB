@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Update minor "co-ordinates" to "coordinates" in docs
+
 v0.3.7 (2023-05-10)
 ------------------------------------------------------------
 
