@@ -31,19 +31,19 @@ authors:
     affiliation: "1, 2"
     corresponding: true
 affiliations:
-  - name: "Molecular Medicine Program, Hospital for Sick Children, Toronto, Ontario M5G 0A4, Canada"
+  - name: "Molecular Medicine Program, Hospital for Sick Children, Toronto, Ontario, Canada"
     index: 1
-  - name: "Department of Biochemistry, University of Toronto, Toronto, Ontario, M5S 1A8, Canada"
+  - name: "Department of Biochemistry, University of Toronto, Toronto, Ontario, Canada"
     index: 2
-  - name: "Pitzer Center for Theoretical Chemistry, University of California, Berkeley, California 94720-1460, USA"
+  - name: "Pitzer Center for Theoretical Chemistry, University of California, Berkeley, California, United States of America"
     index: 3
-  - name: "Department of Chemistry, University of California, Berkeley, California 94720-1460, USA"
+  - name: "Department of Chemistry, University of California, Berkeley, California, United States of America"
     index: 4
-  - name: "Department of Biomedical Sciences, University of Padua, Padova 35131, Italy"
+  - name: "Department of Biomedical Sciences, University of Padua, Padova, Italy"
     index: 5
-  - name: "Department of Chemical and Biomolecular Engineering, University of California, Berkeley, California 94720-1462, USA"
+  - name: "Department of Chemical and Biomolecular Engineering, University of California, Berkeley, California, United States of America"
     index: 6
-  - name: "Department of Bioengineering, University of California, Berkeley, California 94720-1762, USA"
+  - name: "Department of Bioengineering, University of California, Berkeley, California, United States of America"
     index: 7
 date: 02 May 2023
 bibliography: paper.bib
@@ -80,7 +80,7 @@ $$
 \end{aligned}
 $$
 
-Where δx, δy, δz are the cartesian differences between two atoms of interest (1, 2), N represents the number of combinations for NOE atom pairs (2), φ is the Phi torsion angle of interest (3), D is the scalar distance between the residues of interest with R<sub>1</sub> and R<sub>2</sub> being the vector cartesian co-ordinates for the residues and S being the scale factor according to experimental information. 
+Where δx, δy, δz are the Cartesian differences between two atoms of interest (1, 2), N represents the number of combinations for NOE atom pairs (2), φ is the Phi torsion angle of interest (3), D is the scalar distance between the residues of interest with R<sub>1</sub> and R<sub>2</sub> being the vector Cartesian co-ordinates for the residues and S being the scale factor according to experimental information. 
 
 The remaining 4 modules (`cs`, `saxs`, `rh`, `rdc`) call upon third-party academic software: UCBShift, a machine learning algorithm that uses structural alignment for experimental chemical shift replication and employs a random forest regression on curated data to most accurately predict protein chemical shifts [@Li2020]; CRYSOL v3, an updated version of the well-established SAXS back-calculator from ATSAS that can now evaluate the hydration shell by populating the protein structure with dummy water [@Franke2017]; HullRad, to calculate hydrodynamic radius (Rh) by using a convex hull model to estimate the hydrodynamic properties of a macromolecule [@Fleming2018]; and PALES, using the steric obstruction model to derive dipolar coupling (RDC) information from the average orientation of the 3D coordinates [@Zweckstetter2000]. Thorough testing of each module has been performed to ensure smooth installation and troubleshooting, as well as retaining or providing multiprocessing capabilities that may not have been implemented in their standalone forms. When choosing third-party software, we prioritized those written in Python for ease of integration.
 
