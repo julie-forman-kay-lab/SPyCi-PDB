@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.3.7 (2023-05-10)
+------------------------------------------------------------
+
 * Update changelog and minor formatting for README
 
 v0.3.6 (2023-05-10)
