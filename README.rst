@@ -12,6 +12,10 @@ SPyCi-PDB
     :target: https://spyci-pdb.readthedocs.io/en/stable/?badge=stable
     :alt: Documentation Status
 
+.. image:: https://zenodo.org/badge/518984240.svg
+   :target: https://zenodo.org/badge/latestdoi/518984240
+   :alt: Zenodo Archive
+
 **Structural Python (Back) Calculator Interface for PDBs**
 
 **Goal:** User friendly Python3 based interface to generate back-calculated experimental data for singular and multiple (ensembles of) PDB structures.
