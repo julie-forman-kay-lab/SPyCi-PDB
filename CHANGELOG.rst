@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.3.10 (2023-05-11)
+------------------------------------------------------------
+
 * Update README to include citation and JOSS button
 
 v0.3.9 (2023-05-10)
