@@ -12,6 +12,10 @@ SPyCi-PDB
     :target: https://spyci-pdb.readthedocs.io/en/stable/?badge=stable
     :alt: Documentation Status
 
+.. image:: https://joss.theoj.org/papers/10.21105/joss.04861/status.svg
+   :target: https://doi.org/10.21105/joss.04861
+   :alt: JOSS Paper
+
 .. image:: https://zenodo.org/badge/518984240.svg
    :target: https://zenodo.org/badge/latestdoi/518984240
    :alt: Zenodo Archive
@@ -56,7 +60,7 @@ How to Cite
 
 If you use SPyCi-PDB, please cite::
 
-    TBD
+    Liu et al., (2023). SPyCi-PDB: A modular command-line interface for back-calculating experimental datatypes of protein structures.. Journal of Open Source Software, 8(85), 4861, https://doi.org/10.21105/joss.04861
 
 .. end-citing
 
