@@ -2,8 +2,12 @@
 Changelog
 =========
 
+* Update README to include citation and JOSS button
+
 v0.3.9 (2023-05-10)
 ------------------------------------------------------------
+
+* Correct repository for versioning and Git actions
 
 v0.3.8 (2023-05-10)
 ------------------------------------------------------------
@@ -24,8 +28,6 @@ v0.3.5 (2023-05-02)
 ------------------------------------------------------------
 
 * Implement minor editorial suggestions from issue #51
-* Update affiliations and correct spelling inconsistencies in paper
-* Update README with Zenodo badge
 
 v0.3.4 (2023-04-26)
 ------------------------------------------------------------
