@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.3.12 (2023-07-27)
+------------------------------------------------------------
+
 * Update MANIFEST to include existing_requirements.txt
 
 v0.3.11 (2023-07-27)
