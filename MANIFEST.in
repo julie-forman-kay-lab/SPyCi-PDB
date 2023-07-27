@@ -6,6 +6,7 @@ graft thirdparty
 include *.rst
 include LICENSE
 include requirements.txt
+include existing_requirements.txt
 include CODE_OF_CONDUCT.md
 include *.yml
 
