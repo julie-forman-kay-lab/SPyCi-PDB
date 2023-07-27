@@ -14,5 +14,5 @@ dependencies:
     - natsort>=8.0.0,<9
     - pip
     - pip:
-        - "--editable=git+https://github.com/menoliu/IDPConformerGenerator@fix-239#egg=idpconfgen"
+        - "--editable=git+https://github.com/julie-forman-kay-lab/IDPConformerGenerator.git#egg=idpconfgen"
     - tox>=3.25.0,<4
