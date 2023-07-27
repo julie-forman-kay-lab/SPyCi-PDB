@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Correct formatting error in documentation
+
 v0.3.12 (2023-07-27)
 ------------------------------------------------------------
 
