@@ -29,14 +29,15 @@ Full installation instructures are highlighted below.
 
 If you already have an ``idpconfgen`` environment
 -------------------------------------------------
+It is recommended to install IDPConformerGenerator first to have the
+environment prepared for SPyCi-PDB. Please visit the
+`IDPConformerGenerator GitHub <https://github.com/julie-forman-kay-lab/IDPConformerGenerator>_`
+to install IDPConformerGenerator first.
 
-Update the environment with the dependencies seen in SPyCi-PDB::
+Activate the ``idpconfgen`` environment (conda or virtualenv) and
+update the environment with the dependencies seen in SPyCi-PDB::
 
-    conda env update --name idpconfgen --file requirements.yml --prune
-
-Or updating a virtualenv environment::
-
-    pip install -r requirements.txt --upgrade
+    pip install -r existing_requirements.txt --upgrade
 
 Install SPyCi-PDB on top of IDPConformerGenerator::
 
