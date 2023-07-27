@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.3.11 (2023-07-27)
+------------------------------------------------------------
+
 * Update requirements for existing IDPConformerGenerator environment
 * Update documentations for installation for clarity
 

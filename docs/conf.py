@@ -48,7 +48,7 @@ project = 'SPyCi-PDB'
 year = '2022'
 author = 'Zi Hao Liu'
 copyright = '{0}, {1}'.format(year, author)
-version = release = '0.3.10'
+version = release = '0.3.11'
 
 pygments_style = 'trac'
 templates_path = ['.']
