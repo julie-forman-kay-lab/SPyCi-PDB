@@ -2,6 +2,9 @@
 Changelog
 =========
 
+* Update requirements for existing IDPConformerGenerator environment
+* Update documentations for installation for clarity
+
 v0.3.10 (2023-05-11)
 ------------------------------------------------------------
 
