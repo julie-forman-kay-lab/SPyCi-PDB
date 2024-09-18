@@ -164,7 +164,7 @@ def main(
             pales_helper,
             exp_file,
             )
-        execute_pool = pool_function(execute, str_pdbpaths, mode='imap', ncores=ncores)  # noqa: E501
+        execute_pool = pool_function(execute, str_pdbpaths, method='imap', ncores=ncores)  # noqa: E501
         
         _output = {}
         for result in execute_pool:
