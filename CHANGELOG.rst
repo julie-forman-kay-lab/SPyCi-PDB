@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Correct multiprocessing bug in the ``rdc`` module
+
 v0.3.14 (2024-01-12)
 ------------------------------------------------------------
 
