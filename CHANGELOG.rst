@@ -2,6 +2,10 @@
 Changelog
 =========
 
+* Update ``rh`` module to use HullRadSAS v3.1
+* Update RtD documentation compilation
+* Update installation instructions for UCBShift
+
 v0.3.15 (2024-09-18)
 ------------------------------------------------------------
 
