@@ -1,6 +1,5 @@
 # pylint: skip-file
 # flake8: noqa
-#!/usr/bin/env python3
 """
 HullRadSAS
 Version 3.1 
@@ -140,16 +139,15 @@ python HullRadVSAS.py [PDBcode].pdb
     or 
 python HullRadVSAS.py [PDBcode].cif
 """
-
-import os
-import sys
-import math
-import string
-import shlex, subprocess
 import gzip
+import math
 import mimetypes
+import os
 import re
-import collections
+import string
+import subprocess
+import sys
+
 from Bio.PDB.kdtrees import KDTree
 
 
