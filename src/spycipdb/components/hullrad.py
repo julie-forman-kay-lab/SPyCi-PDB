@@ -1,74 +1,75 @@
 # pylint: skip-file
 # flake8: noqa
+#!/usr/bin/env python3
 """
-HullRad
-Version 8.1 
-Calculates hydrodynamic coefficients for a biomolecular structure.
+HullRadSAS
+Version 3.1 
+Calculates hydrodynamic coefficients for a biomolecular structure and
+  calculates surface shell and entrained hydration amounts
 AUTHOR: Patrick Fleming
 
 Release Notes:
-Version 5 (The program as described in Fleming and Fleming, BJ, 2018)
-    Protein
-    Nucleic Acids
-Version 6 (2019)
-    Includes many saccharides for glycosylation
-    Rg is calculated from all atom model, not reduced model as in version 5
-    Includes option to use numpy and scipy
-    Asphericity is calculated from gyration tensor (requires numpy)
-    Option to use either qconvex from qhull or ConvexHull from scipy
-        (Many thanks to Chad Brautigam for implementation)
-Version 7 (2020)
-    Ported to Python 3 (See HullRadV7_3.py, this edition is Python 2)
-    Addition of chain ID
-    Includes several detergents for analysis of protein/detergent micelles.
-        (See DT_data below for list.)
-Version 8 (2021)
-    Accepts both PDB format and mmCIF format files
-    Error checking for presence of all backbone atoms
-      (Needed to calculate hydration layer)
-Version 8.1 (2022)
-    Correct bugs introduced with mmCif reader
+Version 2 (The program as described in Fleming, Correia and Fleming, EBJ, 2023)
+
+Version 3
+    Includes additions found in HullRadV10 as described in
+    Fleming, Correia and Fleming, BJ, 2024
+    Except no PEG in HullRadSAS
 
 If you publish work that uses this code please cite:
-Fleming, PJ and Fleming, KG "HullRad: Fast Calculations of Folded and Disordered
-Protein and Nucleic Acid Hydrogynamic Properties", Biophysical Journal, 2018,
-114:856-869
-DOI: 10.1016/j.bpj.2018.01.002
-
-
-The author would like to acknowledge the work of Jose Garcia de la Torre who led
-the way in development of algorithms for calculating macromolecular
-hydrodynamic properties.
-
+Fleming, P.J., Corriea, J.J. and Fleming, K.G.
+"Revisiting Macromolecular Hydration with HullRadSAS"
+https://www.biorxiv.org/content/10.1101/2022.10.20.513022v1
 --------------------------------------------------------------------------------
 Output looks like:
 
- pdb8rat.ent
- HYDROLASE (NUCLEIC ACID,RNA)            13-AUG-91   8RAT
-  #Amino Acids    :          124
+2ptc.cif
+  Shell Hydration :        0.29     g/g
+  Entrained Hyd.  :        0.31     g/g
+  #Amino Acids    :          281
   #Nucleotides    :            0
   #Saccharides    :            0
   #Detergents     :            0
-  M               :        13692     g/mol
-  v_bar           :        0.710     mL/g
-  R(Anhydrous)    :        15.68     Angstroms
-  Axial Ratio     :         1.31
-  f/fo            :         1.21
-  Dt              :       1.13e-06   cm^2/s
-  R(Translation)  :        18.99     Angstroms
-  s               :       1.84e-13   sec
-  [eta]           :         3.16     cm^3/g
-  Dr              :       1.91e+07   s^-1
-  R(Rotation)     :        20.36     Angstroms
-  tauC            :         8.84     ns (from R_rotation)
-  Asphericity     :         0.14     (from Gyration Tensor)
-
-To write out the unified side chain psuedo-atom model uncomment the line
-near the bottom labeled, # Write out model (~line 1514)
+  #Potassium      :            0
+  #Sodium         :            0
+  #Magnesium      :            0
+  #Manganese      :            0
+  M               :        29809     g/mol
+  v_bar           :        0.725     mL/g
+  Ro(Anhydrous)   :        20.46     Angstroms
+  AnhRg(Anhydrous)   :        18.44     Angstroms
+  Dmax            :        64.47     Angstroms
+  Axial Ratio     :         1.28
+  f/fo            :         1.22
+  Dt              :       8.61e-07   cm^2/s
+  R(Translation)  :        24.90     Angstroms
+  s               :       2.91e-13   sec
+  Int. Viscosity  :         3.46     ml/g 
+  ks(Non-ideal)   :         5.21     ml/g 
+  Asphericity     :         0.06     (from Gyration Tensor)
+  Dr              :       8.13e+06   s^-1
+  R(Rotation)     :        27.04     Angstroms
+  tauC            :        20.50     ns (from R_rotation)
 
 --------------------------------------------------------------------------------
 
 Uses PDB or mmCIF file format as input.
+
+Note the import statements below. You may have to install the following to
+  your python installation.
+
+import os
+import sys
+import math
+import string
+import shlex, subprocess
+import gzip
+import mimetypes
+import re
+import collections
+from Bio.PDB.kdtrees import KDTree
+import numpy as np
+from scipy.spatial import ConvexHull
 
 If your python installation includes numpy and scipy YOU DON'T NEED ANYTHING ELSE.
 This is the preferred way to go.
@@ -135,19 +136,21 @@ For more information, please refer to <http://unlicense.org>
 """
 
 USAGE = """
-python HullRadV8.1.py [PDBcode].pdb
+python HullRadVSAS.py [PDBcode].pdb
     or 
-python HullRadV8.1.py [PDBcode].cif
+python HullRadVSAS.py [PDBcode].cif
 """
-import gzip
-import math
-import mimetypes
+
 import os
-import re
-import shlex
-import string
-import subprocess
 import sys
+import math
+import string
+import shlex, subprocess
+import gzip
+import mimetypes
+import re
+import collections
+from Bio.PDB.kdtrees import KDTree
 
 
 class MMCIFWrapperSyntaxError(Exception):
@@ -492,7 +495,7 @@ if useNumpy:
         useScipy = True
     except:
         pass
-# @menoliu comment out print statement
+
 #print('useNumpy: ', useNumpy)
 #print('useScipy: ', useScipy)
 
@@ -502,30 +505,30 @@ if useNumpy:
 # vbar is 0.60224(V/M)
 #          Mass		Volume	   vbar		Radius of equiv. sphere of side chain volume
 AA_data = {
- 'ALA': (  71.0939,	87.2,      0.74,	1.852),
- 'ARG': ( 156.203,	188.2,     0.73,	3.123),
- 'ASN': ( 114.119,	120.1,     0.63,	2.422),
- 'ASP': ( 115.104,	115.4,     0.60,	2.356),
- 'CYS': ( 103.16,	106.7,     0.62,	2.224),
- 'GLN': ( 128.16,	145.1,     0.68,	2.722),
- 'GLU': ( 129.131,	140.9,     0.66,	2.676),
- 'GLY': (  57.0669,	60.6,      0.64,	0.000),
- 'HIS': ( 137.157,	152.4,     0.67,	2.798), 
- 'HSE': ( 137.157,	152.4,     0.67,	2.798), # CHARMM:neutral His, proton on NE2
- 'HSP': ( 137.157,	152.4,     0.67,	2.798), # CHARMM:Protonated His
- 'HSD': ( 137.157,	152.4,     0.67,	2.798), # CHARMM:neutral HIS, proton on ND1
- 'ILE': ( 113.175,	168.9,     0.90,	2.957),
- 'LEU': ( 113.175,	168.9,     0.90,	2.957),
- 'LYS': ( 128.19,	174.3,     0.82,	3.005),
- 'MET': ( 131.215,	163.1,     0.75,	2.903),
- 'MSE': ( 178.125,	163.1,     0.75,	2.903),
- 'PHE': ( 147.192,	187.9,     0.77,	3.121),
- 'PRO': (  97.132,	122.4,     0.76,	2.453),
- 'SER': (  87.093,	91.0,      0.63,	1.936),
- 'THR': ( 101.12,	117.4,     0.70,	2.385),
- 'TRP': ( 186.229,	228.5,     0.74,	3.422),
- 'TYR': ( 163.192,	192.1,     0.71,	3.155),
- 'VAL': (  99.148,	141.4,     0.86,	2.682)
+ 'ALA': (  71.0779,     87.2,      0.738842,    1.852),
+ 'ARG': ( 156.1857,     188.2,     0.725685,    3.123),
+ 'ASN': ( 114.1026,     120.1,     0.633895,    2.422),
+ 'ASP': ( 115.0874,     115.4,     0.603876,    2.356),
+ 'CYS': ( 103.1429,     106.7,     0.62301,     2.224),
+ 'GLN': ( 128.1292,     145.1,     0.682007,    2.722),
+ 'GLU': ( 129.114,      140.9,     0.657215,    2.676),
+ 'GLY': (  57.0513,     60.6,      0.6397,      0.000),
+ 'HIS': ( 137.1393,     152.4,     0.669257,    2.798),
+ 'HSE': ( 137.1393,     152.4,     0.669257,    2.798), # CHARMM:neutral His, proton on NE2
+ 'HSP': ( 137.1393,     152.4,     0.669257,    2.798), # CHARMM:Protonated His
+ 'HSD': ( 137.1393,     152.4,     0.669257,    2.798), # CHARMM:neutral HIS, proton on ND1
+ 'ILE': ( 113.1576,     168.9,     0.898909,    2.957),
+ 'LEU': ( 113.1576,     168.9,     0.898909,    2.957),
+ 'LYS': ( 128.1723,     174.3,     0.818979,    3.005),
+ 'MET': ( 131.1961,     163.1,     0.748691,    2.903),
+ 'MSE': ( 178.125,      163.1,     0.551441,    2.903),
+ 'PHE': ( 147.1739,     187.9,     0.768892,    3.121),
+ 'PRO': (  97.1152,     122.4,     0.759039,    2.453),
+ 'SER': (  87.0773,     91.0,      0.62937,     1.936),
+ 'THR': ( 101.1039,     117.4,     0.69931,     2.385),
+ 'TRP': ( 186.2099,     228.5,     0.739015,    3.422),
+ 'TYR': ( 163.1733,     192.1,     0.709003,    3.155),
+ 'VAL': (  99.1311,     141.4,     0.859031,    2.682)
 }
 
 # From voss_jmb_2005.pdf and nadassy_nar_2001.pdf
@@ -534,31 +537,31 @@ AA_data = {
 # vbar is 0.60224(V/M)
 #          Mass         Volume   vbar      ND
 NA_data = {
- 'A':  ( 267.25,       272.3,  0.614,   0.00), # Adenosine
- '1MA':  ( 281.25,       299.3,  0.641,   0.00), # 6-HYDRO-1-METHYLADENOSINE
- 'MIA':  ( 383.45,       385.1,  0.605,   0.00), # 2-METHYLTHIO-N6-ISOPENTENYL-ADENOSINE
- 'C':  ( 243.22,       248.1,  0.614,   0.00), # Cytidine
- '5MC':  ( 257.22,       275.1,  0.644,   0.00), # 5-METHYLCYTIDINE
- 'OMC':  ( 257.22,       275.1,  0.644,   0.00), # O2'-METHYLYCYTIDINE
- 'G':  ( 283.24,       279.0,  0.593,   0.00), # Guanosine
- '2MG':  ( 297.27,       306.0,  0.620,   0.00), # 2N-METHYLGUANOSINE
- '7MG':  ( 299.27,       306.0,  0.620,   0.00), # 7N-METHYL-8-HYDROGUANOSINE
- 'M2G':  ( 311.27,       333.0,  0.644,   0.00), # N2-DIMETHYLGUANOSINE
- 'OMG':  ( 297.27,       306.0,  0.620,   0.00), # O2'-METHYLGUANOSINE
- 'YYG':  ( 508.54,       500.0,  0.593,   0.00), # MODIFIED GUANOSINE
- 'YG':  ( 428.55,       427.1,  0.600,   0.00), # WYBUTOSINE
- 'U':  ( 244.20,       243.9,  0.602,   0.00), # Uracil
- '5MU':  ( 258.20,       270.9,  0.632,   0.00), # 5-METHYLURIDINE
- '4SU':  ( 260.35,       270.5,  0.626,   0.00), # 4-THIOURIDINE
- 'H2U':  ( 246.20,       243.9,  0.602,   0.00), # 5,6-DIHYDROURIDINE
- 'PSU':  ( 244.20,       243.9,  0.602,   0.00), # PSEUDOURIDINE
- 'I':  ( 268.23,       273.0,  0.613,   0.00), # Inosine
- 'DA':  ( 251.25,       271.0,  0.650,   0.00), # 2'-DEOXYADENOSINE
- 'DC':  ( 227.22,       246.8,  0.654,   0.00), # 2'-DEOXYCYTIDINE
- 'DG':  ( 267.25,       277.7,  0.626,   0.00), # 2'-DEOXYGUANOSINE
- 'DT':  ( 242.23,       264.4,  0.657,   0.00), # 2'-DEOXYTHYMIDINE
- 'DI':  ( 252.22,       271.7,  0.649,   0.00), # 2'-DEOXYINOSINE
- 'PO2':  (  62.97,	  52.4,  0.501,   0.00) 
+ 'A':  ( 267.25,       244.1,  0.55,   0.00), # Adenosine
+ '1MA':  ( 281.25,       256.9,  0.55,   0.00), # 6-HYDRO-1-METHYLADENOSINE
+ 'MIA':  ( 383.45,       350.2,  0.55,   0.00), # 2-METHYLTHIO-N6-ISOPENTENYL-ADENOSINE
+ 'C':  ( 243.22,       222.1,  0.55,   0.00), # Cytidine
+ '5MC':  ( 257.22,       234.9,  0.55,   0.00), # 5-METHYLCYTIDINE
+ 'OMC':  ( 257.22,       234.9,  0.55,   0.00), # O2'-METHYLYCYTIDINE
+ 'G':  ( 283.24,       258.7,  0.55,   0.00), # Guanosine
+ '2MG':  ( 297.27,       271.5,  0.55,   0.00), # 2N-METHYLGUANOSINE
+ '7MG':  ( 299.27,       273.3,  0.55,   0.00), # 7N-METHYL-8-HYDROGUANOSINE
+ 'M2G':  ( 311.27,       284.3,  0.55,   0.00), # N2-DIMETHYLGUANOSINE
+ 'OMG':  ( 297.27,       271.5,  0.55,   0.00), # O2'-METHYLGUANOSINE
+ 'YYG':  ( 508.54,       464.4,  0.55,   0.00), # MODIFIED GUANOSINE
+ 'YG':  ( 428.55,       391.4,  0.55,   0.00), # WYBUTOSINE
+ 'U':  ( 244.20,       223.0,  0.531,   0.00), # Uracil
+ '5MU':  ( 258.20,       235.8,  0.531,   0.00), # 5-METHYLURIDINE
+ '4SU':  ( 260.35,       237.8,  0.531,   0.00), # 4-THIOURIDINE
+ 'H2U':  ( 246.20,       224.8,  0.531,   0.00), # 5,6-DIHYDROURIDINE
+ 'PSU':  ( 244.20,       223.0,  0.531,   0.00), # PSEUDOURIDINE
+ 'I':  ( 268.23,       245.0,  0.55,   0.00), # Inosine
+ 'DA':  ( 251.25,       229.4,  0.55,   0.00), # 2'-DEOXYADENOSINE
+ 'DC':  ( 227.22,       207.5,  0.55,   0.00), # 2'-DEOXYCYTIDINE
+ 'DG':  ( 267.25,       244.1,  0.55,   0.00), # 2'-DEOXYGUANOSINE
+ 'DT':  ( 242.23,       221.2,  0.55,   0.00), # 2'-DEOXYTHYMIDINE
+ 'DI':  ( 252.22,       230.3,  0.55,   0.00), # 2'-DEOXYINOSINE
+ 'PO2':  (  62.97,        52.4,  0.501,   0.00)
 }
 
 # For default saccharides use average vbar = 0.63
@@ -620,6 +623,136 @@ DT_data = {
  'FOS':  ( 351.46,       548.6,  0.940,   0.00)  # DODECYLPHOSPHOCHOLINE
 }
 
+class ShrakeRupley:
+    """Calculates SASAs using the Shrake-Rupley algorithm."""
+
+    def __init__(self, probe_radius=0.6, n_points=10, radii_dict=None):
+        """Initialize the class.
+
+        :type probe_radius: float
+
+        :param n_points: resolution of the surface of each atom. Default is 100.
+            A higher number of points results in more precise measurements, but
+            slows down the calculation.
+        :type n_points: int
+
+        >>> sr = ShrakeRupley()
+        >>> sr = ShrakeRupley(n_points=960)
+        >>> sr = ShrakeRupley(radii_dict={"O": 3.1415})
+        """
+        if probe_radius <= 0.0:
+            raise ValueError(
+                f"Probe radius must be a positive number: {probe_radius} <= 0"
+            )
+
+        self.probe_radius = float(probe_radius)
+
+        if n_points < 1:
+            raise ValueError(
+                f"Number of sphere points must be larger than 1: {n_points}"
+            )
+        self.n_points = n_points
+
+        # Pre-compute reference sphere
+        self._sphere = self._compute_sphere()
+
+    def _compute_sphere(self):
+        """Return the 3D coordinates of n points on a sphere.
+
+        Uses the golden spiral algorithm to place points 'evenly' on the sphere
+        surface. We compute this once and then move the sphere to the centroid
+        of each atom as we compute the ASAs.
+        """
+        n = self.n_points
+
+        dl = np.pi * (3 - 5**0.5)
+        dz = 2.0 / n
+
+        longitude = 0
+        z = 1 - dz / 2
+
+        coords = np.zeros((n, 3), dtype=np.float64)
+        for k in range(n):
+            r = (1 - z * z) ** 0.5
+            coords[k, 0] = math.cos(longitude) * r
+            coords[k, 1] = math.sin(longitude) * r
+            coords[k, 2] = z
+            z -= dz
+            longitude += dl
+
+        return coords
+
+    def compute(self, n_atms, coords):
+        """Calculate surface accessibility surface 
+        """
+
+        # Pre-compute atom neighbors using KDTree
+        kdt = KDTree(coords, 10)
+
+        # Pre-compute radius * probe table
+        radii = np.array([2.0 for a in coords], dtype=np.float64)
+        radii += self.probe_radius
+        twice_maxradii = np.max(radii) * 2
+
+        # Calculate ASAs
+        asa_array = np.zeros((n_atms, 1), dtype=np.int64)
+        ptset = set(range(self.n_points))
+        mesh_coords = []
+        X = []
+        Y = []
+        Z = []
+        for i in range(n_atms):
+
+            r_i = radii[i]
+
+            # Move sphere to atom
+            s_on_i = (np.array(self._sphere, copy=True) * r_i) + coords[i]
+            available_set = ptset.copy()
+
+            # KDtree for sphere points
+            kdt_sphere = KDTree(s_on_i, 10)
+
+           # Iterate over neighbors of atom i
+            for jj in kdt.search(coords[i], twice_maxradii):
+                j = jj.index
+                if i == j:
+                    continue
+
+                if jj.radius < (r_i + radii[j]):
+                    # Remove overlapping points on sphere from available set
+                    available_set -= {
+                        pt.index for pt in kdt_sphere.search(coords[j], radii[j])
+                    }
+
+            asa_array[i] = len(available_set)  # update counts
+
+            for item in available_set:
+                mesh_coords.append((s_on_i[item][0],s_on_i[item][1],s_on_i[item][2]))
+                X.append(s_on_i[item][0])
+                Y.append(s_on_i[item][1])
+                Z.append(s_on_i[item][2])
+        
+        mesh_coords = np.array(mesh_coords)
+#       print((mesh_coords))
+
+        ## Uncomment next block to write out SAS points in PDB format
+        ff = open('mesh.pdb', 'w')
+        pdbfmt = 'ATOM  %5d %-4s %-3s  %4d    %8.3f%8.3f%8.3f%6.2f%6.2f\n'
+        atmname = " O"
+        resname = "UNK" 
+        Bfac = 1.0
+        Occ = 1.0
+        for i in range(0,len(X)):
+            ff.write(pdbfmt % (i+1, atmname, resname, i+1, X[i], Y[i], Z[i], Bfac, Occ))
+        ff.close()
+
+        # Convert accessible point count to surface area in A**2
+        f = radii * radii * (4 * np.pi / self.n_points)
+        asa_array = asa_array * f[:, np.newaxis]
+        tot_asa = sum(asa_array)
+
+        return mesh_coords,tot_asa
+
 def openGzip(file_path, mode="rt"):
     try:
         return (
@@ -645,7 +778,7 @@ def get_coords(model_array):
     else:
         return coords
 
-def model_from_pdb(file):
+def mesh_from_pdb(file):
     # Makes a reduced atom  model of the pdb file
     # This is the model used to make the convex hull
     # For proteins the CB is displaced along the CA-CB vector a distance 
@@ -658,8 +791,10 @@ def model_from_pdb(file):
     data = open(file, 'r').readlines()
  
     # Initialize all relevant atom record array
-    # Used for Rg
+    # Used for AnhRg
     all_atm_rec = []
+    # Used for HydRg
+    elec_atm_rec = []
     # Initial protein atoms from PDB file
     prot_rec = []
     # Initial nucleic acid atoms from PDB file
@@ -673,6 +808,8 @@ def model_from_pdb(file):
     struc_name = ' '
     num_MG = 0
     num_MN = 0
+    num_K = 0
+    num_Na = 0
 
     # Get all relevant atoms even if in wrong order
     for line in data:
@@ -687,6 +824,42 @@ def model_from_pdb(file):
 
             if resname != 'TIP' and resname != 'HOH':
                 all_atm_rec.append(line)
+                if line[13:14] == 'N':
+                    this_line = [line[30:38],line[38:46],line[46:53],7.0,line[13:16]]
+                    elec_atm_rec.append(this_line)
+                if line[13:15] == 'C ' or line[13:16] == 'CG ' or \
+                  line[13:16] == 'CD ' or line[13:16] == 'CE ' or \
+                  line[13:16] == 'C2 ' or line[13:15] == 'C5' or \
+                  line[13:15] == 'C4' or line[13:15] == 'C6' or \
+                  line[13:16] == 'CZ ' or line[13:16] == 'CD2' or \
+                  line[13:16] == 'CE2':
+                    this_line = [line[30:38],line[38:46],line[46:53],6.0,line[13:16]]
+                    elec_atm_rec.append(this_line)
+                if line[13:15] == 'CA' or line[13:15] == 'CB' or \
+                    line[13:16] == 'CD1' or line[13:16] == 'CE1' or \
+                    line[13:16] == 'CE3' or line[13:16] == 'CH2' or \
+                    line[13:16] == 'CZ2' or line[13:16] == 'CZ3' or \
+                    line[13:15] == 'C1' or line[13:16] == 'C2 ' or \
+                    line[13:15] == 'C3' or line[13:16] == "C4'" or \
+                    line[13:15] == 'C8' or line[13:16] == "C2'":
+                    this_line = [line[30:38],line[38:46],line[46:53],7.0,line[13:16]]
+                    elec_atm_rec.append(this_line)
+                if line[13:14] == 'O' or line[13:16] == 'C5*' or \
+                    line[13:16] == 'CG1':
+                    this_line = [line[30:38],line[38:46],line[46:53],8.0,line[13:16]]
+                    elec_atm_rec.append(this_line)
+                if line[13:16] == 'CG2':
+                    this_line = [line[30:38],line[38:46],line[46:53],9.0,line[13:16]]
+                    elec_atm_rec.append(this_line)
+                if line[13:15] == 'P ':
+                    this_line = [line[30:38],line[38:46],line[46:53],15.0,line[13:16]]
+                    elec_atm_rec.append(this_line)
+                if line[13:15] == 'SD':
+                    this_line = [line[30:38],line[38:46],line[46:53],16.0,line[13:16]]
+                    elec_atm_rec.append(this_line)
+                if line[13:15] == 'SG':
+                    this_line = [line[30:38],line[38:46],line[46:53],17.0,line[13:16]]
+                    elec_atm_rec.append(this_line)
                 if resname in AA_data and (line[13:15] == 'N ' or \
                   line[13:15] == 'CA' or \
                   line[13:15] == 'C ' or \
@@ -727,6 +900,10 @@ def model_from_pdb(file):
                     num_MG += 1
                 elif line[12:14] == 'MN':
                     num_MN += 1
+                elif line[12:14] == ' K':
+                    num_K += 1
+                elif line[12:14] == 'Na':
+                    num_Na += 1
                 # Some nucleic acids are in HETATM (!)
                 elif resname in NA_data and (line[13:14] == 'N' or \
                   line[13:14] == 'O' or line[13:14] == 'P'):
@@ -901,12 +1078,27 @@ def model_from_pdb(file):
         all_atm_array[row][6] = (all_atm_rec[row][38:46]).strip()	#y
         all_atm_array[row][7] = (all_atm_rec[row][46:54]).strip()	#z
 
-    return all_atm_array,num_MG,num_MN,model_array
+    n_atms = len(model_array)
+    dum_coords = np.zeros((n_atms, 3), dtype=np.float64)
+    for i in range(len(model_array)):
+        a = model_array[i]
+        dum_coords[i, 0] = float(a[5])
+        dum_coords[i, 1] = float(a[6])
+        dum_coords[i, 2] = float(a[7])
 
-def model_from_cif(file):
+    prb_rad = 0.6 
+    sr = ShrakeRupley(probe_radius=prb_rad,n_points=10)
+    mesh_coords,tot_asa = sr.compute(n_atms,dum_coords)
+
+    return all_atm_array,num_MG,num_MN,num_K,num_Na,model_array,mesh_coords, \
+           tot_asa,prb_rad,elec_atm_rec
+
+def mesh_from_cif(file):
     # Initialize all relevant atom record array
-    # Used for Rg
+    # Used for AnhRg
     all_atm_rec = []
+    # Used for HydRg
+    elec_atm_rec = []
     # Initial protein atoms from PDB file
     prot_rec = []
     # Initial nucleic acid atoms from PDB file
@@ -920,6 +1112,8 @@ def model_from_cif(file):
     struc_name = ' '
     num_MG = 0
     num_MN = 0
+    num_K = 0
+    num_Na = 0
 
     cif_dict = MMCIF2Dict().parse(file)
     id = list(cif_dict.keys())[0]
@@ -934,10 +1128,40 @@ def model_from_cif(file):
     crdxs = list(cif_dict[id]['_atom_site']['Cartn_x'])
     crdys = list(cif_dict[id]['_atom_site']['Cartn_y'])
     crdzs = list(cif_dict[id]['_atom_site']['Cartn_z'])
+
     for i in range(len(record_types)):
         if record_types[i] == 'ATOM':
             if res_nams[i] != 'TIP' and res_nams[i] != 'HOH':
                 all_atm_rec.append([i,atms[i],res_nams[i],chain_id[i],res_id[i],crdxs[i],crdys[i],crdzs[i]])
+                if atms[i][0] == 'N':
+                    elec_atm_rec.append([crdxs[i],crdys[i],crdzs[i],7.0,atms[i]])
+                if atms[i] == 'C' or atms[i] == 'CG' or \
+                  atms[i] == 'CD' or atms[i] == 'CE' or \
+                  atms[i] == 'C2' or atms[i] == 'C5' or \
+                  atms[i] == 'C4' or atms[i] == 'C6' or \
+                  atms[i] == 'CZ' or atms[i] == 'CD2' or \
+                  atms[i] == 'CE2':
+                    elec_atm_rec.append([crdxs[i],crdys[i],crdzs[i],6.0,atms[i]])
+                if atms[i] == 'CA' or atms[i] == 'CB' or \
+                  atms[i] == 'CD1' or atms[i] == 'CE1' or \
+                  atms[i] == 'CE3' or atms[i] == 'CH2' or \
+                  atms[i] == 'CZ2' or atms[i] == 'CZ3' or \
+                  atms[i] == 'C1' or atms[i] == 'C2' or \
+                  atms[i] == 'C3' or atms[i] == "C4'" or \
+                  atms[i] == 'C8' or atms[i] == "C2'":
+                    elec_atm_rec.append([crdxs[i],crdys[i],crdzs[i],7.0,atms[i]])
+                if atms[i][0] == 'O' or atms[i] == 'C5*' or \
+                  atms[i] == 'CG1':
+                    elec_atm_rec.append([crdxs[i],crdys[i],crdzs[i],8.0,atms[i]])
+                if atms[i] == 'CG2':
+                    elec_atm_rec.append([crdxs[i],crdys[i],crdzs[i],9.0,atms[i]])
+                if atms[i] == 'P':
+                    elec_atm_rec.append([crdxs[i],crdys[i],crdzs[i],15.0,atms[i]])
+                if atms[i] == 'SD':
+                    elec_atm_rec.append([crdxs[i],crdys[i],crdzs[i],16.0,atms[i]])
+                if atms[i] == 'SG':
+                    elec_atm_rec.append([crdxs[i],crdys[i],crdzs[i],17.0,atms[i]])
+
             if res_nams[i] in AA_data and (atms[i] == 'N' or \
               atms[i] == 'CA' or \
               atms[i] == 'C' or \
@@ -946,7 +1170,7 @@ def model_from_cif(file):
               atms[i] == 'CB' and \
               alt_rotamer[i] != 'B'):
                 prot_rec.append([atms[i],res_nams[i],chain_id[i],res_id[i],crdxs[i],crdys[i],crdzs[i]])
-    
+
             #Nucleic Acids
             elif res_nams[i].replace("'","") in NA_data and (atms[i][:1] == 'N' or \
               atms[i][:1] == 'O' or \
@@ -978,7 +1202,11 @@ def model_from_cif(file):
                 if atms[i] =='MG':
                     num_MG += 1
                 elif atms[i] =='MN':
-                    num_MG += 1
+                    num_MN += 1
+                elif atms[i] ==' K':
+                    num_K += 1
+                elif atms[i] =='NA':
+                    num_Na += 1
                 # Some nucleic acids are in HETATM (!)
                 elif res_nams[i] in NA_data and (atms[i][:1] == 'N' or \
                   atms[i][:1] == 'O' or \
@@ -994,6 +1222,7 @@ def model_from_cif(file):
                   atms[i][:1] == 'O' or \
                   atms[i][1:2] == 'O'):
                     dt_rec.append([atms[i],res_nams[i],chain_id[i],res_id[i],crdxs[i],crdys[i],crdzs[i]])
+
     # Get only the N atoms from the protein
     n_rec = []
     for line in prot_rec:
@@ -1090,12 +1319,12 @@ def model_from_cif(file):
             model_array[row+3][5] = str(new_cb_x)
             model_array[row+3][6] = str(new_cb_y)
             model_array[row+3][7] = str(new_cb_z)
-	
+
     # Put nucleic acid atoms into initial array
     num_atoms =  len(na_rec)
     na_array = [['X' for j in range(8)] for i in range(num_atoms)]
     for row in range(len(na_array)):
-        na_array[row][0] = row 
+        na_array[row][0] = row
         na_array[row][1] = (na_rec[row][0]) #Atom Name
         na_array[row][2] = (na_rec[row][1]) #Residue Name
         na_array[row][3] = (na_rec[row][2]) #ChainID
@@ -1141,8 +1370,20 @@ def model_from_cif(file):
     # Add detergent atoms into model array
     for row in range(len(dt_array)):
         model_array.append(dt_array[row])
+ 
+    n_atms = len(model_array)
+    dum_coords = np.zeros((n_atms, 3), dtype=np.float64)
+    for i in range(len(model_array)):
+        a = model_array[i]
+        dum_coords[i, 0] = float(a[5]) 
+        dum_coords[i, 1] = float(a[6]) 
+        dum_coords[i, 2] = float(a[7]) 
 
-    return all_atm_rec,num_MG,num_MN,model_array
+    prb_rad = 0.6
+    sr = ShrakeRupley(probe_radius=prb_rad,n_points=10)
+    mesh_coords,tot_asa = sr.compute(n_atms,dum_coords)
+
+    return all_atm_rec,num_MG,num_MN,num_K,num_Na,model_array,mesh_coords,tot_asa,prb_rad,elec_atm_rec
 
 def write_pdb(model_array, filename):
     # Write out reduced atom model in PDB format for display
@@ -1163,7 +1404,7 @@ def write_pdb(model_array, filename):
 
     ff.close()
 
-def Sved(all_atm_rec,num_MG,num_MN,model_array):
+def Sved(all_atm_rec,num_MG,num_MN,num_K,num_Na,model_array,mesh_coords,tot_asa,prb_rad,elec_atm_rec):
     #
     # Main function: Does most things and calls HullVolume
     #
@@ -1182,21 +1423,58 @@ def Sved(all_atm_rec,num_MG,num_MN,model_array):
     X = 0.0
     Y = 0.0
     Z = 0.0
-    tot = 0.0
-    for row in range(len(all_atm_rec)):
-        X = X + (float(all_atm_rec[row][5]))
-        Y = Y + (float(all_atm_rec[row][6]))
-        Z = Z + (float(all_atm_rec[row][7]))
-        tot += 1
+    tot_anh = 0
+    tot_anh_elec = 0.0
 
-    com_x = (X/tot)
-    com_y = (Y/tot)
-    com_z = (Z/tot)
-    Rg2  = 0.0
-    for row in range(len(all_atm_rec)):
-        Rg2 += ((distance(com_x, com_y, com_z, float(all_atm_rec[row][5]),\
-               float(all_atm_rec[row][6]), float(all_atm_rec[row][7])))**2)
-    Rg = math.sqrt(Rg2/tot)
+    for row in range(len(elec_atm_rec)):
+        X = X + (float(elec_atm_rec[row][0]) * float(elec_atm_rec[row][3]))
+        Y = Y + (float(elec_atm_rec[row][1]) * float(elec_atm_rec[row][3]))
+        Z = Z + (float(elec_atm_rec[row][2]) * float(elec_atm_rec[row][3]))
+        tot_anh += 1
+#       tot_anh_elec += 1.0
+        tot_anh_elec += float(elec_atm_rec[row][3])
+
+    com_x = (X/tot_anh_elec)
+    com_y = (Y/tot_anh_elec)
+    com_z = (Z/tot_anh_elec)
+    AnhRg2  = 0.0
+    for row in range(len(elec_atm_rec)):
+        AnhRg2 += ((distance(com_x, com_y, com_z, \
+               float(elec_atm_rec[row][0]), \
+               float(elec_atm_rec[row][1]), \
+               float(elec_atm_rec[row][2])))**2) * float(elec_atm_rec[row][3])
+    AnhRg = math.sqrt(AnhRg2/tot_anh_elec)
+
+    HydRg2  = 0.0
+    Wat_elec = 11.0
+    tot_hyd = 0
+#   print(len(mesh_coords))
+    for i in range(len(mesh_coords)):
+        X = X + (mesh_coords[i][0]) * Wat_elec
+        Y = Y + (mesh_coords[i][1]) * Wat_elec
+        Z = Z + (mesh_coords[i][2]) * Wat_elec
+        tot_hyd += 1
+
+    tot_hyd_elec = tot_hyd * Wat_elec
+    tot_elec = tot_anh_elec + tot_hyd_elec
+
+    com_x = (X/tot_elec)
+    com_y = (Y/tot_elec)
+    com_z = (Z/tot_elec)
+
+    HydRg2 = 0.0
+    for row in range(len(elec_atm_rec)):
+        HydRg2 += ((distance(com_x, com_y, com_z, \
+               float(elec_atm_rec[row][0]), \
+               float(elec_atm_rec[row][1]), \
+               float(elec_atm_rec[row][2])))**2) * float(elec_atm_rec[row][3])
+    for row in range(len(mesh_coords)):
+        HydRg2 += ((distance(com_x, com_y, com_z, \
+               (mesh_coords[row][0]), \
+               (mesh_coords[row][1]), \
+               (mesh_coords[row][2])))**2) * Wat_elec
+    HydRg = math.sqrt(HydRg2/tot_elec)
+
     # Asphericity
     # 0 for sphere, 1 for rod
     asphr = 0.0
@@ -1271,9 +1549,14 @@ def Sved(all_atm_rec,num_MG,num_MN,model_array):
     # Add weight of water for N-term and C-term of protein
     if AA > 0:
         prot_mol_mass += 18.0
-    # If nucleic acid add weight of MG and MN
+    # If nucleic acid add weight of MG, MN, K, Na
+    ##
+    # v_bar K+ calculated from Voronoi volume in 
+    #   Bkaniana, Shevchenko, and Serezhkin. Russ. J. Coordin. Chem. 31:68, 2005
+    #
     if NA > 0:
-        ion_mass = (num_MG * 24.305) + (num_MN * 54.938)
+        numerator += (num_K * (30.1 * 0.602))
+        ion_mass = (num_MG * 24.305) + (num_MN * 54.938) + (num_K * 39.0983) + (num_Na * 22.9898)
         prot_mol_mass += ion_mass
 
     # Correct by -0.0025 because above volumes were measured at 25 deg C and want 20 deg C
@@ -1282,23 +1565,17 @@ def Sved(all_atm_rec,num_MG,num_MN,model_array):
 
     # Get convex hull area and volume 
     coords = get_coords(model_array)
-    area_hull, vol_hull, Dmax = HullVolume(coords)
+    area_hull, vol_hull, Dmax = HullVolume(mesh_coords)
+    # SAS rounded corners make Dmax larger than original HullRad
+    Dmax = Dmax - 5.0
 
-    # Calculate shell volume from shell thickness
-    # Hydration shell thickness is empirically determined to be optimal 
-    # This expands each hull plane by hydration thickness
-    vol_shell_wat = area_hull * 2.8
-
-    # Calculate total volume of hydrated convex hull (including shell waters)
-    vol_hyd_hull = vol_hull + vol_shell_wat
+    # Don't need to expand for hydration - done with SASA
+    vol_hyd_hull = vol_hull
 
     # Estimate axial ratio 
-    # Minus 3 Ang because DNA duplex a should be rod length, not diagonal
-    #   of hull end vertices (Also necessary to make apoferritin axial ratio = 1)
-    a = (Dmax/2.0) - 3.0
+    a = (Dmax/2.0) 
     b = math.sqrt((3.0 * vol_hull)/(4.0*math.pi*a))
 
-    # But some very spherical structures may not have the diagonal a full 3 Ang longer.
     # Can't have a < b.
     if a > b: 
         # Translational Shape Factor
@@ -1309,19 +1586,27 @@ def Sved(all_atm_rec,num_MG,num_MN,model_array):
         a = b
         Ft = 1.0
 
+#   print('vol_hyd_hull = ', vol_hyd_hull)
+#   print('ellipa = ', a)
+#   print('ellipb = ', b)
     # Weight shape factor
     # Empirically found to work better with expanded volume
     #  (Many combinations tried)
     Ft = math.sqrt(Ft)
+#   print(('  Frict Shape F         :      %4.2f     ' % (Ft)))
 
     # Axial ratio of prolate ellipsoid of same volume as convex hull
     a_b_ratio = a/b
 
     # Find radius of sphere of same volume as hydrated convex hull
     factor = 3.0/(4.0 * math.pi)
-    Rht = (factor * vol_hyd_hull)**0.333333
+#   print('factor = ', factor)
+    Rhv = (factor * vol_hyd_hull)**0.333333
     # Include Shape factor to give effective hydrodynamic translational radius
-    Rht = Rht * Ft
+    Rht = Rhv * Ft
+    # Effective volume
+    vol_eff = ((Rht)**3)/factor
+#   print(('  Effective volume      :  %10.0f     A^3' % (vol_eff)))
     # Rht comes as Angstrom
     # need meters in equation below
     Rh_trans = Rht * 1e-8
@@ -1331,6 +1616,10 @@ def Sved(all_atm_rec,num_MG,num_MN,model_array):
     rho = 0.998234 # g/ml water density
     fT = 6.0*math.pi*eta*Rh_trans
     s = prot_mol_mass * (1.0 - (vbar_prot * rho)) / (6.02214e23 * fT)
+
+    ## Special case for different vbar values
+    # Hellman reports v_bar = 0.536 for Q-quadruplex DNA
+#   s = prot_mol_mass * (1.0 - (0.536 * rho)) / (6.02214e23 * fT)
 
     # Calculate translational diffusion coeff.
     #R = 8.314e7
@@ -1344,12 +1633,87 @@ def Sved(all_atm_rec,num_MG,num_MN,model_array):
     Ro = ((3.0 * vol_prot) / (4.0 * math.pi))**0.333333
     ffo_hyd_P = Rht/Ro
 
+    # From above, vbar_prot = (numerator / prot_mol_mass)
+    # Using v_bar of water = 1.0
+    tot_water_vol = vol_hyd_hull - (vol_prot)
+    tot_water_mass = (tot_water_vol/30.0) * 18.0
+    vbar_hyd_prot = (numerator + tot_water_mass) / prot_mol_mass
+#   print(('  Vbar Hydrated Prot    :        %4.2f     ' % (vbar_hyd_prot)))
+
+    # Uncomment next line for APPROXIMATE SASA.
+    # This is only approximate because it is the SASA for the CG model with 
+    #   single psuedo-atom sidechains
+    # It is a slight over-estimate of the all-atom SASA
+#   print(('  SASA            :     %8.2f    Ang^2' % tot_asa[0]))
+
+    # Shell volume = total SASA * probe radius
+    vol_shell_wat = tot_asa[0] * prb_rad
+    # Shell water is 10% more dense	
+    shell_water_mass = (vol_shell_wat/27.0) * 18.0
+    shell_hydration = shell_water_mass/prot_mol_mass
+    # print(('  Shell Hydration :        %4.2f     g/g' % (shell_hydration)))
+
+    # Crevice 
+    crevice_wat_vol = tot_water_vol - vol_shell_wat
+    crevice_water_mass = (crevice_wat_vol/30.0) * 18.0
+    crevice_hydration = crevice_water_mass/prot_mol_mass
+    # print(('  Entrained Hyd.  :        %4.2f     g/g' % (crevice_hydration)))
+
+
+    # Check that they add up
+#   check_tot_hull_vol = vol_prot + vol_shell_wat + crevice_wat_vol
+#   print('check total hull volume = ',check_tot_hull_vol)
+
+    # Note that the total hydration in HullRadSAS is slightly larger
+    #   than that in the original HullRad because here the increased
+    #   density of the first shell water in included. Can't do that in
+    #   the original HullRad
+    tot_hydration = shell_hydration + crevice_hydration
+
+
+    # Calculate intrinsic viscosity
+    # From Einstein viscosity equation,
+    # [n] = (2.5*6.02214e23*(4*pi*Rht^3)/3)/prot_mol_mass
+    #
+    # rearrange to
+    #
+    int_vis = (10.0 * math.pi * 0.602214 * ((Rht)**3.0)) / (3.0 * prot_mol_mass)
+    ## The above equation is valid only for spherical particles.
+    ## Intrinsic viscosity is very sensitive to axial ratio and whether the molecule approximates
+    ##   a prolate or oblate ellipsoid.
+    ## Following is purely empirical relationship
+    shape_fac = 1.0 + (0.30 * asphr)
+    int_vis = int_vis * (shape_fac)**3.0
+
+    # Calculate concentration dependence of sedimentation coeff.
+    # From Rowe, 1977
+    #  His Vs/v_bar = vbar_hyd_prot/vbar_prot
+    # ks/vbar_prot = (2((vbar_hyd_prot/vbar_prot) + (ffo_hyd_P)**3.0))
+    ks_Rowe = vbar_prot * (2 * ((vbar_hyd_prot/vbar_prot) + (ffo_hyd_P)**3.0))
+
+    # Adjust ks similarly for increased viscosity with concentration
+    ks = ks_Rowe + (int_vis/2.0)
+
+    #Tanford second virials
+    # Bex = (16 * pi * Na * Rs^3) / (3 * M)
+    TanfordBex = (16 * math.pi * 6.02214e23 * Rh_trans**3) / (3 * prot_mol_mass)
+
+    # kd, conc. dependence of diffusion coeff.
+    # Teraoka, p. 200
+    #kd_Tera = (2.0 * TanfordBex) - f1 - (2 * vbar_hyd_prot)
+    # where f1 is the first order concentration frictional coefficent,
+    # i.e., fc = fo(1 + f1c + ...)
+    # Cantor & Schimmel, p, 614, argue that f1 = [eta] is increased friction
+    #   at concentration is due to intrinsic viscosity
+    kd_Tera = (2.0 * TanfordBex) - int_vis - (2 * vbar_hyd_prot)
+    kd = kd_Tera
+
     # Calculate rotational diffusion coeff.
     # Rotation more strongly affected by hydration, Halle & Davidovic, 2003
     # So increase hydration shell thickness
     # Hydration shell thickness empirically found to be optimal
-    vol_shell_wat_rot = area_hull * 4.3
-    vol_hyd_hull_rot = vol_hull + vol_shell_wat_rot
+#   vol_hyd_hull_rot = vol_hull + vol_shell_wat_rot
+    vol_hyd_hull_rot = vol_hull * 1.25
     Rhr = (factor * vol_hyd_hull_rot)**0.333333
 
     # Include empirical correction for shape factor to give effective 
@@ -1365,24 +1729,10 @@ def Sved(all_atm_rec,num_MG,num_MN,model_array):
     tauC = (4.0 * math.pi * eta * (Rh_rot**3.0)) / (3.0 * kB * T)
     tauC = tauC * 1e9
 
-    # Calculate intrinsic viscosity
-    # From Einstein viscosity equation,
-    # [n] = (2.5*6.02214e23*(4*pi*Rht^3)/3)/prot_mol_mass
-    #
-    # rearrange to
-    # 
-    #int_vis = (10.0 * math.pi * 0.602214 * ((Rht)**3.0)) / (3.0 * prot_mol_mass)
-    ## Deleted.
-    ## The above equation is valid only for spherical particles. 
-    ## Intrinsic viscosity is very sensitive to axial ratio and whether the molecule approximates
-    ##   a prolate or oblate ellipsoid. 
-    ## Decided that int_vis was beyond the scope of HullRad.
-    ## Leaving this here for future development.
-    int_vis = 0.0
 
     return s,Dt,Dr,vbar_prot,Rht,ffo_hyd_P,prot_mol_mass,Ro,Rhr,int_vis,a_b_ratio, \
-           Ft,Rg,Dmax,tauC,asphr,AA,NA,GL,DT,useNumpy
-
+           Ft,AnhRg,HydRg,Dmax,tauC,asphr,int_vis,tot_hydration,vbar_hyd_prot,ks, \
+           TanfordBex,kd,AA,NA,GL,DT,useNumpy
 
 def HullVolume(coords):
     #
@@ -1489,40 +1839,54 @@ if __name__ == "__main__":
 
     # Make the reduced atom model
     if extension == 'pdb' or extension == 'ent':
-        all_atm_rec,num_MG,num_MN,model_array = model_from_pdb(file)
+        all_atm_rec,num_MG,num_MN,num_K,num_Na,model_array,mesh_coords,tot_asa, \
+           prb_rad,elec_atm_rec = mesh_from_pdb(file)
     elif extension == 'cif':
-        all_atm_rec,num_MG,num_MN,model_array = model_from_cif(file)
+        all_atm_rec,num_MG,num_MN,num_K,num_Na,model_array,mesh_coords,tot_asa, \
+           prb_rad,elec_atm_rec = mesh_from_cif(file)
 
     # Write out model
     # Uncomment next line if you want the unified atom SC model written out
 #   write_pdb(model_array, basename + '_model.pdb')
 
     # Call the main function
-    s,Dt,Dr,vbar_prot,Rht,ffo_hyd_P,M,Ro,Rhr,int_vis,a_b_ratio,Ft,Rg,Dmax,tauC, \
-           asphr,AA,NA,GL,DT,useNumpy  = Sved(all_atm_rec,num_MG,num_MN,model_array)
+    s,Dt,Dr,vbar_prot,Rht,ffo_hyd_P,M,Ro,Rhr,int_vis,a_b_ratio,Ft,AnhRg,HydRg,Dmax,tauC, \
+           asphr,int_vis,tot_hydration,vbar_hyd_prot,ks,TanfordBex,kd,AA,NA,GL,DT,useNumpy \
+           = Sved(all_atm_rec,num_MG,num_MN,num_K,num_Na,model_array,mesh_coords, \
+                  tot_asa,prb_rad,elec_atm_rec)
 
     # Print coefficients to screen
     print(('  #Amino Acids    :    %9.0f' % (AA)))
     print(('  #Nucleotides    :    %9.0f' % (NA)))
     print(('  #Saccharides    :    %9.0f' % (GL)))
     print(('  #Detergents     :    %9.0f' % (DT)))
+    print(('  #Potassium      :    %9.0f' % (num_K)))
+    print(('  #Sodium         :    %9.0f' % (num_Na)))
+    print(('  #Magnesium      :    %9.0f' % (num_MG)))
+    print(('  #Manganese      :    %9.0f' % (num_MN)))
     print(('  M               :       %6.0f     g/mol' % (M)))
     print(('  v_bar           :       %6.3f     mL/g'  % (vbar_prot)))
     print(('  Ro(Anhydrous)   :       %6.2f     Angstroms' % (Ro)))
-    print(('  Rg(Anhydrous)   :       %6.2f     Angstroms' % (Rg)))
+    print(('  Rg(Anhydrous)   :       %6.2f     Angstroms' % (AnhRg)))
+    print(('  Rg(Hydrated)    :       %6.2f     Angstroms' % (HydRg)))
     print(('  Dmax            :       %6.2f     Angstroms' % (Dmax)))
     print(('  Axial Ratio     :       %6.2f' % (a_b_ratio)))
     print(('  f/fo            :       %6.2f'  % (ffo_hyd_P)))
     print(('  Dt              :       %6.2e   cm^2/s' % (Dt)))
     print(('  R(Translation)  :       %6.2f     Angstroms' % (Rht)))
-    print(('  s               :       %6.2e   sec' % (s)))
+    print(('  s20,w           :       %6.2e   sec' % (s)))
+    print(('  Int. Viscosity  :       %6.2f     ml/g ' % (int_vis)))
+    print(('  Total Hydration :         %4.2f     g/g    ' % (tot_hydration)))
+    print(('  Spc Vol Hyd Prot:         %4.2f     mL/g     ' % (vbar_hyd_prot)))
+    print(('  ks(Non-ideal)   :       %6.2f     ml/g ' % (ks)))
+    print(('  kd(Non-ideal)   :       %6.2f     ml/g ' % (kd)))
+    print(('  Bex(2nd virial) :       %6.2f     ml/g (Excluded volume)' % (TanfordBex)))
+    if useNumpy:
+        print(('  Asphericity     :       %6.2f     (from Gyration Tensor)' % (asphr)))
     if a_b_ratio > 2.63:
         print(' ')
         print('  Caution. Axial ratio too large for accurate prediction')
         print('  of following rotational properties by HullRad.')
-
     print(('  Dr              :       %6.2e   s^-1' % (Dr)))
     print(('  R(Rotation)     :       %6.2f     Angstroms' % (Rhr)))
     print(('  tauC            :       %6.2f     ns (from R_rotation)' % (tauC)))
-    if useNumpy:
-        print(('  Asphericity     :       %6.2f     (from Gyration Tensor)' % (asphr)))

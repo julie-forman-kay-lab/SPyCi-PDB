@@ -3,7 +3,7 @@ import os
 import subprocess
 import sys
 
-from spycipdb.components.hullrad import Sved, model_from_pdb
+from spycipdb.components.hullrad import Sved, mesh_from_pdb
 
 
 # Interesting way to import from repository that cannot be
@@ -106,11 +106,13 @@ def hullrad_helper(pdb_path):
     """Return translational hydrodynamic radius given PDB."""
     pdb_name_ext = pdb_path.rsplit('/', 1)[-1]
     
-    all_atm_rec, num_MG, num_MN, model_array = model_from_pdb(pdb_path)
+    all_atm_rec,num_MG,num_MN,num_K,num_Na,model_array,mesh_coords,tot_asa, \
+        prb_rad,elec_atm_rec = mesh_from_pdb(pdb_path)
     
-    s, Dt, Dr, vbar_prot, Rht, ffo_hyd_P, M, Ro, Rhr, int_vis, a_b_ratio, \
-        Ft, Rg, Dmax, tauC, asphr, AA, NA, GL, DT, useNumpy \
-        = Sved(all_atm_rec, num_MG, num_MN, model_array)
+    s,Dt,Dr,vbar_prot,Rht,ffo_hyd_P,M,Ro,Rhr,int_vis,a_b_ratio,Ft,AnhRg,HydRg,Dmax,tauC, \
+        asphr,int_vis,tot_hydration,vbar_hyd_prot,ks,TanfordBex,kd,AA,NA,GL,DT,useNumpy \
+            = Sved(all_atm_rec,num_MG,num_MN,num_K,num_Na,model_array,mesh_coords, \
+                tot_asa,prb_rad,elec_atm_rec)
 
     return pdb_name_ext, Rht
 
