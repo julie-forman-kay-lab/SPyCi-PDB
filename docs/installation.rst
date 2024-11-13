@@ -187,6 +187,11 @@ Currently, reinstallation is required as UCBShift changes the Python version.
 We will be working on a fix to streamline this process soon by using package
 handlers such as ``PyPi``. Thank you for your patience.
 
+If you're running into DSSP errors, please make sure you only have one version
+of DSSP installed and the preferred DSSP version is 3.X. Please refer to
+`this issue <https://github.com/julie-forman-kay-lab/IDPConformerGenerator/issues/48>`_
+for troubleshooting an older version of DSSP on a newer version of Ubuntu.
+
 ATSAS v3.1.1 - CRYSOL v3.0
 ``````````````````````````
 

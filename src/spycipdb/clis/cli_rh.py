@@ -2,17 +2,12 @@
 Back-calculates translational Rh values from PDB structure file.
 
 Uses third-party software to do so.
-Default is HullRad 8.1.
+Default is HullRadSAS 3.1.
 
 Publication:
-Fleming, P.J. and Fleming, K.G.
-"HullRad: Fast Calculations of Folded and Disordered Protein
-and Nucleic Acid Hydrodynamic Properties"
-Biophysical Journal, 114:856-869, February 27, 2018
-DOI: 10.1016/j.bpj.2018.01.002
-
-Back-calculator error 0.1 from Fleming, P.J. and Fleming, K.G. 2018.
-Units for values are in Angstroms.
+Fleming, P.J., Corriea, J.J. and Fleming, K.G.
+"Revisiting Macromolecular Hydration with HullRadSAS"
+https://www.biorxiv.org/content/10.1101/2022.10.20.513022v1
 
 USAGE:
     $ spycipdb rh <PDB-FILES>
