@@ -2,8 +2,8 @@ Usage
 =====
 
 SPyCi-PDB runs entirely through command-lines. Theoretically, it is compatible
-with any machine that can un Python. However, it's only been thoroughly tested
-on WSL 2.0 on Windows 11, Linux Ubuntu 20.04.X LTS and 18.04.X LTS.
+with any machine that can run Python. However, it's only been thoroughly tested
+on WSL 2.0 on Windows 11, Linux Ubuntu LTS versions 24.04, 22.04, 20.04, and 18.04.
 
 Please follow the explanations in this page plus the documentation on the command-line
 themselves via::
@@ -121,7 +121,7 @@ Small Angle X-ray Scattering (SAXS) module
 Hydrodynamic Radius (Rh) module
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 | **Output:** Each PDB name is assigned a singular hydrodynamic radius value.
-| **About:** The default back-calculator uses the third-party program HullRad.
+| **About:** The default back-calculator uses the third-party program HullRadSAS.
   It has been chosen for its speed and usage of the convex hull model to estimate hydrodynamic properties.
 
 Chemical Shift (CS) module

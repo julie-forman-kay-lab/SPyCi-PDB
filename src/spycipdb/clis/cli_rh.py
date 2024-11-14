@@ -41,7 +41,7 @@ from spycipdb.logger import S, T, init_files, report_on_crash
 
 LOGFILESNAME = '.spycipdb_rh'
 _name = 'rh'
-_help = 'Rh back-calculator using HullRad v8.1.'
+_help = 'Rh back-calculator using HullRadSAS v3.1.'
 
 _prog, _des, _usage = libcli.parse_doc_params(__doc__)
 

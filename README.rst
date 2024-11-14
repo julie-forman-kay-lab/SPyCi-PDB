@@ -29,7 +29,7 @@ SPyCi-PDB
 #. PRE, NOE, J-Coupling, smFRET: Internal
 #. Chemical shifts (CS): `UCBShift <https://github.com/THGLab/CSpred>`_
 #. SAXS: `CRYSOLv3 <https://www.embl-hamburg.de/biosaxs/crysol.html>`_
-#. Hydrodynamic Radius (Rh): `HullRad <http://52.14.70.9/>`_
+#. Hydrodynamic Radius (Rh): `HullRadSAS <http://52.14.70.9/HullRadSAS_descrip.html>`_
 #. Residual Dipolar Couplings (RDC): `PALES <https://spin.niddk.nih.gov/bax/>`_
 
 Please note for third-party software, installation instructions have been fully
