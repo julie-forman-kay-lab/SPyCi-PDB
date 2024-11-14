@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.4.2 (2024-11-14)
+------------------------------------------------------------
+
 * Update CLI and documentation for Rh calculation as seen in v0.4.0
 
 v0.4.1 (2024-11-13)
