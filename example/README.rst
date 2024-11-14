@@ -72,9 +72,9 @@ number of harmonics to perform the appropriate SAXS back-calculation. The defaul
 value is 20 (from 1-100). Increasing the number of harmonics will also increase
 the cost of computational time.
 
-Rh Module - Using HullRad 8.1
+Rh Module - Using HullRadSAS v3.1
 -----------------------------
-HullRad should be working out of the box with the basic installation instructions.
+HullRadSAS should be working out of the box with the basic installation instructions.
 An experimental file template is not required::
 
     spycipdb rh ./drksh3_csss_100.tar.xz -n
