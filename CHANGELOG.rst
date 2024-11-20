@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Fix a bug where ``cs`` module was duplicating ``CB`` shifts into ``N`` during the output.
+
 v0.4.2 (2024-11-14)
 ------------------------------------------------------------
 
