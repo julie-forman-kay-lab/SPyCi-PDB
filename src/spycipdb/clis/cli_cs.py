@@ -184,7 +184,7 @@ def main(
         per_struct['C'] = result[1].C_UCBShift.values.astype(float).tolist()
         per_struct['CA'] = result[1].CA_UCBShift.values.astype(float).tolist()
         per_struct['CB'] = result[1].CB_UCBShift.values.astype(float).tolist()
-        per_struct['N'] = result[1].CB_UCBShift.values.astype(float).tolist()
+        per_struct['N'] = result[1].N_UCBShift.values.astype(float).tolist()
         
         _output['format'] = format
         _output[result[0]] = per_struct
