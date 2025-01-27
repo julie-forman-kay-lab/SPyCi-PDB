@@ -131,6 +131,24 @@ Installing Third-party Software
 Some functionalities of ``SPyCi-PDB`` require third-party software.
 These are not mandatory to install unless you want to use such operations.
 
+DEERPREdict
+```````````
+
+.. note::
+    A default PRE calculator will be installed along with ``SPyCi-PDB``.
+
+    However, if you would like to use DEERPREdict as an alternative
+    predictor for PRE values, specifically, predicting intensity ratios
+    instead of the default distance calculation, please see below.
+
+The installation of DEERPREdict can be done by using ``pip`` as highlighted
+on their `website<https://deerpredict.readthedocs.io/_docs/installation.html>`_.
+
+Specifically you can install DEERpredict on-top of the SPyCi-PDB environment.::
+
+    pip install DEERPREdict
+
+
 UCBShift
 ````````
 
