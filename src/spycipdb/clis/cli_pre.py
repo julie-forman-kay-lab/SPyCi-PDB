@@ -4,12 +4,15 @@ Back-calculates the PRE distances from PDB structure file.
 Uses idpconfgen libraries for coordinate parsing as it's proven
 to be faster than BioPython.
 
-Back-calculator logic inspired from X-EISD.
-Error = 0.0001 as reported in Lincoff et al. 2020.
+Back-calculator logic inspired from X-EISD and DEERPREdict.
+Error for the default calculator = 0.0001 as reported in Lincoff et al. 2020.
+Error for PREpredict = 0.1 as reported in Tesei and Martins et al. 2021.
+
+Use `-m deerpredict` for PREpredict. Otherwise, leave out the `-m` flag.
 
 USAGE:
     $ spycipdb pre <PDB-FILES> [--exp-file]
-    $ spycipdb pre <PDB-FILES> [--exp-file] [--output] [--ncores] [--plot]
+    $ spycipdb pre <PDB-FILES> [--exp-file] [--method] [--output] [--ncores]
 
 REQUIREMENTS:
     Experimental data must be comma-delimited with the following columns:
@@ -29,6 +32,15 @@ OUTPUT:
         'format': {'res1': [], 'atom1': [], 'res2': [], 'atom2': []},
         'pdb1': [dist_values],
         'pdb2': [dist_values],
+        ...
+    }
+    
+    or when using DEERPREdict:
+    
+    {
+        'format': {'res1': [], 'atom1': [], 'res2': [], 'atom2': []},
+        'pdb1': [intensity_ratios],
+        'pdb2': [intensity_ratios],
         ...
     }
 """
@@ -64,6 +76,7 @@ ap = libcli.CustomParser(
     )
 
 libcli.add_argument_pdb_files(ap)
+libcli.add_argument_method(ap)
 libcli.add_argument_exp_file(ap)
 libcli.add_argument_output(ap)
 libcli.add_argument_ncores(ap)
@@ -85,6 +98,7 @@ def main(
         pdb_files,
         exp_file,
         output,
+        method="default",
         ncores=1,
         plot=False,
         tmpdir=TMPDIR,
@@ -105,7 +119,12 @@ def main(
     output : str or Path, optional
         Where to store the back-calculated data.
         Defaults to working directory.
-        
+    
+    method : str, optional
+        Either uses default back-calculator logic or
+        DEERPREdict.
+        Defaults to default.
+    
     ncores : int, optional
         The number of cores to use.
         Defaults to 1.

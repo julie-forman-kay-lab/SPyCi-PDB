@@ -151,6 +151,17 @@ def add_argument_pdb_files(parser):
         )
 
 
+def add_argument_method(parser):
+    """Add argument for method of back-calculator."""
+    parser.add_argument(
+        '-m',
+        '--method',
+        help='Method of back-calculator.',
+        type=str,
+        required=False,
+        )
+
+
 def add_argument_exp_file(parser):
     """Add argument for path to experimental file template."""
     parser.add_argument(
