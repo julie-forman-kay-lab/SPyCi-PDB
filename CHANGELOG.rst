@@ -2,7 +2,8 @@
 Changelog
 =========
 
-* Add DEERpredict as one of the calculators for ``pre`` data.
+* Add DEERPREdict as one of the calculators for ``pre`` data.
+* Updated documentation for installation and usage of DEERPREdict within SPyCi-PDB
 
 v0.4.3 (2024-11-20)
 ------------------------------------------------------------
