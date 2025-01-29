@@ -57,13 +57,16 @@ Using the default method, the usage is akin to the NOE and JC modules above.::
 To use DEERPREdict within SPyCi-PDB, you must specify ``--method deerpredict``
 as well as a parameters text file with the following default parameters.::
     
+    atom=H
+    temp=298
     tau_c=2*1e-9
     tau_t=0.5*1e-9
     delay=10e-3
     r_2=10
     wh=750
 
-Where ``tau_c`` and ``tau_t`` are the rotational tumbling time and internal
+Where ``temp`` is the integer temperature value of the experiment in Kelvin, 
+``tau_c`` and ``tau_t`` are the rotational tumbling time and internal
 correlation time respectively, ``delay`` is the indept delay within the pulse
 sequence, ``r_2`` is the diamagnetic transverse relaxation rate in the diamagnetic
 molecule, and ``wh`` is the strength of the magnetic field. These parameters can be
@@ -71,6 +74,8 @@ changed and specified by using ``--parameters ./deerpredict_params.txt``. An exa
 of usage could be.::
 
     spycipdb pre ./PATH_TO_CONFORMERS -m deerpredict --parameters ./PATH_TO_TXT -e ./PATH_TO_EXP_DATA -n
+
+The output will represent intensity ratios as ``Ipara/Idia``.
 
 CS Module - Using UCBShift
 --------------------------

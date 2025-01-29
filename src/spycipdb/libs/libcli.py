@@ -158,6 +158,17 @@ def add_argument_method(parser):
         '--method',
         help='Method of back-calculator.',
         type=str,
+        default="default",
+        required=False,
+        )
+
+
+def add_argument_parameters(parser):
+    """Add argument for method of back-calculator."""
+    parser.add_argument(
+        '--parameters',
+        help='Path to parameters file for specific back-calculators.',
+        type=str,
         required=False,
         )
 
