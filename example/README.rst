@@ -29,23 +29,48 @@ Please note for large number of PDB ensembles, it is recommended to specify
 the number of CPU cores you are comfortable with using to maximize speed.
 Having just :code:`-n` will utilize all but one CPU thread.
 
-PRE, NOE, and JC Modules
-------------------------
+NOE, and JC Modules
+-------------------
 To perform the back-calculation using the default internal calculators,
 give the tarball of provided structures as the first argument as well as the
 path to the experimental data file to use as a template. For example, using the
-PRE module::
-
-    spycipdb pre ./drksh3_csss_100.tar.xz -e ./drksh3_exp_data/drksh3_PRE.txt -n
-
-Likewise to the PRE module, the tarball of the provided structures and sample
-NOE experimental data file are required::
+NOE module::
 
     spycipdb noe ./drksh3_csss_100.tar.xz -e ./drksh3_exp_data/drksh3_NOE.txt -n
 
-Since the J-Coupling back-calculator is also internal, the same format is as follows::
+Likewise to the NOE module, the tarball of the provided structures and sample
+JC experimental data file are required::
 
     spycipdb jc ./drksh3_csss_100.tar.xz -e ./drksh3_exp_data/drksh3_JC.txt -n
+
+PRE Module
+----------
+There are two method of back-calculating PRE values within SPyCi-PDB. The first
+uses a distance-based approach as seen in the original X-EISD `paper <https://www.nature.com/articles/s42004-020-0323-0>`_.
+The second method uses `DEERPREdict <https://github.com/KULL-Centre/DEERpredict>`_ with
+adjustable experimental parameters and yields intensity ratios.
+
+Using the default method, the usage is akin to the NOE and JC modules above.::
+
+    spycipdb pre ./drksh3_csss_100.tar.xz -e ./drksh3_exp_data/drksh3_PRE.txt -n
+
+To use DEERPREdict within SPyCi-PDB, you must specify ``--method deerpredict``
+as well as a parameters text file with the following default parameters.::
+    
+    tau_c=2*1e-9
+    tau_t=0.5*1e-9
+    delay=10e-3
+    r_2=10
+    wh=750
+
+Where ``tau_c`` and ``tau_t`` are the rotational tumbling time and internal
+correlation time respectively, ``delay`` is the indept delay within the pulse
+sequence, ``r_2`` is the diamagnetic transverse relaxation rate in the diamagnetic
+molecule, and ``wh`` is the strength of the magnetic field. These parameters can be
+changed and specified by using ``--parameters ./deerpredict_params.txt``. An example
+of usage could be.::
+
+    spycipdb pre ./PATH_TO_CONFORMERS -m deerpredict --parameters ./PATH_TO_TXT -e ./PATH_TO_EXP_DATA -n
 
 CS Module - Using UCBShift
 --------------------------
