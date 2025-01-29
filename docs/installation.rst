@@ -24,7 +24,6 @@ Full installation instructures are highlighted below.
     | ``matplotlib >= 3.5.2, < 4``
     | ``natsort >= 8, < 9``
     | ``tox == 4``
-    | ``DEERPREdict >=0.2.1. < 0.3``
     
     As mentioned above, ``IDPConformerGenerator`` libraries are required.
 
@@ -104,8 +103,9 @@ To update to the latest version, navigate to the repository folder, activate the
 
 Your installation will become up to date with the latest developments.
 
-Please note that IDPConformerGenerator will have to be be installed alongside SPyCi-PDB
-as the library is required for processing PDB files.
+Please note that IDPConformerGenerator will be installed alongside SPyCi-PDB
+as the library is required for processing PDB files. You can find the installation
+of IDPConformerGenerator in ``src/idpconfgen/``.
 
 Updating SPyCi-PDB
 ------------------
