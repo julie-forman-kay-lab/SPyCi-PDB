@@ -23,7 +23,8 @@ Full installation instructures are highlighted below.
     | ``scipy >= 1.8.1, < 2``
     | ``matplotlib >= 3.5.2, < 4``
     | ``natsort >= 8, < 9``
-    | ``tox >= 3.25.0, < 4``
+    | ``tox == 4``
+    | ``DEERPREdict >=0.2.1. < 0.3``
     
     As mentioned above, ``IDPConformerGenerator`` libraries are required.
 
