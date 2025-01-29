@@ -15,4 +15,5 @@ dependencies:
     - pip
     - pip:
         - "--editable=git+https://github.com/julie-forman-kay-lab/IDPConformerGenerator.git#egg=idpconfgen"
+        - DEERPREdict>=0.2.1,<0.3.0
     - tox>=3.25.0,<4

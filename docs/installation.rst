@@ -141,8 +141,11 @@ DEERPREdict
     predictor for PRE values, specifically, predicting intensity ratios
     instead of the default distance calculation, please see below.
 
-The installation of DEERPREdict can be done by using ``pip`` as highlighted
-on their `website<https://deerpredict.readthedocs.io/_docs/installation.html>`_.
+If you've installed a recent version of SPyCi-PDB (past v0.8.X), DEERPREdict
+should already be installed in your Python environment.
+
+If you do not have DEERPREdict as a package, the installation of DEERPREdict
+can be done by using ``pip`` as highlighted on their `website<https://deerpredict.readthedocs.io/_docs/installation.html>`_.
 
 Specifically you can install DEERpredict on-top of the SPyCi-PDB environment.::
 
