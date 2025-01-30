@@ -141,7 +141,7 @@ DEERPREdict
     predictor for PRE values, specifically, predicting intensity ratios
     instead of the default distance calculation, please see below.
 
-If you've installed a recent version of SPyCi-PDB (past v0.8.X), DEERPREdict
+If you've installed a recent version of SPyCi-PDB (past v0.5.X), DEERPREdict
 should already be installed in your Python environment.
 
 If you do not have DEERPREdict as a package, the installation of DEERPREdict
