@@ -5,8 +5,14 @@ import os
 
 import numpy as np
 import pandas as pd
-from DEERPREdict.PRE import PREpredict
-from MDAnalysis import Universe
+
+
+try:
+    from DEERPREdict.PRE import PREpredict
+    from MDAnalysis import Universe
+except ModuleNotFoundError:
+    # Error message handled in `cli_pre.py`
+    pass
 
 
 default_deerpredict = {
