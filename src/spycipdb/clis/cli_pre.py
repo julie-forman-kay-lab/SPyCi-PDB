@@ -55,10 +55,19 @@ from idpconfgen.libs.libmulticore import pool_function
 from natsort import os_sorted
 
 from spycipdb import log
-from spycipdb.components.deerpredict import (
-    calc_pre_predict,
-    default_deerpredict,
-    )
+
+
+try:
+    from spycipdb.components.deerpredict import (
+        calc_pre_predict,
+        default_deerpredict,
+        )
+except ImportError:
+    print(  # noqa: T201
+        "Note: DEERPREdict installation not found. "
+        "If you would like to use the DEERPREdict method, "
+        "please refer to the installation instructions."
+        )
 from spycipdb.core.calculators import calc_pre
 from spycipdb.core.parsers import get_exp_format_pre
 from spycipdb.libs import libcli
