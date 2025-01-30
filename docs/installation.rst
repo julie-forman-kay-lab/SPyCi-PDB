@@ -23,7 +23,7 @@ Full installation instructures are highlighted below.
     | ``scipy >= 1.8.1, < 2``
     | ``matplotlib >= 3.5.2, < 4``
     | ``natsort >= 8, < 9``
-    | ``tox >= 3.25.0, < 4``
+    | ``tox == 4``
     
     As mentioned above, ``IDPConformerGenerator`` libraries are required.
 
@@ -130,6 +130,27 @@ Installing Third-party Software
 
 Some functionalities of ``SPyCi-PDB`` require third-party software.
 These are not mandatory to install unless you want to use such operations.
+
+DEERPREdict
+```````````
+
+.. note::
+    A default PRE calculator will be installed along with ``SPyCi-PDB``.
+
+    However, if you would like to use DEERPREdict as an alternative
+    predictor for PRE values, specifically, predicting intensity ratios
+    instead of the default distance calculation, please see below.
+
+If you've installed a recent version of SPyCi-PDB (past v0.8.X), DEERPREdict
+should already be installed in your Python environment.
+
+If you do not have DEERPREdict as a package, the installation of DEERPREdict
+can be done by using ``pip`` as highlighted on their `website<https://deerpredict.readthedocs.io/_docs/installation.html>`_.
+
+Specifically you can install DEERpredict on-top of the SPyCi-PDB environment.::
+
+    pip install DEERPREdict
+
 
 UCBShift
 ````````
