@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Update README.rst to account for DEERPREdict and future requests
+
 v0.5.1 (2025-01-30)
 ------------------------------------------------------------
 
