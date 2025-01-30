@@ -13,7 +13,6 @@ from . import (
     fret_exp_expected,
     jc_exp_expected,
     noe_exp_expected,
-    pre_exp_expected,
     )
 
 
