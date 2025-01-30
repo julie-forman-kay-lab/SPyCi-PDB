@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.5.1 (2025-01-30)
+------------------------------------------------------------
+
 * Correct documentation for DEERPREdict versioning
 * Fixed tests for ``pre`` module
 
