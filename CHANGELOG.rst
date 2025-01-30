@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.5.2 (2025-01-30)
+------------------------------------------------------------
+
 * Update README.rst to account for DEERPREdict and future requests
 
 v0.5.1 (2025-01-30)
