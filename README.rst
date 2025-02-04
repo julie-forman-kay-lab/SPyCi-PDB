@@ -26,14 +26,16 @@ SPyCi-PDB
 
 **Back-Calculators:** The current back calculators integrated are:
 
-#. PRE, NOE, J-Coupling, smFRET: Internal
+#. NOE, J-Coupling, smFRET: Internal
+#. Paramagnetic Relaxation Enhancement (PRE): distance-based and `DEERPREdict <https://github.com/KULL-Centre/DEERpredict>`_
 #. Chemical shifts (CS): `UCBShift <https://github.com/THGLab/CSpred>`_
 #. SAXS: `CRYSOLv3 <https://www.embl-hamburg.de/biosaxs/crysol.html>`_
 #. Hydrodynamic Radius (Rh): `HullRadSAS <http://52.14.70.9/HullRadSAS_descrip.html>`_
 #. Residual Dipolar Couplings (RDC): `PALES <https://spin.niddk.nih.gov/bax/>`_
 
 Please note for third-party software, installation instructions have been fully
-documented and tested for Linux Ubuntu Focal Fossa (20.04.X LTS) and Bionic Beaver (18.04.X LTS).
+documented and tested for the following Linux Ubuntu versions:
+24.04 LTS, 22.04 LTS, 20.04 LTS, and 18.04 LTS.
 
 To make new requests and/or additions, please see ``docs/contributing.rst``.
 
@@ -67,4 +69,4 @@ If you use SPyCi-PDB, please cite::
 Version
 =======
 
-v0.5.1
+v0.5.2
