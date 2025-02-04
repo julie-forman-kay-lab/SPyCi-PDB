@@ -83,7 +83,7 @@ def calc_pre_predict(pdb, fexp, parameters):
                     ratio = float(eval(splitted[1]))
                 except NameError:
                     ratio = float('nan')
-                if res_num in res2_splitted:
+                if res_num in res2_splitted[i]:
                     ratios.append(ratio)
         
         try:
