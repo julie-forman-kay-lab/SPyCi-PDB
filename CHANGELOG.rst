@@ -2,6 +2,8 @@
 Changelog
 =========
 
+* Fixed DEERPREdict parsing bug for ``pre`` module
+
 v0.5.1 (2025-01-30)
 ------------------------------------------------------------
 
