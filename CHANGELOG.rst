@@ -2,6 +2,9 @@
 Changelog
 =========
 
+v0.6.0 (2025-07-10)
+------------------------------------------------------------
+
 * Update installation requirements and requirements for UCBShift
 * Quiet warnings when running UCBShift natively for cleaner output
 
