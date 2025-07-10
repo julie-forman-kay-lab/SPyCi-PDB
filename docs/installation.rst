@@ -14,6 +14,7 @@ Full installation instructures are highlighted below.
 
 .. note::
     As highlighted in ``requirements.txt``, listed below are all of the Python packages required.
+    Please note that the Python version must be between 3.8 and 3.11, inclusive.
     The following list will be updated if more packages are added:
 
     | ``numpy >= 1.22.4, < 2``
@@ -64,7 +65,7 @@ Anaconda is used as your Python package manager::
     If you don't use Anaconda to manage your Python installations, you can use
     ``virtualenv`` and the ``requirements.txt`` file following the commands:
 
-    | ``virtualenv spycienv --python=3.8``
+    | ``virtualenv spycienv --python=3.11``
     | ``source spycienv/bin/activate``
     | ``pip install -r requirements.txt``
 
@@ -157,7 +158,6 @@ UCBShift
 
 .. note::
     Module is only required if you wish to perform Chemical Shift back-calculations.
-    The following installation will revert Python to version 3.8.15.
     
     You should be in the parent directory where ``SPyCi-PDB`` was cloned to
     with the Python environment is deactivated.
